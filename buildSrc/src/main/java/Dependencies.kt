@@ -26,6 +26,8 @@ object Repo {
 
 object Modules {
     val app = ":app"
+    val domain = ":domain"
+    val data = ":data"
     val sdkBase = ":sdk-base"
     val sdkPlatform = ":sdk-platform"
     val sdkTest = ":sdk-test"
@@ -56,6 +58,7 @@ object Versions {
     val leakCanary = "1.6.2"
     val koin = "1.0.0"
     val gson = "2.8.5"
+    val coroutinesAdapter = "0.9.2"
 
     val junit = "4.12"
     val mockito = "2.18.3"
@@ -78,6 +81,7 @@ object Libraries {
 
     val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}"
     val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinCoroutines}"
+    val coroutinesAdapter = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.coroutinesAdapter}"
 
     val timber = "com.jakewharton.timber:timber:${Versions.timber}"
 

@@ -1,0 +1,34 @@
+apply from: GradleDir.android
+
+android{
+    buildTypes {
+        debug {
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+dependencies {
+    implementation project(Modules.sdkBase)
+    implementation Libraries.retrofit
+    implementation Libraries.okhttp
+    implementation Libraries.loggingInterceptor
+    implementation Libraries.moshiConverter
+    implementation Libraries.coroutinesAdapter
+    implementation Libraries.coroutinesAndroid
+    implementation Libraries.koinAndroid
+    implementation Libraries.gsonConverter
+
+    testImplementation project(Modules.sdkTest)
+    testImplementation TestLibraries.kotlin
+    testImplementation TestLibraries.kotlinTest
+    testImplementation TestLibraries.junit
+    testImplementation TestLibraries.mockitoKotlin
+    testImplementation TestLibraries.mockitoInline
+    testImplementation TestLibraries.kluent
+    testImplementation TestLibraries.retrofitMock
+    testImplementation TestLibraries.okhttpMockServer
+}
+

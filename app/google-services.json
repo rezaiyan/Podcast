@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "16201877371",
+    "firebase_url": "https://hezaro-wall-android.firebaseio.com",
+    "project_id": "hezaro-wall-android",
+    "storage_bucket": "hezaro-wall-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16201877371:android:8998d2ef3a501f42",
+        "android_client_info": {
+          "package_name": "com.hezaro.wall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "16201877371-3245amnv4keq7vc54rt7lmm09m21m80q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4AbSol6lefBZiv3uar56Cy-kSd5vQ47Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "16201877371-3245amnv4keq7vc54rt7lmm09m21m80q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

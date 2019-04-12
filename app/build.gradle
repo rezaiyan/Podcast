@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    compileSdkVersion App.compileSdk
+    defaultConfig {
+        applicationId App.id
+        minSdkVersion App.minSdk
+        targetSdkVersion App.targetSdk
+        versionCode App.versionCode
+        versionName App.versionName
+        testInstrumentationRunner TestLibraries.androidJUnitRunner
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation Libraries.kotlin
+    implementation Libraries.ktx
+    implementation SupportLibraries.appcompat
+    implementation SupportLibraries.design
+    implementation SupportLibraries.constraintLayout
+    implementation Libraries.firebaseCore
+    implementation Libraries.crashlytics
+}
+apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}

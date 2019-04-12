@@ -1,8 +1,6 @@
 apply from: GradleDir.android
 
 dependencies {
-    implementation Libraries.retrofit
-    implementation Libraries.coroutinesAndroid
     implementation TestLibraries.junit
     implementation TestLibraries.mockitoKotlin
     implementation TestLibraries.junit

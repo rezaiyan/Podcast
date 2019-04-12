@@ -1,0 +1,17 @@
+apply from: GradleDir.android
+
+dependencies {
+    implementation project(Modules.sdkBase)
+    implementation SupportLibraries.archComponents
+    implementation SupportLibraries.appcompat
+    implementation SupportLibraries.constraintLayout
+    implementation SupportLibraries.design
+    implementation Libraries.retrofit
+    implementation Libraries.coroutinesCore
+    testImplementation TestLibraries.rules
+    testImplementation TestLibraries.kluent
+    testImplementation TestLibraries.junit
+    testImplementation project(Modules.sdkTest)
+
+}
+

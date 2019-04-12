@@ -26,6 +26,9 @@ object Repo {
 
 object Modules {
     val app = ":app"
+    val sdkBase = ":sdk-base"
+    val sdkPlatform = ":sdk-platform"
+    val sdkTest = ":sdk-test"
 }
 
 object Versions {

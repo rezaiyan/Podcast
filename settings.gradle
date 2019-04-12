@@ -1,3 +1,2 @@
-include ':sdk-test'
-include Modules.app
+include Modules.app, Modules.sdkTest, Modules.sdkPlatform, Modules.sdkBase
 rootProject.name='دیوار پادکست'

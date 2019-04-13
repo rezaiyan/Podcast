@@ -43,6 +43,7 @@ object Versions {
     val design = "1.0.0"
     val cardview = "1.0.0"
     val recyclerview = "1.0.0"
+    val androidx = "1.0.0-rc01"
 
     val ktx = "1.0.1"
 
@@ -72,11 +73,17 @@ object Versions {
     val javaxAnnotations_version = "1.0"
 
     val picasso = "2.71828"
+
+    val firebase = "16.0.1"
+    val crashlytics = "2.9.9"
+
+    val exoPlayer = "2.9.6"
 }
 
 object Libraries {
-    val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
+    val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
 
+    val media = "androidx.media:media:${Versions.androidx}"
     val ktx = "androidx.core:core-ktx:${Versions.ktx}"
 
     val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}"
@@ -112,8 +119,16 @@ object Libraries {
     val javaxAnnotation = "javax.annotation:jsr250-api:${Versions.javaxAnnotations_version}"
     val picasso = "com.squareup.picasso:picasso:${Versions.picasso}"
 
-    val firebaseCore = "com.google.firebase:firebase-core:16.0.1"
-    val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.9"
+    val firebaseCore = "com.google.firebase:firebase-core:${Versions.firebase}"
+    val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
+
+    val exoPlayerCore = "com.google.android.exoplayer:exoplayer-core:${Versions.exoPlayer}"
+    val exoPlayerDash = "com.google.android.exoplayer:exoplayer-dash:${Versions.exoPlayer}"
+    val exoPlayerUi = "com.google.android.exoplayer:exoplayer-ui:${Versions.exoPlayer}"
+    val exoPlayerHls = "com.google.android.exoplayer:exoplayer-hls:${Versions.exoPlayer}"
+    val exoPlayerIma = "com.google.android.exoplayer:exoplayer-ima:${Versions.exoPlayer}"
+    val exoPlayerExMediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoPlayer}"
+    val exoPlayersmoothstreaming = "com.google.android.exoplayer:exoplayer-smoothstreaming:${Versions.exoPlayer}"
 }
 
 object SupportLibraries {

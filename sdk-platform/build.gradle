@@ -8,6 +8,13 @@ dependencies {
     implementation SupportLibraries.design
     implementation Libraries.retrofit
     implementation Libraries.coroutinesCore
+    implementation Libraries.exoPlayerCore
+    implementation Libraries.exoPlayerUi
+    implementation Libraries.exoPlayerExMediaSession
+    implementation Libraries.media
+    implementation Libraries.picasso
+    implementation Libraries.koinCore
+    implementation Libraries.koinAndroid
     testImplementation TestLibraries.rules
     testImplementation TestLibraries.kluent
     testImplementation TestLibraries.junit

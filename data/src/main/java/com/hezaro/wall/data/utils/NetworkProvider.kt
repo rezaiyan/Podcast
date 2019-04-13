@@ -1,8 +1,8 @@
 package com.hezaro.wall.data.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.remote.ApiService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Cache
@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 fun ModuleDefinition.provideRetrofit(isDebug: Boolean): ApiService {
     return Retrofit.Builder()
-        .baseUrl("https://api.foursquare.com")
+        .baseUrl("http://wall.hezaro.com")
         .client(provideHttpClient(isDebug))
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
@@ -26,12 +26,13 @@ fun ModuleDefinition.provideRetrofit(isDebug: Boolean): ApiService {
 
 fun ModuleDefinition.provideHttpClient(isDebug: Boolean): OkHttpClient {
 
-    val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
     val clientBuilder = OkHttpClient.Builder()
         .cache(provideCache())
         .addNetworkInterceptor(networkCacheProvider())
         .addInterceptor(offlineCacheProvider())
+        .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
     if (isDebug) {
+        val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         clientBuilder.addInterceptor(httpLoggingInterceptor)
     }
@@ -42,6 +43,17 @@ fun ModuleDefinition.provideCache(): Cache {
     val cacheSize = 10 * 1024 * 1024
     val fileCache = java.io.File(androidContext().cacheDir, "responses")
     return okhttp3.Cache(fileCache, cacheSize.toLong())
+}
+
+fun ModuleDefinition.setHeader(key: String, value: String): Interceptor {
+    return Interceptor {
+        var request = it.request()
+
+        request = request.newBuilder()
+            .header(key, value)
+            .build()
+        it.proceed(request)
+    }
 }
 
 fun ModuleDefinition.offlineCacheProvider(): Interceptor {

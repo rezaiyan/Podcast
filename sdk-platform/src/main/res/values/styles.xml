@@ -10,7 +10,8 @@
 
     <style name="BaseToolbarTheme">
         <item name="android:textColorPrimary">@color/colorTextSecondary</item>
-        <item name="android:textColorSecondary">@color/colorTextPrimary</item>
+        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:background">@color/colorAccent</item>
     </style>
 
     <style name="CustomTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

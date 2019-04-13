@@ -26,8 +26,16 @@ android {
 }
 
 dependencies {
+    implementation project(Modules.domain)
+    implementation project(Modules.sdkPlatform)
+    implementation project(Modules.sdkBase)
     implementation Libraries.kotlin
     implementation Libraries.ktx
+    implementation Libraries.koinCore
+    implementation Libraries.koinAndroid
+    implementation Libraries.koinViewModel
+    implementation Libraries.coroutinesAndroid
+    implementation Libraries.picasso
     implementation SupportLibraries.appcompat
     implementation SupportLibraries.design
     implementation SupportLibraries.constraintLayout

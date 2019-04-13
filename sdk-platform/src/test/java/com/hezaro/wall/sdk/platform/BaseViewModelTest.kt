@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.test.AndroidTest
 import org.amshove.kluent.shouldBeInstanceOf
-import org.junit.Test
-
-
+import org.junit.*
 
 class BaseViewModelTest : AndroidTest() {
 
@@ -26,6 +24,6 @@ class BaseViewModelTest : AndroidTest() {
     }
 
     private class MyViewModel : BaseViewModel() {
-        fun handleError(failure: Failure) = handleFailure(failure)
+        fun handleError(failure: Failure) = onFailure(failure)
     }
 }

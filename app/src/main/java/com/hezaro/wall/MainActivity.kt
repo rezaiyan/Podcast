@@ -1,5 +1,8 @@
 package com.hezaro.wall
 
-import androidx.appcompat.app.AppCompatActivity
+import com.hezaro.wall.feature.explore.ExploreFragment
+import com.hezaro.wall.sdk.platform.BaseActivity
 
-class MainActivity : AppCompatActivity()
+class MainActivity : BaseActivity() {
+    override fun fragment() = ExploreFragment()
+}

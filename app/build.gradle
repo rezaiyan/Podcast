@@ -31,6 +31,7 @@ dependencies {
     implementation project(Modules.sdkBase)
     implementation Libraries.kotlin
     implementation Libraries.ktx
+    implementation Libraries.timber
     implementation Libraries.koinCore
     implementation Libraries.koinAndroid
     implementation Libraries.koinViewModel

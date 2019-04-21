@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">دیوار پادکست</string>
+    <string name="server_client_id">16201877371-0gt1lhne8ksce8fo7lfgkkj18q89coo7.apps.googleusercontent.com</string>
+
+    <!-- Notificaiton Channel -->
+    <string name="notification_channel">Now Playing</string>
+    <string name="notification_channel_description">Shows what music is currently playing in UAMP</string>
+
+    <!-- Notification actions -->
+    <string name="notification_skip_to_previous">Skip to previous track</string>
+    <string name="notification_skip_to_next">Skip to next track</string>
+    <string name="notification_play">Play</string>
+    <string name="notification_pause">Pause</string>
+    <string name="pref_key_skip_backward">pref_key_skip_backward</string>
+    <string name="pref_key_skip_forward">pref_key_skip_forward</string>
 </resources>

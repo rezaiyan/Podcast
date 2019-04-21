@@ -1,7 +1,7 @@
 object App {
     val id = "com.hezaro.wall"
     val compileSdk = 28
-    val minSdk = 19
+    val minSdk = 21
     val minSdkTv = 21
     val targetSdk = 28
     val versionCode = 1
@@ -68,16 +68,19 @@ object Versions {
     val mockitoInline = "2.8.9"
     val robolectric_version = "3.8"
     val kluent_version = "1.14"
+    val glide = "4.8.0"
 
     val javaxInject_version = "1"
     val javaxAnnotations_version = "1.0"
 
     val picasso = "2.71828"
 
-    val firebase = "16.0.1"
+    val firebase = "16.0.7"
+    val firebaseMessaging = "17.6.0"
     val crashlytics = "2.9.9"
 
     val exoPlayer = "2.9.6"
+    val playService = "16.0.1"
 }
 
 object Libraries {
@@ -120,7 +123,10 @@ object Libraries {
     val picasso = "com.squareup.picasso:picasso:${Versions.picasso}"
 
     val firebaseCore = "com.google.firebase:firebase-core:${Versions.firebase}"
+    val firebaseMessaging = "com.google.firebase:firebase-messaging:${Versions.firebaseMessaging}"
     val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
+
+    val playServiceAuth = "com.google.android.gms:play-services-auth:${Versions.playService}"
 
     val exoPlayerCore = "com.google.android.exoplayer:exoplayer-core:${Versions.exoPlayer}"
     val exoPlayerDash = "com.google.android.exoplayer:exoplayer-dash:${Versions.exoPlayer}"
@@ -129,12 +135,16 @@ object Libraries {
     val exoPlayerIma = "com.google.android.exoplayer:exoplayer-ima:${Versions.exoPlayer}"
     val exoPlayerExMediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoPlayer}"
     val exoPlayersmoothstreaming = "com.google.android.exoplayer:exoplayer-smoothstreaming:${Versions.exoPlayer}"
+
+    val glide =  "com.github.bumptech.glide:glide:${Versions.glide}"
+    val glideCompiler =  "com.github.bumptech.glide:compiler:${Versions.glide}"
 }
 
 object SupportLibraries {
     val archComponents = "androidx.lifecycle:lifecycle-extensions:${Versions.archComponents_version}"
 
     val leanback = "androidx.leanback:leanback:${Versions.appcompat}"
+    val annotation = "androidx.annotation:annotation:${Versions.appcompat}"
     val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraint}"
     val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
     val design = "com.google.android.material:material:${Versions.design}"

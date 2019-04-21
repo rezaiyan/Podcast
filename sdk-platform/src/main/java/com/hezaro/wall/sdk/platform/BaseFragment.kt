@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_layout.*
 
 /**
  * Base Fragment class with helper methods for handling views and back button events.
@@ -21,13 +20,11 @@ abstract class BaseFragment : Fragment() {
 
     open fun onBackPressed() {}
 
-    internal fun firstTimeCreated(savedInstanceState: Bundle?) = savedInstanceState == null
-
     fun showProgress() = progressStatus(View.VISIBLE)
 
     fun hideProgress() = progressStatus(View.GONE)
 
     private fun progressStatus(viewStatus: Int) {
-        with(activity) { if (this is BaseActivity) this.progress.visibility = viewStatus }
+        with(activity) { if (this is BaseActivity) progressBar().visibility = viewStatus }
     }
 }

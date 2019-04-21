@@ -4,5 +4,7 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorTextPrimary">#D50000</color>
     <color name="colorTextSecondary">#C62828</color>
+    <color name="ic_controller">#FF000000</color>
+    <color name="black">#000000</color>
 
 </resources>

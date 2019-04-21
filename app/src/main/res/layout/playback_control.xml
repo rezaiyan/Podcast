@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:layoutDirection="ltr"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@id/exo_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/margin_4"
+            android:includeFontPadding="false"
+            android:paddingEnd="@dimen/margin_4"
+            android:paddingStart="@dimen/margin_4"
+            android:textColor="@color/ic_controller"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/exo_progress"
+            app:layout_constraintTop_toBottomOf="@id/exo_progress"
+            tools:text="00:00" />
+
+        <com.google.android.exoplayer2.ui.DefaultTimeBar
+            android:id="@id/exo_progress"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="50dp"
+            app:buffered_color="#7C6363"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:played_color="#D15252"
+            app:scrubber_color="#DD2C00"
+            app:unplayed_color="#A89D9D" />
+
+        <TextView
+            android:id="@id/exo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="@dimen/margin_4"
+            android:includeFontPadding="false"
+            android:paddingEnd="@dimen/margin_4"
+            android:paddingStart="@dimen/margin_4"
+            android:textColor="@color/ic_controller"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/exo_progress"
+            app:layout_constraintTop_toBottomOf="@id/exo_progress"
+            tools:text="00:00" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingTop="4dp">
+
+        <ImageButton
+            android:id="@id/exo_prev"
+            style="@style/ExoMediaButton.Previous"
+            android:tint="@color/ic_controller" />
+
+        <ImageButton
+            android:id="@id/exo_rew"
+            style="@style/ExoMediaButton.Rewind"
+            android:src="@drawable/ic_replay_10"
+            android:tint="@color/ic_controller" />
+
+        <ImageButton
+            android:id="@id/exo_play"
+            style="@style/ExoMediaButton.Play"
+            android:tint="@color/ic_controller" />
+
+        <ImageButton
+            android:id="@id/exo_pause"
+            style="@style/ExoMediaButton.Pause"
+            android:tint="@color/ic_controller" />
+
+        <ImageButton
+            android:id="@id/exo_ffwd"
+            style="@style/ExoMediaButton.FastForward"
+            android:src="@drawable/ic_forward_30"
+            android:tint="@color/ic_controller" />
+
+        <ImageButton
+            android:id="@id/exo_next"
+            style="@style/ExoMediaButton.Next"
+            android:tint="@color/ic_controller" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

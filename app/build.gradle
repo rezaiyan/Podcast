@@ -35,6 +35,7 @@ dependencies {
     implementation Libraries.koinCore
     implementation Libraries.koinAndroid
     implementation Libraries.koinViewModel
+    implementation Libraries.coroutinesCore
     implementation Libraries.coroutinesAndroid
     implementation Libraries.picasso
     implementation SupportLibraries.appcompat
@@ -42,8 +43,10 @@ dependencies {
     implementation SupportLibraries.constraintLayout
     implementation Libraries.firebaseCore
     implementation Libraries.crashlytics
+    implementation Libraries.playServiceAuth
+    implementation Libraries.firebaseMessaging
+    implementation Libraries.exoPlayerCore
+    implementation Libraries.exoPlayerUi
 }
+
 apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
-}

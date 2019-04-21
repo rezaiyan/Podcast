@@ -12,7 +12,6 @@ class ExploreViewModel(private val repository: ExploreRepository) :
     BaseViewModel() {
 
     var episodes: MutableLiveData<MutableList<Episode>> = MutableLiveData()
-
     fun episodes() {
         launch(job) {
             repository.explore().either(::onFailure, ::onExplore)

@@ -1,6 +1,4 @@
 <code_scheme name="grandcentrix">
-  <option name="FIELD_NAME_PREFIX" value="m" />
-  <option name="STATIC_FIELD_NAME_PREFIX" value="m" />
   <option name="GENERATE_FINAL_LOCALS" value="true" />
   <option name="GENERATE_FINAL_PARAMETERS" value="true" />
   <option name="INSERT_INNER_CLASS_IMPORTS" value="true" />
@@ -62,8 +60,6 @@
     <option name="HTML_SPACE_INSIDE_EMPTY_TAG" value="true" />
   </HTMLCodeStyleSettings>
   <JavaCodeStyleSettings>
-    <option name="FIELD_NAME_PREFIX" value="m" />
-    <option name="STATIC_FIELD_NAME_PREFIX" value="m" />
     <option name="GENERATE_FINAL_LOCALS" value="true" />
     <option name="GENERATE_FINAL_PARAMETERS" value="true" />
     <option name="INSERT_INNER_CLASS_IMPORTS" value="true" />

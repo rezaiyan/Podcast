@@ -1,5 +1,6 @@
 package com.hezaro.wall.data.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import com.hezaro.wall.data.BuildConfig
@@ -13,7 +14,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.context.ModuleDefinition
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
+import java.util.concurrent.TimeUnit.SECONDS
 
 fun ModuleDefinition.provideRetrofit(isDebug: Boolean): ApiService {
     return Retrofit.Builder()
@@ -30,6 +31,8 @@ fun ModuleDefinition.provideHttpClient(isDebug: Boolean): OkHttpClient {
         .cache(provideCache())
         .addNetworkInterceptor(networkCacheProvider())
         .addInterceptor(offlineCacheProvider())
+        .readTimeout(5, SECONDS)
+        .connectTimeout(10, SECONDS)
         .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
     if (isDebug) {
         val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
@@ -91,6 +94,7 @@ fun ModuleDefinition.networkCacheProvider(): Interceptor {
     }
 }
 
+@SuppressLint("MissingPermission")
 fun ModuleDefinition.isOnline(): Boolean {
     val cm = androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
     val netInfo = cm!!.activeNetworkInfo

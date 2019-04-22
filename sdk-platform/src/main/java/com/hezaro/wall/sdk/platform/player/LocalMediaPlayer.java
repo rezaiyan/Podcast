@@ -109,22 +109,22 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
     }
 
     @Override
+    public void onTracksChanged(final TrackGroupArray trackGroups, final TrackSelectionArray trackSelections) {
+        episode = playlist.getItem(exoPlayer.getCurrentWindowIndex());
+        getListenerReference().notifyEpisode(episode);
+    }
+
+    @Override
     public void selectTrack(final Episode episode) {
         this.episode = episode;
         if (playlist != null) {
             int currentIndex = playlist.getIndex(episode);
-            if (currentIndex >= 0) {
+            if (currentIndex >= 0 && exoPlayer.getCurrentWindowIndex() != currentIndex) {
                 exoPlayer.seekTo(currentIndex, 0);
                 exoPlayer.setPlayWhenReady(true);
             }
         }
 
-    }
-
-    @Override
-    public void onTracksChanged(final TrackGroupArray trackGroups, final TrackSelectionArray trackSelections) {
-         episode = playlist.getItem(exoPlayer.getCurrentWindowIndex());
-        getListenerReference().notifyEpisode(episode);
     }
 
     @Override

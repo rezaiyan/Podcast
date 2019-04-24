@@ -9,8 +9,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.ACTION_STOP
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
@@ -47,10 +49,12 @@ class PlayerNotificationHelper(
         notificationManager = PlayerNotificationManager.createWithNotificationChannel(
             context, CHANNEL_ID, CHANNEL_NAME, NOTIFICATION_ID, this
         ).apply {
+            setStopAction(ACTION_STOP)
             setNotificationListener(this@PlayerNotificationHelper)
             setMediaSessionToken(sessionToken)
             setFastForwardIncrementMs(fastForwardIncrementMs)
             setRewindIncrementMs(rewindIncrementMs)
+            setPriority(NotificationCompat.PRIORITY_DEFAULT)
         }
 
     }

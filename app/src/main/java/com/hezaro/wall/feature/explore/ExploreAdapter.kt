@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_explore.view.podcaster
 import kotlinx.android.synthetic.main.item_explore.view.title
 
 class ExploreAdapter(
-    private val episodes: MutableList<Episode> = mutableListOf(),
+    val episodes: MutableList<Episode> = mutableListOf(),
     private val onItemClick: (Episode, Int) -> Unit
 ) :
     RecyclerView.Adapter<ExploreAdapter.ItemHolder>() {

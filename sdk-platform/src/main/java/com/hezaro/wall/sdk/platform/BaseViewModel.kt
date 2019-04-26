@@ -17,18 +17,25 @@ import kotlin.coroutines.CoroutineContext
  * @see ViewModel
  * @see Failure
  */
-abstract class BaseViewModel : ViewModel(), CoroutineScope {
+abstract class BaseViewModel<T : Any> : ViewModel(), CoroutineScope {
 
     var failure: MutableLiveData<Failure> = MutableLiveData()
+    var result: MutableLiveData<T> = MutableLiveData()
     var isExecute = false
-
     var job = Job()
+
     override val coroutineContext: CoroutineContext = job + Dispatchers.IO
+
     public override fun onCleared() {
         super.onCleared()
         isExecute = false
         job.cancel()
         job = Job()
+    }
+
+    protected fun onSuccess(it: T) {
+        isExecute = false
+        launch(Dispatchers.Main) { result.value = it }
     }
 
     protected fun onFailure(it: Failure) {
@@ -43,5 +50,4 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     fun <L : LiveData<Failure>> LifecycleOwner.failure(liveData: L, body: (Failure) -> Unit) =
         liveData.observe(this, Observer(body))
-
 }

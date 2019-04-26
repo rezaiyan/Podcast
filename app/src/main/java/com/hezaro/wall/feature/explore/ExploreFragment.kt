@@ -42,7 +42,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        vm.episodes.value?.let {
+        vm.result.value?.let {
             outState.putParcelable(SAVE_INSTANCE_EPISODES, Playlist(ArrayList(it)))
 
         }
@@ -53,7 +53,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
             it.getParcelable<Playlist>(SAVE_INSTANCE_EPISODES)?.let { playlist ->
-                vm.episodes.value = playlist.getItems()
+                vm.result.value = playlist.getItems()
             }
         }
     }
@@ -68,21 +68,37 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         exploreList.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = exploreAdapter
+            loadingStatus.observeForever { isLoading ->
+                if (isLoading) {
+                    showProgress()
+                } else
+                    hideProgress()
+            }
+            setOnLoadMoreListener {
+                vm.explore(page = page)
+                setLoading(true)
+            }
         }
 
         refreshLayout.setOnRefreshListener {
             with(vm) {
-                if (isExecute)
-                    explore()
+                if (!isExecute) {
+                    explore(page = 1)
+                    exploreList.page = 2
+                    exploreList.setLoading(true)
+                    exploreAdapter.episodes.clear()
+                }
             }
             refreshLayout.isRefreshing = false
         }
 
         with(vm) {
-            observe(episodes, ::onSuccess)
+            observe(result, ::onSuccess)
             failure(failure, ::onFailure)
-            explore()
-        }.also { showProgress() }
+            explore(exploreList.page)
+            exploreList.page++
+            exploreList.setLoading(true)
+        }
 
         search.setOnClickListener {
             activity.search()
@@ -107,15 +123,14 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 
     private fun onSuccess(episodes: MutableList<Episode>) {
-        hideProgress()
+        exploreList.setLoading(false)
         val nonFilterEpisodes = episodes.filter { !it.source.contains("live.bbc.co.uk") }.toMutableList()
         val playlist = Playlist(ArrayList(nonFilterEpisodes))
         exploreAdapter.addEpisode(playlist.getItems())
-        MediaPlayerServiceHelper.playPlaylist(requireContext(),playlist)
+        MediaPlayerServiceHelper.playPlaylist(requireContext(), playlist)
     }
 
     private fun onFailure(failure: Failure) {
-        hideProgress()
     }
 }
 

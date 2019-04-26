@@ -56,7 +56,6 @@ class PlayerNotificationHelper(
             setRewindIncrementMs(rewindIncrementMs)
             setPriority(NotificationCompat.PRIORITY_DEFAULT)
         }
-
     }
 
     override fun onNotificationStarted(notificationId: Int, notification: Notification) {
@@ -96,17 +95,22 @@ class PlayerNotificationHelper(
     }
 
     override fun onShow(mediaPlayer: MediaPlayer) {
-        notificationManager.setPlayer(mediaPlayer.player)
+        if (::notificationManager.isInitialized)
+            notificationManager.setPlayer(mediaPlayer.player)
     }
 
     override fun onHide() {
-        notificationManager.setPlayer(null)
+        if (::notificationManager.isInitialized)
+            notificationManager.setPlayer(null)
     }
 
     override fun onGoing(onGoing: Boolean) {
-        notificationManager.setOngoing(onGoing)
+        if (::notificationManager.isInitialized)
+            notificationManager.setOngoing(onGoing)
     }
+
     override fun onDestroy() {
-        notificationManager.setPlayer(null)
+        if (::notificationManager.isInitialized)
+            notificationManager.setPlayer(null)
     }
 }

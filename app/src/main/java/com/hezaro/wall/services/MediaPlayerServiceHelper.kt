@@ -4,6 +4,14 @@ import android.content.Context
 import android.content.Intent
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
+import com.hezaro.wall.utils.ACTION_PLAY_EPISODE
+import com.hezaro.wall.utils.ACTION_PLAY_PLAYLIST
+import com.hezaro.wall.utils.ACTION_SEEK_BACKWARD
+import com.hezaro.wall.utils.ACTION_SEEK_FORWARD
+import com.hezaro.wall.utils.ACTION_SET_SPEED
+import com.hezaro.wall.utils.PARAM_EPISODE
+import com.hezaro.wall.utils.PARAM_PLAYBACK_SPEED
+import com.hezaro.wall.utils.PARAM_PLAYLIST
 
 class MediaPlayerServiceHelper{
 

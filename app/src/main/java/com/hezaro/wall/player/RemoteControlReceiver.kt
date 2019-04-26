@@ -1,14 +1,14 @@
-package com.hezaro.wall.receivers
+package com.hezaro.wall.player
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.view.KeyEvent
-import com.hezaro.wall.services.ACTION_PAUSE
-import com.hezaro.wall.services.ACTION_RESUME_PLAYBACK
-import com.hezaro.wall.services.ACTION_SEEK_BACKWARD
-import com.hezaro.wall.services.ACTION_SEEK_FORWARD
 import com.hezaro.wall.services.MediaPlayerServiceHelper.Companion.sendIntent
+import com.hezaro.wall.utils.ACTION_PAUSE
+import com.hezaro.wall.utils.ACTION_RESUME_PLAYBACK
+import com.hezaro.wall.utils.ACTION_SEEK_BACKWARD
+import com.hezaro.wall.utils.ACTION_SEEK_FORWARD
 
 class RemoteControlReceiver : BroadcastReceiver() {
 

@@ -28,13 +28,14 @@
             android:name=".services.MediaPlayerService"
             android:exported="false" />
         <service
-            android:name=".services.WallFirebaseMessagingService"
+            android:name=".notification.WallFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <receiver android:name=".receivers.RemoteControlReceiver">
+
+        <receiver android:name=".player.RemoteControlReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

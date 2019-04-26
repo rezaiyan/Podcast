@@ -1,4 +1,4 @@
-package com.hezaro.wall.services
+package com.hezaro.wall.player
 
 import android.content.Context
 import android.content.Intent
@@ -14,7 +14,6 @@ import com.hezaro.wall.utils.ACTION_EPISODE
 import com.hezaro.wall.utils.ACTION_EPISODE_GET
 import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
-import com.hezaro.wall.utils.NotificationHelper
 import timber.log.Timber
 
 class MediaPlayerListenerImpl(
@@ -34,21 +33,22 @@ class MediaPlayerListenerImpl(
         broadcastStatus(state)
         onStateChanged = state
         when (state) {
-            MediaPlayerState.STATE_CONNECTING -> {
+            MediaPlayerState.STATE_PAUSED -> {
+                updateEpisode(state)
+                notificationHelper.onGoing(true)
+            }
+            MediaPlayerState.STATE_PLAYING -> {
+                if (::mediaPlayer.isInitialized) {
+                    notificationHelper.onGoing(false)
+                    notificationHelper.onShow(mediaPlayer)
+                    updateEpisode(state)
+                }
             }
             MediaPlayerState.STATE_ENDED -> {
                 currentEpisode.value!!.status = Status.PLAYED
                 mediaPlayer.next()
             }
             MediaPlayerState.STATE_IDLE -> updateEpisode(state)
-            STATE_PLAYING -> {
-                if (::mediaPlayer.isInitialized) {
-
-                    notificationHelper.onShow(mediaPlayer)
-                    updateEpisode(state)
-                }
-            }
-            MediaPlayerState.STATE_PAUSED -> updateEpisode(state)
         }
     }
 

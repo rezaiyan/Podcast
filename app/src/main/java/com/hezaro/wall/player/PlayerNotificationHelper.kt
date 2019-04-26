@@ -1,4 +1,4 @@
-package com.hezaro.wall.utils
+package com.hezaro.wall.player
 
 import android.app.Activity
 import android.app.Notification
@@ -12,7 +12,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.ACTION_STOP
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
@@ -49,9 +48,10 @@ class PlayerNotificationHelper(
         notificationManager = PlayerNotificationManager.createWithNotificationChannel(
             context, CHANNEL_ID, CHANNEL_NAME, NOTIFICATION_ID, this
         ).apply {
-            setStopAction(ACTION_STOP)
+            //            setStopAction(ACTION_STOP)
             setNotificationListener(this@PlayerNotificationHelper)
             setMediaSessionToken(sessionToken)
+            onGoing(false)
             setFastForwardIncrementMs(fastForwardIncrementMs)
             setRewindIncrementMs(rewindIncrementMs)
             setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -103,6 +103,9 @@ class PlayerNotificationHelper(
         notificationManager.setPlayer(null)
     }
 
+    override fun onGoing(onGoing: Boolean) {
+        notificationManager.setOngoing(onGoing)
+    }
     override fun onDestroy() {
         notificationManager.setPlayer(null)
     }

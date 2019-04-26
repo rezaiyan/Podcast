@@ -15,7 +15,8 @@ import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.services.MediaPlayerServiceHelper
-import com.hezaro.wall.services.SAVE_INSTANCE_EPISODES
+import com.hezaro.wall.utils.OnLoadMoreListener
+import com.hezaro.wall.utils.SAVE_INSTANCE_EPISODES
 import kotlinx.android.synthetic.main.fragment_explore.exploreList
 import kotlinx.android.synthetic.main.fragment_explore.refreshLayout
 import kotlinx.android.synthetic.main.toolbar.profile
@@ -74,10 +75,12 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
                 } else
                     hideProgress()
             }
-            setOnLoadMoreListener {
-                vm.explore(page = page)
-                setLoading(true)
-            }
+            setOnLoadMoreListener(object : OnLoadMoreListener {
+                override fun onLoadMore() {
+                    vm.explore(page = page)
+                    setLoading(true)
+                }
+            })
         }
 
         refreshLayout.setOnRefreshListener {

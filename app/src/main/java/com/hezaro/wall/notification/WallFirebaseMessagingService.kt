@@ -1,10 +1,10 @@
-package com.hezaro.wall.services
+package com.hezaro.wall.notification
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.hezaro.wall.R
-import com.hezaro.wall.utils.GeneralNotificationHelper
-import com.hezaro.wall.utils.NotificationBody
+import com.hezaro.wall.R.string
+import com.hezaro.wall.player.GeneralNotificationHelper
+import com.hezaro.wall.player.NotificationBody
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -18,7 +18,7 @@ class WallFirebaseMessagingService : FirebaseMessagingService() {
                 GeneralNotificationHelper(baseContext).showMessage(
                     NotificationBody(
                         id = it.messageId ?: "1",
-                        title = notification.title ?: getString(R.string.app_name),
+                        title = notification.title ?: getString(string.app_name),
                         message = notification.body ?: "",
                         bigMessage = getBigMessage(remoteMessage)
                     )

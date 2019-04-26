@@ -1,4 +1,4 @@
-package com.hezaro.wall.services
+package com.hezaro.wall.utils
 
 import android.support.v4.media.session.PlaybackStateCompat
 
@@ -45,3 +45,8 @@ const val PARAM_EPISODE = "episode"
 const val PARAM_SEEK_MS = "seekMs"
 
 const val PARAM_PLAYBACK_SPEED = "playbackSpeed"
+
+const val ACTION_PLAYER = "com.hezaro.wall.player.action"
+const val ACTION_PLAYER_STATUS = "com.hezaro.wall.player.action.status"
+const val ACTION_EPISODE = "com.hezaro.wall.episode.action"
+const val ACTION_EPISODE_GET = "com.hezaro.wall.episode.action.get"

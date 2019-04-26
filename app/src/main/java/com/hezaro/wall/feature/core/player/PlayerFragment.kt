@@ -12,12 +12,12 @@ import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
-import com.hezaro.wall.services.ACTION_PLAY_PAUSE
 import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.ACTION_EPISODE
 import com.hezaro.wall.utils.ACTION_EPISODE_GET
 import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
+import com.hezaro.wall.utils.ACTION_PLAY_PAUSE
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_player.logo
 import kotlinx.android.synthetic.main.fragment_player.miniPlayerLayout

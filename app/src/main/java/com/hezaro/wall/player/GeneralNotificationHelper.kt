@@ -1,4 +1,4 @@
-package com.hezaro.wall.utils
+package com.hezaro.wall.player
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

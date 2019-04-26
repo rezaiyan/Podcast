@@ -1,4 +1,4 @@
-package com.hezaro.wall.services
+package com.hezaro.wall.player
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -18,11 +18,11 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.receivers.RemoteControlReceiver
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
+import com.hezaro.wall.utils.MEDIA_SESSION_ACTIONS
 import com.hezaro.wall.utils.load
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom

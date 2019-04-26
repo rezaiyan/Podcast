@@ -25,8 +25,8 @@ import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.services.MediaPlayerService
-import com.hezaro.wall.services.RC_SIGN_IN
 import com.hezaro.wall.utils.CircleTransform
+import com.hezaro.wall.utils.RC_SIGN_IN
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_layout.progressBar
 import kotlinx.android.synthetic.main.fragment_player.playerView

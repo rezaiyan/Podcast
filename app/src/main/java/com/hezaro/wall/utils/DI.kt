@@ -1,7 +1,6 @@
 package com.hezaro.wall.utils
 
 import android.preference.PreferenceManager
-import com.hezaro.wall.BuildConfig
 import com.hezaro.wall.data.utils.provideRetrofit
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.domain.LoginRepository
@@ -25,5 +24,5 @@ val module: Module = module {
 
     single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
 
-    single { provideRetrofit(BuildConfig.DEBUG) }
+    single { provideRetrofit() }
 }

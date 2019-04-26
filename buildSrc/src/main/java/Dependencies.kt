@@ -61,6 +61,7 @@ object Versions {
     val koin = "1.0.0"
     val gson = "2.8.5"
     val coroutinesAdapter = "0.9.2"
+    val logger = "2.2.0"
 
     val junit = "4.12"
     val mockito = "2.18.3"
@@ -137,6 +138,8 @@ object Libraries {
     val exoPlayerIma = "com.google.android.exoplayer:exoplayer-ima:${Versions.exoPlayer}"
     val exoPlayerExMediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoPlayer}"
     val exoPlayersmoothstreaming = "com.google.android.exoplayer:exoplayer-smoothstreaming:${Versions.exoPlayer}"
+
+    val logger = "com.orhanobut:logger:${Versions.logger}"
 
     val glide =  "com.github.bumptech.glide:glide:${Versions.glide}"
     val glideCompiler =  "com.github.bumptech.glide:compiler:${Versions.glide}"

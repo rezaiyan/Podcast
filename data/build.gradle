@@ -16,6 +16,8 @@ dependencies {
     implementation project(Modules.sdkBase)
     implementation Libraries.retrofit
     implementation Libraries.okhttp
+    implementation Libraries.timber
+    implementation Libraries.logger
     implementation Libraries.loggingInterceptor
     implementation Libraries.moshiConverter
     implementation Libraries.coroutinesAdapter

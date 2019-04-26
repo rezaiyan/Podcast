@@ -85,6 +85,7 @@
             app:layout_constraintStart_toEndOf="@+id/playPause"
             app:layout_constraintTop_toTopOf="@id/logo"
             app:layout_constraintVertical_bias="0.25"
+            android:fontFamily="@font/trafic"
             tools:text="@tools:sample/lorem" />
 
         <TextView
@@ -96,6 +97,7 @@
             android:layout_marginEnd="@dimen/margin_8"
             android:layout_marginStart="8dp"
             android:ellipsize="start"
+            android:fontFamily="@font/trafic"
             android:gravity="right"
             android:singleLine="true"
             android:textColor="@color/black"

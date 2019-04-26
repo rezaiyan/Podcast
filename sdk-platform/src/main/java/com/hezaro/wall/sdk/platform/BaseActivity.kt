@@ -1,10 +1,14 @@
 package com.hezaro.wall.sdk.platform
 
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.transition.Slide
+import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.inTransaction
+import com.hezaro.wall.sdk.platform.ext.show
 
 /**
  * Base Activity class with helper methods for handling fragment transactions and back button
@@ -20,16 +24,30 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setSupportActionBar(toolbar())
-        addFragment(savedInstanceState)
+        addFragment(fragment())
     }
 
-    override fun onBackPressed() {
-        (supportFragmentManager.findFragmentById(fragmentContainer()) as BaseFragment).onBackPressed()
-        super.onBackPressed()
+    fun showProgress() {
+        progressBar().show()
     }
 
-    private fun addFragment(savedInstanceState: Bundle?) =
-        savedInstanceState ?: supportFragmentManager.inTransaction { add(fragmentContainer(), fragment()) }
+    fun hideProgress() {
+        progressBar().hide()
+    }
+
+    fun addFragment(fragment: BaseFragment) {
+        var gravity = Gravity.END
+        if (fragment.tag() == "SearchFragment")
+            gravity = Gravity.START
+        fragment.enterTransition = Slide(gravity)
+        fragment.exitTransition = Slide(gravity)
+
+        with(supportFragmentManager) {
+            if (fragments.indexOf(findFragmentByTag(fragment.tag())) == -1) {
+                inTransaction { add(fragmentContainer(), fragment, fragment.tag()) }
+            }
+        }
+    }
 
     abstract fun fragment(): BaseFragment
 }

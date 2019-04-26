@@ -6,48 +6,44 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     android:fitsSystemWindows="true"
-    app:elevation="0dp">
+    app:elevation="4dp">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@android:color/transparent"
+        android:background="@color/black"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
         app:layout_scrollFlags="scroll|enterAlways">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:layout_marginStart="@dimen/margin_8"
             android:background="@android:color/transparent"
-            android:clipToPadding="false"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:id="@+id/search"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_alignParentStart="true"
-                android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@+id/profileLayout"
-                android:background="@drawable/bg_search" />
+                android:src="@drawable/ic_search" />
 
-            <FrameLayout
-                android:id="@+id/profileLayout"
-                android:layout_width="50dp"
-                android:layout_height="42dp"
+            <ImageView
+                android:id="@+id/profile"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/bg_account">
-
-                <ImageView
-                    android:id="@+id/profile"
-                    android:layout_width="35dp"
-                    android:layout_gravity="center"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_account" />
-            </FrameLayout>
+                android:layout_gravity="center"
+                android:src="@drawable/ic_account" />
 
         </RelativeLayout>
 

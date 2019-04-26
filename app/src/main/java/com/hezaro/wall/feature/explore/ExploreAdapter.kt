@@ -39,13 +39,11 @@ class ExploreAdapter(
 
                 episode.run {
 
-                    Picasso.get().load(this.cover).into(it.logo,object:Callback{
+                    Picasso.get().load(this.cover).into(it.logo, object : Callback {
                         override fun onSuccess() {
-
                         }
 
                         override fun onError(e: Exception?) {
-
                         }
                     })
                     it.title.text = this.title

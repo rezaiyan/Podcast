@@ -67,8 +67,7 @@ class MediaPlayerService : Service() {
         mediaSessionHelper = MediaSessionHelper(context, mediaPlayer!!)
         notificationHelper.initNotificationHelper(mediaSessionHelper.sessionToken)
         headsetReceiver = HeadsetReceiver(mediaPlayer!!)
-
-
+        headrestPlugged()
     }
 
     override fun onDestroy() {
@@ -172,7 +171,6 @@ class MediaPlayerService : Service() {
     private fun makePlaylist(playlist: Playlist) {
         currentEpisode.postValue(playlist.getFirst())
         mediaPlayer!!.concatPlaylist(playlist)
-        headrestPlugged()
     }
 
     private fun endPlayback(cancelNotification: Boolean) {

@@ -38,6 +38,7 @@ dependencies {
     implementation Libraries.coroutinesCore
     implementation Libraries.coroutinesAndroid
     implementation Libraries.picasso
+    implementation Libraries.okhttp
     implementation SupportLibraries.appcompat
     implementation SupportLibraries.design
     implementation SupportLibraries.constraintLayout

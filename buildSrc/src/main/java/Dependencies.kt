@@ -44,6 +44,7 @@ object Versions {
     val cardview = "1.0.0"
     val recyclerview = "1.0.0"
     val androidx = "1.0.0-rc01"
+    val paging = "2.1.0-rc01"
 
     val ktx = "1.0.1"
 
@@ -88,6 +89,7 @@ object Libraries {
 
     val media = "androidx.media:media:${Versions.androidx}"
     val ktx = "androidx.core:core-ktx:${Versions.ktx}"
+    val paging = "androidx.paging:paging-runtime-ktx:${Versions.paging}"
 
     val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}"
     val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinCoroutines}"

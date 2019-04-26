@@ -6,6 +6,8 @@ const val DEFAULT_PLAYBACK_SPEED = 1.0f
 
 const val MS_TO_REVERSE_ON_PAUSE = 0
 
+const val SAVE_INSTANCE_EPISODES = "com.hezaro.wall.explore"
+const val RC_SIGN_IN = 991
 const val MEDIA_SESSION_ACTIONS = PlaybackStateCompat.ACTION_FAST_FORWARD or
         PlaybackStateCompat.ACTION_REWIND or
         PlaybackStateCompat.ACTION_SEEK_TO or

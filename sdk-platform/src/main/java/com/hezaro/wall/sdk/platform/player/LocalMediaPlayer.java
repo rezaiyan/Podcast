@@ -54,7 +54,9 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
 
     private Playlist playlist;
 
-    private SimpleCache cache;
+    private static SimpleCache cache;
+
+    private final ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
 
     public LocalMediaPlayer(WeakReference<MediaPlayerListener> mediaPlayerListener, Context context) {
         super(mediaPlayerListener);
@@ -99,13 +101,25 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
 
     @Override
     public void concatPlaylist(@NotNull Playlist playlist) {
-        this.playlist = playlist;
-        final ConcatenatingMediaSource concatenatingMediaSource = new ConcatenatingMediaSource();
-        for (Episode episode : playlist.getItems()) {
-            concatenatingMediaSource.addMediaSource(buildMediaSource(episode));
+        if (this.playlist == null) {
+            this.playlist = playlist;
+            for (int i = 0; i < this.playlist.getItems().size(); i++) {
+                concatenatingMediaSource.addMediaSource(buildMediaSource(playlist.getItem(i)));
+            }
+
+        } else {
+            for (int i = 0; i < playlist.getItems().size(); i++) {
+                Episode it = playlist.getItem(i);
+                if (this.playlist.getIndex(it) == -1) {
+                    this.playlist.getItems().add(it);
+                    concatenatingMediaSource.addMediaSource(buildMediaSource(it));
+                }
+            }
         }
-        exoPlayer.prepare(concatenatingMediaSource, true, false);
-        exoPlayer.setPlayWhenReady(false);
+
+        boolean beReset = exoPlayer.getCurrentWindowIndex() > 0 || isPlaying();
+        exoPlayer.prepare(concatenatingMediaSource, !beReset, !beReset);
+        exoPlayer.setPlayWhenReady(beReset);
     }
 
     @Override
@@ -119,7 +133,7 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
         this.episode = episode;
         if (playlist != null) {
             int currentIndex = playlist.getIndex(episode);
-            if (currentIndex >= 0 && exoPlayer.getCurrentWindowIndex() != currentIndex) {
+            if (((currentIndex > 0) && (exoPlayer.getCurrentWindowIndex() != currentIndex)) || currentIndex == 0) {
                 exoPlayer.seekTo(currentIndex, 0);
                 exoPlayer.setPlayWhenReady(true);
             }

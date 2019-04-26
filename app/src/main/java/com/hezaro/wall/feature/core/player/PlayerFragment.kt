@@ -31,25 +31,16 @@ import kotlinx.android.synthetic.main.playback_control.exo_rew
 
 class PlayerFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_player
+    override fun tag(): String = this::class.java.simpleName
 
     private var isBuffering = false
     private var isExpanded = false
-
-    fun showMinimize(beMinimize: Boolean) {
-
-        if (beMinimize) {
-            minimize.visibility = View.VISIBLE
-            playPause.visibility = View.INVISIBLE
-        } else {
-            playPause.visibility = View.VISIBLE
-            minimize.visibility = View.INVISIBLE
-        }
-    }
 
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
 
     fun setBehavior(playerSheetBehavior: BottomSheetBehavior<View>) {
         this.playerSheetBehavior = playerSheetBehavior
+        this.playerSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         playerSheetBehavior.setBottomSheetCallback(bottomSheetCallback)
     }
 
@@ -85,7 +76,7 @@ class PlayerFragment : BaseFragment() {
             when (playerSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
                     if (!isBuffering)
-                        playerSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
                 }
                 BottomSheetBehavior.STATE_EXPANDED -> {
                     playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -137,10 +128,35 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
+    fun expand() {
+        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    fun isExpand() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED
+
+    fun collapse() {
+        playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
     fun openMiniPlayer(episode: Episode) {
         title.text = episode.title
         subtitle.text = episode.podcast?.creator
         Picasso.get().load(episode.cover).into(logo)
+    }
+
+    private fun showMinimize(beMinimize: Boolean) {
+
+        if (beMinimize) {
+            minimize.visibility = View.VISIBLE
+            playPause.visibility = View.INVISIBLE
+        } else {
+            playPause.visibility = View.VISIBLE
+            minimize.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun onBackPressed() {
+        collapse()
     }
 
     override fun onStart() {
@@ -154,4 +170,6 @@ class PlayerFragment : BaseFragment() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
     }
+
+    fun ishidden() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_HIDDEN
 }

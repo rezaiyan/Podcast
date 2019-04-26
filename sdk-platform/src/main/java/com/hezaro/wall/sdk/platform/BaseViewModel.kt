@@ -20,17 +20,20 @@ import kotlin.coroutines.CoroutineContext
 abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     var failure: MutableLiveData<Failure> = MutableLiveData()
+    var isExecute = false
 
     var job = Job()
     override val coroutineContext: CoroutineContext = job + Dispatchers.IO
     public override fun onCleared() {
         super.onCleared()
+        isExecute = false
         job.cancel()
         job = Job()
     }
 
     protected fun onFailure(it: Failure) {
         launch(Dispatchers.Main) {
+            isExecute = false
             failure.value = it
         }
     }

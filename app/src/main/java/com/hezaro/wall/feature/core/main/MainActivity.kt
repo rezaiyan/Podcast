@@ -18,6 +18,7 @@ import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.core.player.PlayerFragment
+import com.hezaro.wall.feature.episode.EpisodeFragment
 import com.hezaro.wall.feature.explore.ExploreFragment
 import com.hezaro.wall.feature.profile.ProfileFragment
 import com.hezaro.wall.feature.search.SearchFragment
@@ -90,6 +91,11 @@ class MainActivity : BaseActivity() {
 
     fun search() {
         playerFragment.collapse(); addFragment(SearchFragment())
+    }
+
+    fun episode() {
+        val fragment = EpisodeFragment()
+        playerFragment.collapse(); addFragment(fragment)
     }
 
     fun profile() {

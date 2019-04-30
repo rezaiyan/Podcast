@@ -42,6 +42,11 @@ abstract class BaseActivity : AppCompatActivity() {
         fragment.enterTransition = Slide(gravity)
         fragment.exitTransition = Slide(gravity)
 
+        if (fragment.tag() == "EpisodeFragment") {
+            fragment.enterTransition = Slide(Gravity.BOTTOM)
+            fragment.exitTransition = Slide(Gravity.TOP)
+        }
+
         with(supportFragmentManager) {
             if (fragments.indexOf(findFragmentByTag(fragment.tag())) == -1) {
                 inTransaction { add(fragmentContainer(), fragment, fragment.tag()) }

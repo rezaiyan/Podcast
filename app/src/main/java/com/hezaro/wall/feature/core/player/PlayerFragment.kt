@@ -10,6 +10,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.feature.core.main.MainActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.services.MediaPlayerServiceHelper
@@ -19,6 +20,7 @@ import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
 import com.hezaro.wall.utils.ACTION_PLAY_PAUSE
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_player.episodeInfo
 import kotlinx.android.synthetic.main.fragment_player.logo
 import kotlinx.android.synthetic.main.fragment_player.miniPlayerLayout
 import kotlinx.android.synthetic.main.fragment_player.miniPlayerProgressBar
@@ -32,11 +34,10 @@ import kotlinx.android.synthetic.main.playback_control.exo_rew
 class PlayerFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_player
     override fun tag(): String = this::class.java.simpleName
-
     private var isBuffering = false
     private var isExpanded = false
-
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
+    private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     fun setBehavior(playerSheetBehavior: BottomSheetBehavior<View>) {
         this.playerSheetBehavior = playerSheetBehavior
@@ -72,6 +73,7 @@ class PlayerFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showMinimize(false)
+        episodeInfo.setOnClickListener { activity.episode() }
         miniPlayerLayout.setOnClickListener {
             when (playerSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {

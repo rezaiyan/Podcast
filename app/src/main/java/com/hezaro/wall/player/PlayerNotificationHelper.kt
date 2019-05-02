@@ -65,18 +65,18 @@ class PlayerNotificationHelper(
     }
 
     override fun getCurrentContentTitle(player: Player): String {
-        return service.currentEpisode.value!!.title
+        return service.currentEpisode!!.title
     }
 
     override fun createCurrentContentIntent(player: Player): PendingIntent = pendingIntent
 
     override fun getCurrentContentText(player: Player): String? {
-        return service.currentEpisode.value!!.podcast!!.title
+        return service.currentEpisode!!.podcast!!.title
     }
 
     override fun getCurrentLargeIcon(player: Player, callback: BitmapCallback): Bitmap? {
-        service.currentEpisode.value?.let {
-            if (!it.cover.isNotEmpty())
+        service.currentEpisode?.let {
+            if (it.cover.isNotEmpty())
                 Picasso.get()
                     .load(it.cover)
                     .into(object : Target {

@@ -118,8 +118,9 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
         }
 
         boolean beReset = exoPlayer.getCurrentWindowIndex() > 0 || isPlaying();
-        exoPlayer.prepare(concatenatingMediaSource, !beReset, !beReset);
-        exoPlayer.setPlayWhenReady(beReset);
+        if (!beReset) {
+            exoPlayer.prepare(concatenatingMediaSource);
+        }
     }
 
     @Override
@@ -129,7 +130,7 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
     }
 
     @Override
-    public void selectTrack(final Episode episode) {
+    public void selectTrack(@NotNull final Episode episode) {
         this.episode = episode;
         if (playlist != null) {
             int currentIndex = playlist.getIndex(episode);

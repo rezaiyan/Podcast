@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -48,24 +47,23 @@ class MainActivity : BaseActivity() {
     override fun progressBar(): ProgressBar = progressBar
     override fun fragmentContainer() = R.id.fragmentContainer
     private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }
-
+    var playerService: MediaPlayerService? = null
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             playerView.player = null
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val playerService = (service as MediaPlayerService.ServiceBinder).service
+            playerService = (service as MediaPlayerService.ServiceBinder).service
 
-            val currentEpisode = playerService.currentEpisode.value
+            val currentEpisode = playerService?.currentEpisode
             if (currentEpisode != null) {
-                playerFragment.openMiniPlayer(currentEpisode)
+                playerFragment.updateMiniPlayer(currentEpisode)
             } else {
-                playerService.serviceConnected(this@MainActivity)
+                playerService?.serviceConnected(this@MainActivity)
             }
-            playerView.player = playerService.player
-            playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
-            playerService.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
+            playerView.player = playerService?.player
+            playerService?.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
         }
     }
 
@@ -78,10 +76,7 @@ class MainActivity : BaseActivity() {
             failure(failure, ::onFailure)
         }
 
-
-        Intent(this, MediaPlayerService::class.java).let {
-            startService(it)
-        }
+        startService(Intent(this, MediaPlayerService::class.java))
 
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener { task ->
@@ -93,9 +88,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun bindService() {
-        Intent(this, MediaPlayerService::class.java).let {
-            bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
-        }
+        bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     fun search() {

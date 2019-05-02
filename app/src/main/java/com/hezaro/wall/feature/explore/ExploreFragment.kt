@@ -131,7 +131,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
     private fun onFailure(failure: Failure) {
         failure.message?.let { showMessage(it) }
-
         exploreList.setLoading(false)
     }
 }

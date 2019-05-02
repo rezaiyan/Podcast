@@ -164,6 +164,18 @@ class PlayerFragment : BaseFragment() {
         collapse()
     }
 
+    fun updateMiniPlayer(episode: Episode) {
+        doOnPlayer(ACTION_PLAY_PAUSE)
+        doOnPlayer(ACTION_PLAY_PAUSE)
+        playerSheetBehavior?.peekHeight =
+            resources.getDimension(R.dimen.mini_player_height).toInt()
+        updatePlayerView(episode)
+        collapse()
+        isBuffering = false
+        miniPlayerProgressBar.visibility = View.INVISIBLE
+        playPause.setImageResource(R.drawable.ic_pause)
+    }
+
     private fun updatePlayerView(episode: Episode) {
         title.text = episode.title
         subtitle.text = episode.podcast?.creator

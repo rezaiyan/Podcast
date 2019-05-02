@@ -3,12 +3,12 @@ apply from: GradleDir.android
 android{
     buildTypes {
         debug {
-            buildConfigField 'String', "API_KEY", "\"fb9e5df9609d6edcddbabf46571ddedf1ba09f8d199b1889d0166d5ada89fhu623husi3141f5\""
+            buildConfigField 'String', "API_KEY", apiKey
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', "API_KEY", "\"fb9e5df9609d6edcddbabf46571ddedf1ba09f8d199b1889d0166d5ada89fhu623husi3141f5\""
+            buildConfigField 'String', "API_KEY", apiKey
         }
     }
 }

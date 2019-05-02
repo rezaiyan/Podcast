@@ -48,7 +48,7 @@ import java.lang.ref.WeakReference
 
 class MediaPlayerService : Service() {
 
-    private var mediaPlayer: MediaPlayer? = null
+    var mediaPlayer: MediaPlayer? = null
 
     private lateinit var mediaSessionHelper: MediaSessionHelper
 
@@ -152,12 +152,15 @@ class MediaPlayerService : Service() {
                     player.stop()
                     stopSelf()
                 }
-                ACTION_SET_SPEED -> mediaPlayer!!.setPlaybackSpeed(
-                    intent.getFloatExtra(
-                        PARAM_PLAYBACK_SPEED,
-                        DEFAULT_PLAYBACK_SPEED
-                    )
-                )
+                ACTION_SET_SPEED ->
+                    mediaPlayer?.let {
+                        it.setPlaybackSpeed(
+                            intent.getFloatExtra(
+                                PARAM_PLAYBACK_SPEED,
+                                DEFAULT_PLAYBACK_SPEED
+                            )
+                        )
+                    }
 
             }
         }

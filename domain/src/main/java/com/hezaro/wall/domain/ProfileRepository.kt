@@ -22,7 +22,7 @@ interface ProfileRepository {
                 val username = get(USER_NAME, "")
                 val email = get(EMAIL, "")
                 return if (email.isNotEmpty() && username.isNotEmpty())
-                    Either.Right(UserInfo(username, email, ""))
+                    Either.Right(UserInfo(username, email))
                 else Either.Left(Failure.UserNotFound())
             }
         }

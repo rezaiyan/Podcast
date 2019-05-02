@@ -52,8 +52,14 @@ class MainActivity : BaseActivity() {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val playerService = (service as MediaPlayerService.ServiceBinder).service
+
             playerService.serviceConnected(this@MainActivity)
             playerView.player = playerService.player
+            playerService.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
+
+            if (playerService.mediaPlayer!!.isStreaming || playerService.mediaPlayer!!.isPlaying) {
+                playerFragment.openMiniPlayer(playerService.mediaPlayer!!.getCurrentEpisode()!!)
+            }
         }
     }
 

@@ -4,8 +4,10 @@ import android.preference.PreferenceManager
 import com.hezaro.wall.data.utils.provideRetrofit
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.domain.LoginRepository
+import com.hezaro.wall.domain.PlayerRepository
 import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.feature.core.main.MainViewModel
+import com.hezaro.wall.feature.core.player.PlayerViewModel
 import com.hezaro.wall.feature.explore.ExploreViewModel
 import com.hezaro.wall.feature.profile.ProfileViewModel
 import org.koin.android.ext.koin.androidContext
@@ -17,10 +19,12 @@ val module: Module = module {
 
     viewModel { ExploreViewModel(get()) }
     single { ExploreRepository.ExploreRepositoryImpl(get()) } bind ExploreRepository::class
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get()) }
     single { LoginRepository.LoginRepositoryImpl(get(), get()) } bind LoginRepository::class
     viewModel { ProfileViewModel(get()) }
     single { ProfileRepository.ProfileRepositoryImpl(get()) } bind ProfileRepository::class
+    single { PlayerRepository.PlayerRepositoryImpl(get()) } bind PlayerRepository::class
+    viewModel { PlayerViewModel(get()) }
 
     single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
 

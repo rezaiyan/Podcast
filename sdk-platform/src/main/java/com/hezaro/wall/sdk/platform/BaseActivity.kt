@@ -23,7 +23,6 @@ abstract class BaseActivity : AppCompatActivity() {
     abstract fun fragmentContainer(): Int
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setSupportActionBar(toolbar())
         addFragment(fragment())
     }
 

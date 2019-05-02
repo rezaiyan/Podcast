@@ -6,8 +6,8 @@ data class Login(
 )
 
 data class UserInfo(
-    val username: String,
-    val avatar: String,
-    var email: String,
-    var jwt: String
+    val username: String = "",
+    val avatar: String = "",
+    var email: String = "",
+    var jwt: String = ""
 )

@@ -1,5 +1,6 @@
 package com.hezaro.wall.feature.core.player
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -26,16 +27,19 @@ import kotlinx.android.synthetic.main.fragment_player.miniPlayerLayout
 import kotlinx.android.synthetic.main.fragment_player.miniPlayerProgressBar
 import kotlinx.android.synthetic.main.fragment_player.minimize
 import kotlinx.android.synthetic.main.fragment_player.playPause
+import kotlinx.android.synthetic.main.fragment_player.speedChooser
 import kotlinx.android.synthetic.main.fragment_player.subtitle
 import kotlinx.android.synthetic.main.fragment_player.title
 import kotlinx.android.synthetic.main.playback_control.exo_ffwd
 import kotlinx.android.synthetic.main.playback_control.exo_rew
+import org.koin.android.ext.android.inject
 
 class PlayerFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_player
     override fun tag(): String = this::class.java.simpleName
     private var isBuffering = false
     private var isExpanded = false
+    private val vm: PlayerViewModel by inject()
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
@@ -70,9 +74,15 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showMinimize(false)
+        speedChooser.text = "${vm.defaultSpeed()}x"
+        val speedPicker = SpeedPicker(context!!, ::setSpeedListener)
+        speedChooser.setOnClickListener {
+            speedPicker.show(vm.defaultSpeed())
+        }
         episodeInfo.setOnClickListener { activity.episode() }
         miniPlayerLayout.setOnClickListener {
             when (playerSheetBehavior?.state) {
@@ -89,6 +99,13 @@ class PlayerFragment : BaseFragment() {
         exo_rew.setOnClickListener { MediaPlayerServiceHelper.seekBackward(requireContext()) }
         exo_ffwd.setOnClickListener { MediaPlayerServiceHelper.seekForward(requireContext()) }
         playPause.setOnClickListener { if (!isBuffering) doOnPlayer(ACTION_PLAY_PAUSE) }
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun setSpeedListener(it: Float) {
+        vm.speed(it)
+        speedChooser.text = "${it}x"
+        MediaPlayerServiceHelper.changePlaybackSpeed(context!!, it)
     }
 
     private fun doOnPlayer(action: String) {

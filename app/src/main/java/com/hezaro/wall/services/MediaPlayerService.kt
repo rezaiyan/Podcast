@@ -9,7 +9,6 @@ import android.media.AudioManager
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.Player
 import com.hezaro.wall.data.model.Episode
@@ -54,7 +53,7 @@ class MediaPlayerService : Service() {
 
     private var mediaPlayerState: Int = MediaPlayerState.STATE_IDLE
 
-    var currentEpisode: MutableLiveData<Episode> = MutableLiveData()
+    var currentEpisode: Episode? = null
 
     private var headsetReceiverIsRegistered: Boolean = false
 
@@ -82,8 +81,9 @@ class MediaPlayerService : Service() {
         notificationHelper = PlayerNotificationHelper(context, activity, this)
 
         val mediaPlayerListener = MediaPlayerListenerImpl(
-            context, notificationHelper, currentEpisode
-        ) { this.mediaPlayerState = it }
+            context, notificationHelper, currentEpisode,
+            { this.mediaPlayerState = it },
+            { this.currentEpisode = it })
 
         mediaPlayer = LocalMediaPlayer(WeakReference(mediaPlayerListener), this)
 
@@ -127,8 +127,8 @@ class MediaPlayerService : Service() {
                 ACTION_PLAY_QUEUE -> player.next()
                 ACTION_PLAY_EPISODE -> {
                     intent.getParcelableExtra<Episode>(PARAM_EPISODE)?.let {
-                        mediaPlayer?.let { media -> media.selectTrack(it) }
-                        currentEpisode.postValue(it)
+                        currentEpisode = it
+                        mediaPlayer?.selectTrack(it)
                     }
                 }
                 ACTION_PLAY_PLAYLIST -> addPlaylist(intent.extras!!.getParcelable(PARAM_PLAYLIST))
@@ -153,14 +153,12 @@ class MediaPlayerService : Service() {
                     stopSelf()
                 }
                 ACTION_SET_SPEED ->
-                    mediaPlayer?.let {
-                        it.setPlaybackSpeed(
-                            intent.getFloatExtra(
-                                PARAM_PLAYBACK_SPEED,
-                                DEFAULT_PLAYBACK_SPEED
-                            )
+                    mediaPlayer?.setPlaybackSpeed(
+                        intent.getFloatExtra(
+                            PARAM_PLAYBACK_SPEED,
+                            DEFAULT_PLAYBACK_SPEED
                         )
-                    }
+                    )
 
             }
         }
@@ -191,46 +189,21 @@ class MediaPlayerService : Service() {
         }
     }
 
-    private fun makePlaylist(playlist: Playlist) {
-        currentEpisode.postValue(playlist.getFirst())
-        mediaPlayer!!.concatPlaylist(playlist)
-    }
-
     private fun endPlayback(cancelNotification: Boolean) {
-        currentEpisode.value?.let { it.status = Status.PLAYED }
+        currentEpisode!!.status = Status.PLAYED
         if (cancelNotification) {
             notificationHelper.onHide()
         }
     }
 
     private fun addPlaylist(playlist: Playlist?) {
-        currentEpisode.postValue(playlist?.getFirst())
-        when (mediaPlayerState) {
-            MediaPlayerState.STATE_CONNECTING, MediaPlayerState.STATE_PLAYING, MediaPlayerState.STATE_PAUSED ->
-
-                when {
-                    playlist != null -> {
-                        endPlayback(false)
-                        makePlaylist(playlist)
-                    }
-                    mediaPlayerState == MediaPlayerState.STATE_PAUSED -> mediaPlayer?.resumePlayback()
-                    else -> Timber.w("Player is playing, episode cannot be null")
-                }
-            MediaPlayerState.STATE_ENDED, MediaPlayerState.STATE_IDLE ->
-                // stopped or uninitialized, so we need to start from scratch
-                if (playlist != null) {
-                    makePlaylist(playlist)
-                } else {
-                    Timber.w("Player is stopped/uninitialized, episode cannot be null")
-                }
-            else -> Timber.w(
-                "Trying to addPlaylist an episode, but player is in a $mediaPlayerState"
-            )
-        }
+        if (playlist != null) mediaPlayer!!.concatPlaylist(playlist)
+        else Timber.w("Player is playing, episode cannot be null")
     }
 
     @Suppress("NAME_SHADOWING")
-    private fun seekTo(seekTo: Long) {
+    private fun seekTo(msec: Long) {
+        val seekTo = msec + player.currentPosition
         when (mediaPlayerState) {
             MediaPlayerState.STATE_PAUSED, STATE_PLAYING -> {
                 var seekTo = seekTo

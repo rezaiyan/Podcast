@@ -2,7 +2,6 @@ package com.hezaro.wall.player
 
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Status
@@ -19,8 +18,9 @@ import timber.log.Timber
 class MediaPlayerListenerImpl(
     private val context: Context,
     private val notificationHelper: NotificationHelper,
-    private val currentEpisode: MutableLiveData<Episode>,
-    private val onStateChangedListener: (Int) -> Unit
+    private var currentEpisode: Episode?,
+    private val onStateChangedListener: (Int) -> Unit,
+    private val onEpisodeChange: (Episode) -> Unit
 ) : MediaPlayerListener {
 
     lateinit var mediaPlayer: MediaPlayer
@@ -45,7 +45,7 @@ class MediaPlayerListenerImpl(
                 }
             }
             MediaPlayerState.STATE_ENDED -> {
-                currentEpisode.value!!.status = Status.PLAYED
+                currentEpisode?.status = Status.PLAYED
                 mediaPlayer.next()
             }
             MediaPlayerState.STATE_IDLE -> updateEpisode(state)
@@ -54,19 +54,15 @@ class MediaPlayerListenerImpl(
 
     private fun updateEpisode(state: Int) {
         Timber.d("Updating episode, state: %d", state)
-        if (::mediaPlayer.isInitialized || currentEpisode.value!!.id == -1) {
+        if (::mediaPlayer.isInitialized || currentEpisode?.id == -1) {
             return
         }
 
         when (state) {
             STATE_PLAYING ->
-                currentEpisode.value?.let {
-                    it.status = Status.IN_PROGRESS
-                }
+                currentEpisode?.status = Status.IN_PROGRESS
             MediaPlayerState.STATE_PAUSED, MediaPlayerState.STATE_IDLE -> {
-                currentEpisode.value?.let {
-                    it.status = Status.PLAYED
-                }
+                currentEpisode?.status = Status.PLAYED
             }
             else -> throw IllegalArgumentException(
                 "Incorrect state for showing addPlaylist pause notification"
@@ -75,7 +71,8 @@ class MediaPlayerListenerImpl(
     }
 
     override fun notifyEpisode(episode: Episode) {
-        currentEpisode.value = episode
+        currentEpisode = episode
+        onEpisodeChange(currentEpisode!!)
         val intent = Intent(ACTION_EPISODE)
         intent.putExtra(ACTION_EPISODE_GET, episode)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)

@@ -20,7 +20,7 @@ class MediaPlayerListenerImpl(
     private val context: Context,
     private val notificationHelper: NotificationHelper,
     private val currentEpisode: MutableLiveData<Episode>,
-    private var onStateChanged: Int
+    private val onStateChangedListener: (Int) -> Unit
 ) : MediaPlayerListener {
 
     lateinit var mediaPlayer: MediaPlayer
@@ -31,7 +31,7 @@ class MediaPlayerListenerImpl(
 
     override fun onStateChanged(state: Int) {
         broadcastStatus(state)
-        onStateChanged = state
+        onStateChangedListener(state)
         when (state) {
             MediaPlayerState.STATE_PAUSED -> {
                 updateEpisode(state)

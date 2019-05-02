@@ -18,6 +18,8 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationLi
 import com.hezaro.wall.R
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.services.MediaPlayerService
+import com.hezaro.wall.utils.fastForwardIncrementMs
+import com.hezaro.wall.utils.rewindIncrementMs
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
@@ -33,8 +35,6 @@ class PlayerNotificationHelper(
     private val CHANNEL_ID = "321"
     private val REQUEST_CODE = 991
     private val NOTIFICATION_ID = 114
-    private val fastForwardIncrementMs = 30000L
-    private val rewindIncrementMs = 10000L
     private lateinit var notificationManager: PlayerNotificationManager
     private val pendingIntent = PendingIntent
         .getActivity(
@@ -48,10 +48,8 @@ class PlayerNotificationHelper(
         notificationManager = PlayerNotificationManager.createWithNotificationChannel(
             context, CHANNEL_ID, CHANNEL_NAME, NOTIFICATION_ID, this
         ).apply {
-            //            setStopAction(ACTION_STOP)
             setNotificationListener(this@PlayerNotificationHelper)
             setMediaSessionToken(sessionToken)
-            onGoing(false)
             setFastForwardIncrementMs(fastForwardIncrementMs)
             setRewindIncrementMs(rewindIncrementMs)
             setPriority(NotificationCompat.PRIORITY_DEFAULT)

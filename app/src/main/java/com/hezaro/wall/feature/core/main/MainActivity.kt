@@ -1,12 +1,14 @@
 package com.hezaro.wall.feature.core.main
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -45,6 +47,8 @@ class MainActivity : BaseActivity() {
     override fun toolbar(): Toolbar = toolbar
     override fun progressBar(): ProgressBar = progressBar
     override fun fragmentContainer() = R.id.fragmentContainer
+    private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             playerView.player = null
@@ -53,19 +57,16 @@ class MainActivity : BaseActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val playerService = (service as MediaPlayerService.ServiceBinder).service
 
-            playerService.serviceConnected(this@MainActivity)
-            playerView.player = playerService.player
-            playerService.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
-
-            if (playerService.mediaPlayer!!.isStreaming || playerService.mediaPlayer!!.isPlaying) {
-                playerFragment.openMiniPlayer(playerService.mediaPlayer!!.getCurrentEpisode()!!)
+            val currentEpisode = playerService.currentEpisode.value
+            if (currentEpisode != null) {
+                playerFragment.openMiniPlayer(currentEpisode)
+            } else {
+                playerService.serviceConnected(this@MainActivity)
             }
+            playerView.player = playerService.player
+            playerView.setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
+            playerService.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
         }
-    }
-
-    override fun onDestroy() {
-        unbindService(serviceConnection)
-        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +81,6 @@ class MainActivity : BaseActivity() {
 
         Intent(this, MediaPlayerService::class.java).let {
             startService(it)
-            bindService(it, serviceConnection, 0)
         }
 
         FirebaseInstanceId.getInstance().instanceId
@@ -90,10 +90,13 @@ class MainActivity : BaseActivity() {
 
             }
         prepareGoogleSignIn()
-
     }
 
-    private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }
+    private fun bindService() {
+        Intent(this, MediaPlayerService::class.java).let {
+            bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
 
     fun search() {
         playerFragment.collapse(); addFragment(SearchFragment())
@@ -120,8 +123,14 @@ class MainActivity : BaseActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
+    override fun onStop() {
+        super.onStop()
+        unbindService(serviceConnection)
+    }
+
     override fun onStart() {
         super.onStart()
+        bindService()
         val account = googleSignInAccount()
         updateUI(account)
     }

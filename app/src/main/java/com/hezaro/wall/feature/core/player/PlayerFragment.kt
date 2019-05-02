@@ -119,16 +119,15 @@ class PlayerFragment : BaseFragment() {
                 when (intent.action) {
                     ACTION_EPISODE -> {
                         val episode = intent.getParcelableExtra<Episode>(ACTION_EPISODE_GET)
-                        openMiniPlayer(episode)
+                        updatePlayerView(episode)
                     }
                     ACTION_PLAYER -> {
                         val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
                         when (action) {
-                            MediaPlayerState.STATE_CONNECTING -> {
+                            MediaPlayerState.STATE_CONNECTING or MediaPlayerState.STATE_CONNECTING -> {
                                 isBuffering = true
                                 playPause.setImageResource(R.drawable.ic_play)
-                                if (!isExpanded)
-                                    miniPlayerProgressBar.visibility = View.VISIBLE
+                                miniPlayerProgressBar.visibility = View.VISIBLE
                             }
                             MediaPlayerState.STATE_PLAYING -> {
                                 isBuffering = false
@@ -158,6 +157,14 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun openMiniPlayer(episode: Episode) {
+        playerSheetBehavior?.peekHeight =
+            resources.getDimension(R.dimen.mini_player_height).toInt()
+        MediaPlayerServiceHelper.playEpisode(requireContext(), episode)
+        updatePlayerView(episode)
+        collapse()
+    }
+
+    private fun updatePlayerView(episode: Episode) {
         title.text = episode.title
         subtitle.text = episode.podcast?.creator
         Picasso.get().load(episode.cover).into(logo)

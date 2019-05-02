@@ -34,11 +34,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     override fun invoke(episode: Episode, index: Int) {
-        MediaPlayerServiceHelper.playEpisode(requireContext(), episode)
         setMargin()
-        playerSheetBehavior.peekHeight =
-            resources.getDimension(R.dimen.mini_player_height).toInt()
-        playerSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         playerFragment.openMiniPlayer(episode)
     }
 

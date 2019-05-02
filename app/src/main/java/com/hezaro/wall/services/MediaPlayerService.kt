@@ -56,7 +56,7 @@ class MediaPlayerService : Service() {
 
     var currentEpisode: MutableLiveData<Episode> = MutableLiveData()
 
-    private var headsetReceiverIsRegisterd: Boolean = false
+    private var headsetReceiverIsRegistered: Boolean = false
 
     private var mServiceBound = false
 
@@ -90,11 +90,11 @@ class MediaPlayerService : Service() {
         mediaSessionHelper = MediaSessionHelper(context, mediaPlayer!!)
         notificationHelper.initNotificationHelper(mediaSessionHelper.sessionToken)
         headsetReceiver.let {
-            if (!headsetReceiverIsRegisterd) {
+            if (!headsetReceiverIsRegistered) {
                 val iff = IntentFilter(Intent.ACTION_HEADSET_PLUG)
                 iff.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
                 LocalBroadcastManager.getInstance(this).registerReceiver(it, iff)
-                headsetReceiverIsRegisterd = true
+                headsetReceiverIsRegistered = true
             }
 
         }
@@ -184,10 +184,10 @@ class MediaPlayerService : Service() {
     }
 
     private fun headrestUnPlugged() {
-        if (headsetReceiverIsRegisterd) {
+        if (headsetReceiverIsRegistered) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(headsetReceiver)
             unregisterReceiver(headsetReceiver)
-            headsetReceiverIsRegisterd = false
+            headsetReceiverIsRegistered = false
         }
     }
 

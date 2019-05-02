@@ -15,6 +15,10 @@ class Episode() : Parcelable {
     var votes: Int = -1
     var views: Int = -1
     var cover: String = ""
+        set(value) {
+            if (!value.startsWith("http"))
+                field = "http://$value"
+        }
     var source: String = ""
 //    var duration: String = ""
     var mime_type: String = ""

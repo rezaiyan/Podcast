@@ -2,8 +2,10 @@ package com.hezaro.wall.utils
 
 import android.support.v4.media.session.PlaybackStateCompat
 
-const val DEFAULT_PLAYBACK_SPEED = 1.0f
+val fastForwardIncrementMs = 30000L
+val rewindIncrementMs = 10000L
 
+const val DEFAULT_PLAYBACK_SPEED = 1.0f
 const val MS_TO_REVERSE_ON_PAUSE = 0
 
 const val SAVE_INSTANCE_EPISODES = "com.hezaro.wall.explore"

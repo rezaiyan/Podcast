@@ -25,10 +25,10 @@ import com.hezaro.wall.feature.search.SearchFragment
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
+import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.RC_SIGN_IN
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_layout.progressBar
 import kotlinx.android.synthetic.main.fragment_player.playerView
 import kotlinx.android.synthetic.main.toolbar.profile
@@ -99,11 +99,11 @@ class MainActivity : BaseActivity() {
     }
 
     fun profile() {
-        //            if (googleSignInAccount() == null) {
-//                signIn()
-//            } else {
-        playerFragment.collapse();addFragment(ProfileFragment())
-//            }
+        if (googleSignInAccount() == null) {
+            signIn()
+        } else {
+            playerFragment.collapse();addFragment(ProfileFragment())
+        }
     }
 
     private fun prepareGoogleSignIn() {
@@ -156,15 +156,16 @@ class MainActivity : BaseActivity() {
     }
 
     private fun updateUI(account: GoogleSignInAccount?) {
+
         account?.let {
             Timber.i("idToken== ${it.idToken}")
-            vm.login(it.idToken!!)
+            profile.load(it.photoUrl.toString(), CircleTransform())
+//            vm.login(it.idToken!!)
         }
     }
 
     private fun onSuccess(userInfo: UserInfo) {
-        Picasso.get().load(GoogleSignIn.getLastSignedInAccount(this)!!.photoUrl).transform(CircleTransform())
-            .into(profile)
+        profile.load(userInfo.avatar, CircleTransform())
     }
 
     private fun onFailure(failure: Failure) {

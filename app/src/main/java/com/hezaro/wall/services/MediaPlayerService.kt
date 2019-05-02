@@ -10,6 +10,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.Player
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
@@ -40,6 +41,8 @@ import com.hezaro.wall.utils.PARAM_EPISODE
 import com.hezaro.wall.utils.PARAM_PLAYBACK_SPEED
 import com.hezaro.wall.utils.PARAM_PLAYLIST
 import com.hezaro.wall.utils.PARAM_SEEK_MS
+import com.hezaro.wall.utils.fastForwardIncrementMs
+import com.hezaro.wall.utils.rewindIncrementMs
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
@@ -53,11 +56,11 @@ class MediaPlayerService : Service() {
 
     var currentEpisode: MutableLiveData<Episode> = MutableLiveData()
 
-    private var headsetIsPlugged: Boolean = false
+    private var headsetReceiverIsRegisterd: Boolean = false
 
     private var mServiceBound = false
 
-    private var headsetReceiver: HeadsetReceiver? = null
+    private val headsetReceiver: HeadsetReceiver by lazy { HeadsetReceiver { mediaPlayer!!.pausePlayback() } }
 
     private lateinit var notificationHelper: PlayerNotificationHelper
 
@@ -79,15 +82,22 @@ class MediaPlayerService : Service() {
         notificationHelper = PlayerNotificationHelper(context, activity, this)
 
         val mediaPlayerListener = MediaPlayerListenerImpl(
-            context, notificationHelper, currentEpisode, mediaPlayerState
-        )
-        mediaPlayer = LocalMediaPlayer(WeakReference(mediaPlayerListener), this)
+            context, notificationHelper, currentEpisode
+        ) { this.mediaPlayerState = it }
 
+        mediaPlayer = LocalMediaPlayer(WeakReference(mediaPlayerListener), this)
 
         mediaSessionHelper = MediaSessionHelper(context, mediaPlayer!!)
         notificationHelper.initNotificationHelper(mediaSessionHelper.sessionToken)
-        headsetReceiver = HeadsetReceiver(mediaPlayer!!)
-        headrestPlugged()
+        headsetReceiver.let {
+            if (!headsetReceiverIsRegisterd) {
+                val iff = IntentFilter(Intent.ACTION_HEADSET_PLUG)
+                iff.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+                LocalBroadcastManager.getInstance(this).registerReceiver(it, iff)
+                headsetReceiverIsRegisterd = true
+            }
+
+        }
     }
 
     override fun onDestroy() {
@@ -100,6 +110,7 @@ class MediaPlayerService : Service() {
             .setState(PlaybackStateCompat.STATE_NONE, mediaPlayer!!.currentPosition, 1.0f)
             .setActions(MEDIA_SESSION_ACTIONS or PlaybackStateCompat.ACTION_PLAY)
             .build()
+        headrestUnPlugged()
         notificationHelper.onDestroy()
         mediaSessionHelper.onDestroy()
         mediaPlayer!!.onDestroy()
@@ -128,8 +139,8 @@ class MediaPlayerService : Service() {
                     mediaPlayer!!.resumePlayback()
                 }
                 ACTION_PAUSE -> mediaPlayer!!.pausePlayback()
-                ACTION_SEEK_FORWARD -> seekTo(30000)
-                ACTION_SEEK_BACKWARD -> seekTo(-10000)
+                ACTION_SEEK_FORWARD -> seekTo(fastForwardIncrementMs)
+                ACTION_SEEK_BACKWARD -> seekTo(-rewindIncrementMs)
                 ACTION_SEEK_TO -> seekTo(intent.getIntExtra(PARAM_SEEK_MS, 30).toLong())
                 ACTION_STOP_SERVICE -> {
                     endPlayback(true)
@@ -169,22 +180,11 @@ class MediaPlayerService : Service() {
         return mBinder
     }
 
-    private fun headrestPlugged() {
-        if (!headsetIsPlugged) {
-            registerReceiver(headsetReceiver, IntentFilter(Intent.ACTION_HEADSET_PLUG))
-            registerReceiver(
-                headsetReceiver, IntentFilter(
-                    AudioManager.ACTION_AUDIO_BECOMING_NOISY
-                )
-            )
-            headsetIsPlugged = true
-        }
-    }
-
     private fun headrestUnPlugged() {
-        if (headsetIsPlugged) {
+        if (headsetReceiverIsRegisterd) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(headsetReceiver)
             unregisterReceiver(headsetReceiver)
-            headsetIsPlugged = false
+            headsetReceiverIsRegisterd = false
         }
     }
 
@@ -195,7 +195,6 @@ class MediaPlayerService : Service() {
 
     private fun endPlayback(cancelNotification: Boolean) {
         currentEpisode.value?.let { it.status = Status.PLAYED }
-        headrestUnPlugged()
         if (cancelNotification) {
             notificationHelper.onHide()
         }

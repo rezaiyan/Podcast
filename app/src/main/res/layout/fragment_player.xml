@@ -133,7 +133,7 @@
         app:hide_on_touch="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/miniPlayerLayout"
-        app:show_buffering="always"
+        app:show_buffering="never"
         app:show_shuffle_button="false"
         app:show_timeout="0"
         app:shutter_background_color="@color/colorAccent"

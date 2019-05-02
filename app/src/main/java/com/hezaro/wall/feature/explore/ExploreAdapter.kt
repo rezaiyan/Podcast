@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.hezaro.wall.data.model.Status.Companion.IN_PROGRESS
+import com.hezaro.wall.sdk.platform.ext.load
 import kotlinx.android.synthetic.main.item_explore.view.logo
 import kotlinx.android.synthetic.main.item_explore.view.podcaster
 import kotlinx.android.synthetic.main.item_explore.view.title
@@ -38,16 +38,11 @@ class ExploreAdapter(
             itemView.let {
 
                 episode.run {
-
-                    Picasso.get().load(this.cover).into(it.logo, object : Callback {
-                        override fun onSuccess() {
-                        }
-
-                        override fun onError(e: Exception?) {
-                        }
-                    })
-                    it.title.text = this.title
-                    it.podcaster.text = this.podcast?.title
+                    if (status == IN_PROGRESS)
+                        itemView.setBackgroundColor(itemView.context.resources.getColor(R.color.colorTextSecondary))
+                    it.logo.load(cover)
+                    it.title.text = title
+                    it.podcaster.text = podcast?.title
                     it.setOnClickListener { onItemClick(this, adapterPosition) }
 
                 }

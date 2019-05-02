@@ -75,20 +75,29 @@ class PlayerNotificationHelper(
     }
 
     override fun getCurrentLargeIcon(player: Player, callback: BitmapCallback): Bitmap? {
-        Picasso.get()
-            .load(service.currentEpisode.value!!.cover)
-            .into(object : Target {
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                    callback.onBitmap(BitmapFactory.decodeResource(context.resources, R.drawable.ic_placeholder))
-                }
+        service.currentEpisode.value?.let {
+            if (!it.cover.isNotEmpty())
+                Picasso.get()
+                    .load(it.cover)
+                    .into(object : Target {
+                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                            callback.onBitmap(
+                                BitmapFactory.decodeResource(
+                                    context.resources,
+                                    R.drawable.ic_placeholder
+                                )
+                            )
+                        }
 
-                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                }
+                        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                        }
 
-                override fun onBitmapLoaded(bitmap: Bitmap?, from: LoadedFrom?) {
-                    callback.onBitmap(bitmap)
-                }
-            })
+                        override fun onBitmapLoaded(bitmap: Bitmap?, from: LoadedFrom?) {
+                            callback.onBitmap(bitmap)
+                        }
+                    })
+        }
+
         return null
     }
 

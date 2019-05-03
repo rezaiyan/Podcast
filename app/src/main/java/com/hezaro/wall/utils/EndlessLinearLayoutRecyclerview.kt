@@ -14,6 +14,11 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
 
     var page = 1
 
+    fun onError() {
+        if (page > 1)
+            page--
+    }
+
     val loadingStatus: MutableLiveData<Boolean>
         get() = this.aeros.loadingStatus
 

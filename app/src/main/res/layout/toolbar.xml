@@ -45,6 +45,16 @@
                 android:layout_gravity="center"
                 android:src="@drawable/ic_account" />
 
+            <ImageView
+                android:id="@+id/sort"
+                android:layout_width="@dimen/navigator_icon"
+                android:layout_height="@dimen/navigator_icon"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:layout_toStartOf="@+id/profile"
+                android:rotation="180"
+                android:src="@drawable/ic_sort" />
+
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>

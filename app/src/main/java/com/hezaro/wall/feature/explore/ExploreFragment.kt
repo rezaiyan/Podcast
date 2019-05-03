@@ -4,12 +4,20 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
+import com.hezaro.wall.data.model.Status.Companion.BEST
+import com.hezaro.wall.data.model.Status.Companion.BEST_
+import com.hezaro.wall.data.model.Status.Companion.NEWEST
+import com.hezaro.wall.data.model.Status.Companion.NEWEST_
+import com.hezaro.wall.data.model.Status.Companion.OLDEST
+import com.hezaro.wall.data.model.Status.Companion.OLDEST_
+import com.hezaro.wall.data.model.Status.Companion.SortBy
 import com.hezaro.wall.feature.core.main.MainActivity
 import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.sdk.base.exception.Failure
@@ -21,6 +29,7 @@ import kotlinx.android.synthetic.main.fragment_explore.exploreList
 import kotlinx.android.synthetic.main.fragment_explore.refreshLayout
 import kotlinx.android.synthetic.main.toolbar.profile
 import kotlinx.android.synthetic.main.toolbar.search
+import kotlinx.android.synthetic.main.toolbar.sort
 import org.koin.android.ext.android.inject
 
 class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
@@ -99,12 +108,44 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             exploreList.setLoading(true)
         }
 
+        val menu = PopupMenu(context!!, sort)
+        menu.menu.add(NEWEST_)
+        menu.menu.add(OLDEST_)
+        menu.menu.add(BEST_)
+
+        sort.setOnClickListener {
+            menu.show()
+
+        }
+        menu.setOnMenuItemClickListener {
+            when (it.title) {
+                NEWEST_ -> {
+                    sortPlaylist(NEWEST)
+                }
+                OLDEST_ -> {
+                    sortPlaylist(OLDEST)
+                }
+                BEST_ -> {
+                    sortPlaylist(BEST)
+                }
+                else -> false
+
+            }
+        }
         search.setOnClickListener {
             activity.search()
         }
         profile.setOnClickListener {
             activity.profile()
         }
+    }
+
+    private fun sortPlaylist(sortBy: @SortBy String): Boolean {
+        exploreList.page = 2
+        exploreList.setLoading(true)
+        exploreAdapter.clearAll()
+        vm.explore(page = 1, sortBy = sortBy)
+        return true
     }
 
     private fun liftExploreList() {
@@ -130,6 +171,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 
     private fun onFailure(failure: Failure) {
+        exploreList.onError()
         failure.message?.let { showMessage(it) }
         exploreList.setLoading(false)
     }

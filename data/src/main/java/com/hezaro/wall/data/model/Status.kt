@@ -1,6 +1,7 @@
 package com.hezaro.wall.data.model
 
 import androidx.annotation.IntDef
+import androidx.annotation.StringDef
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
@@ -27,6 +28,18 @@ companion object {
     @IntDef(DOWNLOADED, DOWNLOADING, NOT_DOWNLOADED)
     @Retention(RetentionPolicy.SOURCE)
     annotation class PlayStatus
+
+    const val BEST = "best"
+    const val BEST_ = "بهترین ها"
+    const val OLDEST = "old"
+    const val OLDEST_ = "قدیمی ترین"
+    const val NEWEST = "new"
+    const val NEWEST_ = "جدیدترین"
+
+    @Target(AnnotationTarget.TYPE, AnnotationTarget.PROPERTY)
+    @StringDef(BEST, OLDEST, NEWEST)
+    @Retention(RetentionPolicy.SOURCE)
+    annotation class SortBy
 
 }
 }

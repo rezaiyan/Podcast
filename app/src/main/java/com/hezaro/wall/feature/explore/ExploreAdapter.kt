@@ -32,6 +32,11 @@ class ExploreAdapter(
         notifyItemRangeInserted(itemCount, this.episodes.size)
     }
 
+    fun clearAll() {
+        notifyItemRangeRemoved(0, episodes.size)
+        episodes.clear()
+    }
+
     inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(episode: Episode) {

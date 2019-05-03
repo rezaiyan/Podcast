@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
@@ -23,6 +22,7 @@ import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.services.MediaPlayerServiceHelper
+import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
 import com.hezaro.wall.utils.SAVE_INSTANCE_EPISODES
 import kotlinx.android.synthetic.main.fragment_explore.exploreList
@@ -72,7 +72,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
         exploreAdapter = ExploreAdapter(mutableListOf(), this@ExploreFragment)
         exploreList.apply {
-            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = exploreAdapter
             loadingStatus.observeForever { isLoading ->
                 if (isLoading) {
@@ -87,7 +87,8 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
                 }
             })
         }
-
+        refreshLayout.setColorSchemeResources(R.color.colorAccent)
+        refreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.ic_controller))
         refreshLayout.setOnRefreshListener {
             with(vm) {
                 if (!isExecute) {

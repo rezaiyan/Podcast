@@ -5,6 +5,9 @@ import android.util.AttributeSet
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
+import androidx.recyclerview.widget.RecyclerView.State
+import timber.log.Timber
 
 class EndlessLinearLayoutRecyclerview : RecyclerView {
 
@@ -21,6 +24,7 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
 
     val loadingStatus: MutableLiveData<Boolean>
         get() = this.aeros.loadingStatus
+
 
     abstract inner class AdvancedEndlessRecyclerOnScrollListener(private val linearLayoutManager: RecyclerView.LayoutManager) :
         RecyclerView.OnScrollListener() {
@@ -91,4 +95,16 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
 interface OnLoadMoreListener {
 
     fun onLoadMore()
+}
+
+class EndlessLayoutManager(context: Context?, orientation: Int, reverseLayout: Boolean) :
+    LinearLayoutManager(context, orientation, reverseLayout) {
+
+    override fun onLayoutChildren(recycler: Recycler?, state: State?) {
+        try {
+            super.onLayoutChildren(recycler, state)
+        } catch (e: IndexOutOfBoundsException) {
+            Timber.e("meet a IOOBE in RecyclerView")
+        }
+    }
 }

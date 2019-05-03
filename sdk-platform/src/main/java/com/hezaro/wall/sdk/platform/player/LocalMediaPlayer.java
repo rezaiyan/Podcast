@@ -137,7 +137,10 @@ public class LocalMediaPlayer extends MediaPlayer implements Player.EventListene
         this.episode = episode;
         if (playlist != null) {
             int currentIndex = playlist.getIndex(episode);
-            if (((currentIndex > 0) && (exoPlayer.getCurrentWindowIndex() != currentIndex)) || currentIndex == 0) {
+
+            if (((currentIndex > 0 && exoPlayer.getCurrentTimeline().getWindowCount() > 0 &&
+                    exoPlayer.getCurrentTimeline().getWindowCount() >= currentIndex
+            ) && (exoPlayer.getCurrentWindowIndex() != currentIndex)) || currentIndex == 0) {
                 exoPlayer.seekTo(currentIndex, 0);
                 exoPlayer.setPlayWhenReady(true);
             }

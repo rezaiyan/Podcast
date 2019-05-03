@@ -10,6 +10,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.transition.Fade
 import androidx.transition.Slide
 import com.google.android.material.button.MaterialButton
 import com.hezaro.wall.sdk.platform.ext.hide
@@ -69,10 +70,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun addFragment(fragment: BaseFragment) {
         var gravity = Gravity.END
-        if (fragment.tag() == "SearchFragment")
-            gravity = Gravity.START
-        fragment.enterTransition = Slide(gravity)
-        fragment.exitTransition = Slide(gravity)
+        if (fragment.tag() == "SearchFragment") {
+            fragment.enterTransition = Fade()
+            fragment.exitTransition = Fade()
+        } else {
+            fragment.enterTransition = Slide(gravity)
+            fragment.exitTransition = Slide(gravity)
+        }
 
         if (fragment.tag() == "EpisodeFragment") {
             fragment.enterTransition = Slide(Gravity.BOTTOM)

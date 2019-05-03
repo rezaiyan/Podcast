@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="top"
     android:layoutDirection="ltr"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
 
@@ -37,14 +38,14 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="50dp"
             android:layout_marginStart="50dp"
-            app:buffered_color="#7C6363"
+            app:buffered_color="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:played_color="#D15252"
-            app:scrubber_color="#DD2C00"
-            app:unplayed_color="#A89D9D" />
+            app:played_color="@color/colorAccent"
+            app:scrubber_color="@color/colorAccent"
+            app:unplayed_color="@color/ic_controller" />
 
         <TextView
             android:id="@id/exo_duration"

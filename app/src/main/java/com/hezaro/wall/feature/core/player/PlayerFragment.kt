@@ -160,7 +160,8 @@ class PlayerFragment : BaseFragment() {
     fun isExpand() = sheetState == BottomSheetBehavior.STATE_EXPANDED
 
     fun collapse() {
-        sheetState = BottomSheetBehavior.STATE_COLLAPSED
+        if (sheetState == BottomSheetBehavior.STATE_EXPANDED)
+            sheetState = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun openMiniPlayer(episode: Episode) {

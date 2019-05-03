@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    android:fitsSystemWindows="true"
-    app:elevation="4dp">
+    android:layout_height="56dp"
+    android:background="@color/colorPrimaryDark"
+    android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/black"
+        android:layout_height="wrap_content"
         app:contentInsetEnd="0dp"
         app:contentInsetLeft="0dp"
         app:contentInsetRight="0dp"
@@ -24,7 +22,6 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/margin_8"
             android:layout_marginStart="@dimen/margin_8"
-            android:background="@android:color/transparent"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

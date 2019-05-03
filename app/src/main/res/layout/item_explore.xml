@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     app:cardCornerRadius="1dp"
+    app:cardBackgroundColor="@color/colorPrimaryDark"
     app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +36,7 @@
             android:gravity="right"
             android:maxLines="2"
             android:textAlignment="gravity"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/colorTextPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/logo"
             app:layout_constraintHorizontal_bias="1.0"
@@ -53,6 +54,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/trafic"
             android:gravity="right"
+            android:textColor="@color/colorTextSecondary"
             android:maxLines="3"
             android:singleLine="true"
             app:layout_constraintEnd_toEndOf="@+id/title"

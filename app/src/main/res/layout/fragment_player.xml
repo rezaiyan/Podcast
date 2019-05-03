@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:background="@color/colorPrimaryDark"
     android:elevation="4dp"
     android:orientation="vertical">
 
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:alpha="0.5"
-            android:background="@color/black"
+            android:background="@color/colorPrimary"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -40,6 +40,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="@dimen/margin_8"
             android:indeterminate="true"
+            android:indeterminateTint="@color/colorAccent"
+            android:indeterminateTintMode="multiply"
             app:layout_constraintBottom_toBottomOf="@+id/logo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/logo" />
@@ -74,9 +76,10 @@
             android:layout_marginEnd="@dimen/margin_8"
             android:layout_marginStart="8dp"
             android:ellipsize="marquee"
+            android:fontFamily="@font/trafic"
             android:gravity="right"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/logo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +88,6 @@
             app:layout_constraintStart_toEndOf="@+id/playPause"
             app:layout_constraintTop_toTopOf="@id/logo"
             app:layout_constraintVertical_bias="0.25"
-            android:fontFamily="@font/trafic"
             tools:text="@tools:sample/lorem" />
 
         <TextView
@@ -100,7 +102,7 @@
             android:fontFamily="@font/trafic"
             android:gravity="right"
             android:singleLine="true"
-            android:textColor="@color/black"
+            android:textColor="@color/colorTextSecondary"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/logo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +117,7 @@
             android:id="@+id/dividerBottom"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginTop="@dimen/margin_10"
             android:alpha="0.5"
             android:background="@color/black"
             app:layout_constraintTop_toBottomOf="@id/logo" />
@@ -136,7 +138,7 @@
         app:show_buffering="never"
         app:show_shuffle_button="false"
         app:show_timeout="0"
-        app:shutter_background_color="@color/colorAccent"
+        app:shutter_background_color="@color/colorPrimaryDark"
         app:surface_type="none"
         app:use_artwork="false"
         app:use_controller="true" />
@@ -152,8 +154,8 @@
         android:minWidth="26dp"
         android:paddingLeft="@dimen/margin_10"
         android:paddingRight="@dimen/margin_10"
-        android:src="@drawable/ic_play"
         android:text="1.0x"
+        android:textColor="@color/ic_controller"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

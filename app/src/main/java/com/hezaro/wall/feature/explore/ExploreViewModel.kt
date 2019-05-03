@@ -22,7 +22,7 @@ class ExploreViewModel(private val repository: ExploreRepository) :
 
     private fun onSuccess(it: MutableList<Episode>) =
         launch(Dispatchers.Main) {
-            isExecute = true
+            isExecute = false
             explore.value = it
         }
 }

@@ -18,6 +18,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.UserInfo
+import com.hezaro.wall.data.model.Version
 import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.feature.episode.EpisodeFragment
 import com.hezaro.wall.feature.explore.ExploreFragment
@@ -70,10 +71,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
-
         with(vm) {
-            observe(result, ::onSuccess)
+            observe(login, ::onLogin)
             failure(failure, ::onFailure)
+            observe(version, ::onVersion)
+            version()
         }
 
         startService(Intent(this, MediaPlayerService::class.java))
@@ -167,13 +169,17 @@ class MainActivity : BaseActivity() {
 
         account?.let {
             Timber.i("idToken== ${it.idToken}")
-            profile.load(it.photoUrl.toString(), CircleTransform())
-//            vm.login(it.idToken!!)
+            vm.login(it.idToken!!)
         }
     }
 
-    private fun onSuccess(userInfo: UserInfo) {
-        profile.load(userInfo.avatar, CircleTransform())
+    private fun onLogin(it: UserInfo) {
+        profile.load(it.avatar, CircleTransform())
+    }
+
+    private fun onVersion(it: Version) {
+        if (!it.force_update)
+            forceUpdateDialog()
     }
 
     private fun onFailure(failure: Failure) {

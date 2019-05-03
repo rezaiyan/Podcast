@@ -17,10 +17,9 @@ import kotlin.coroutines.CoroutineContext
  * @see ViewModel
  * @see Failure
  */
-abstract class BaseViewModel<T : Any> : ViewModel(), CoroutineScope {
+abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     var failure: MutableLiveData<Failure> = MutableLiveData()
-    var result: MutableLiveData<T> = MutableLiveData()
     var isExecute = false
     var job = Job()
 
@@ -33,10 +32,6 @@ abstract class BaseViewModel<T : Any> : ViewModel(), CoroutineScope {
         job = Job()
     }
 
-    protected fun onSuccess(it: T) {
-        isExecute = false
-        launch(Dispatchers.Main) { result.value = it }
-    }
 
     protected fun onFailure(it: Failure) {
         launch(Dispatchers.Main) {

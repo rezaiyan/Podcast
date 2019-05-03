@@ -6,7 +6,13 @@ import android.content.Intent
 import android.media.AudioManager
 import timber.log.Timber
 
-class HeadsetReceiver(private val pauseAction: () -> Unit) : BroadcastReceiver() {
+class HeadsetReceiver() : BroadcastReceiver() {
+
+    private lateinit var pauseAction: () -> Unit
+
+    constructor(pauseAction: () -> Unit) : this() {
+        this.pauseAction = pauseAction
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
 

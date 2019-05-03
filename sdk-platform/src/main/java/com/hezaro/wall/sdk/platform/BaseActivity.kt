@@ -1,11 +1,17 @@
 package com.hezaro.wall.sdk.platform
 
+import android.animation.ValueAnimator
+import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Slide
+import com.google.android.material.button.MaterialButton
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.inTransaction
 import com.hezaro.wall.sdk.platform.ext.show
@@ -26,12 +32,39 @@ abstract class BaseActivity : AppCompatActivity() {
         addFragment(fragment())
     }
 
+    fun progressbarMargin() {
+        val params = progressBar().layoutParams as CoordinatorLayout.LayoutParams
+        if (params.bottomMargin == 0) {
+            val animator =
+                ValueAnimator.ofInt(params.bottomMargin, resources.getDimension(R.dimen.progress_margin).toInt())
+            animator.addUpdateListener { valueAnimator ->
+                params.bottomMargin = valueAnimator.animatedValue as Int
+                progressBar().requestLayout()
+            }
+            animator.duration = 100
+            animator.start()
+        }
+    }
+
     fun showProgress() {
         progressBar().show()
     }
 
     fun hideProgress() {
         progressBar().hide()
+    }
+
+    fun forceUpdateDialog() {
+        val dialog = Dialog(this)
+        dialog.setTitle("ورژن جدید اپلیکیشن در دسترس می باشد")
+        dialog.setContentView(R.layout.dialog_force_update)
+        dialog.findViewById<MaterialButton>(R.id.exit).setOnClickListener { System.exit(0) }
+        dialog.findViewById<MaterialButton>(R.id.update).setOnClickListener {
+            Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("http://wall.hezaro.com")
+                startActivity(this)
+            }
+        }
     }
 
     fun addFragment(fragment: BaseFragment) {

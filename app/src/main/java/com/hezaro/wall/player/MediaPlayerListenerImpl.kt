@@ -23,7 +23,7 @@ class MediaPlayerListenerImpl(
     private val onEpisodeChange: (Episode) -> Unit
 ) : MediaPlayerListener {
 
-    lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun setPlayer(mediaPlayer: MediaPlayer) {
         this.mediaPlayer = mediaPlayer

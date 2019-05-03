@@ -20,7 +20,7 @@ class ProfileFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(vm) {
-            observe(result, ::onSuccess)
+            observe(userInfo, ::onSuccess)
             failure(failure, ::onFailure)
         }
     }

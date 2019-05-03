@@ -4,12 +4,9 @@ import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.media.AudioManager
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.Player
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
@@ -59,7 +56,7 @@ class MediaPlayerService : Service() {
 
     private var mServiceBound = false
 
-    private val headsetReceiver: HeadsetReceiver by lazy { HeadsetReceiver { mediaPlayer!!.pausePlayback() } }
+    private val headsetReceiver: HeadsetReceiver by lazy { HeadsetReceiver { mediaPlayer?.pausePlayback() } }
 
     private lateinit var notificationHelper: PlayerNotificationHelper
 
@@ -89,15 +86,7 @@ class MediaPlayerService : Service() {
 
         mediaSessionHelper = MediaSessionHelper(context, mediaPlayer!!)
         notificationHelper.initNotificationHelper(mediaSessionHelper.sessionToken)
-        headsetReceiver.let {
-            if (!headsetReceiverIsRegistered) {
-                val iff = IntentFilter(Intent.ACTION_HEADSET_PLUG)
-                iff.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-                LocalBroadcastManager.getInstance(this).registerReceiver(it, iff)
-                headsetReceiverIsRegistered = true
-            }
 
-        }
     }
 
     override fun onDestroy() {
@@ -110,7 +99,6 @@ class MediaPlayerService : Service() {
             .setState(PlaybackStateCompat.STATE_NONE, mediaPlayer!!.currentPosition, 1.0f)
             .setActions(MEDIA_SESSION_ACTIONS or PlaybackStateCompat.ACTION_PLAY)
             .build()
-        headrestUnPlugged()
         notificationHelper.onDestroy()
         mediaSessionHelper.onDestroy()
         mediaPlayer!!.onDestroy()
@@ -181,16 +169,8 @@ class MediaPlayerService : Service() {
         return mBinder
     }
 
-    private fun headrestUnPlugged() {
-        if (headsetReceiverIsRegistered) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(headsetReceiver)
-            unregisterReceiver(headsetReceiver)
-            headsetReceiverIsRegistered = false
-        }
-    }
-
     private fun endPlayback(cancelNotification: Boolean) {
-        currentEpisode!!.status = Status.PLAYED
+        currentEpisode?.status = Status.PLAYED
         if (cancelNotification) {
             notificationHelper.onHide()
         }

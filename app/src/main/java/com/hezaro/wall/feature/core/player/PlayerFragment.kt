@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.core.main.MainActivity
+import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.services.MediaPlayerServiceHelper
@@ -41,11 +42,18 @@ class PlayerFragment : BaseFragment() {
     private var isExpanded = false
     private val vm: PlayerViewModel by inject()
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
+    private var sheetState = BottomSheetBehavior.STATE_HIDDEN
+        set(value) {
+            if (value == BottomSheetBehavior.STATE_COLLAPSED)
+                (activity as BaseActivity).progressbarMargin()
+            playerSheetBehavior?.state = value
+            field = value
+        }
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     fun setBehavior(playerSheetBehavior: BottomSheetBehavior<View>) {
         this.playerSheetBehavior = playerSheetBehavior
-        this.playerSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+        sheetState = BottomSheetBehavior.STATE_HIDDEN
         playerSheetBehavior.setBottomSheetCallback(bottomSheetCallback)
     }
 
@@ -53,7 +61,7 @@ class PlayerFragment : BaseFragment() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (isBuffering && newState == BottomSheetBehavior.STATE_DRAGGING)
-                playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                sheetState = BottomSheetBehavior.STATE_COLLAPSED
 
             when (newState) {
                 BottomSheetBehavior.STATE_EXPANDED -> {
@@ -70,8 +78,7 @@ class PlayerFragment : BaseFragment() {
             }
         }
 
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 
     @SuppressLint("SetTextI18n")
@@ -88,14 +95,14 @@ class PlayerFragment : BaseFragment() {
             when (playerSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
                     if (!isBuffering)
-                        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                        sheetState = BottomSheetBehavior.STATE_EXPANDED
                 }
                 BottomSheetBehavior.STATE_EXPANDED -> {
-                    playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    sheetState = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
         }
-        minimize.setOnClickListener { playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED }
+        minimize.setOnClickListener { sheetState = BottomSheetBehavior.STATE_COLLAPSED }
         exo_rew.setOnClickListener { MediaPlayerServiceHelper.seekBackward(requireContext()) }
         exo_ffwd.setOnClickListener { MediaPlayerServiceHelper.seekForward(requireContext()) }
         playPause.setOnClickListener { if (!isBuffering) doOnPlayer(ACTION_PLAY_PAUSE) }
@@ -147,13 +154,13 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun expand() {
-        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        sheetState = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    fun isExpand() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED
+    fun isExpand() = sheetState == BottomSheetBehavior.STATE_EXPANDED
 
     fun collapse() {
-        playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        sheetState = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun openMiniPlayer(episode: Episode) {
@@ -209,5 +216,5 @@ class PlayerFragment : BaseFragment() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
     }
 
-    fun ishidden() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_HIDDEN
+    fun ishidden() = sheetState == BottomSheetBehavior.STATE_HIDDEN
 }

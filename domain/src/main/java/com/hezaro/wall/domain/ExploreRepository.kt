@@ -14,8 +14,7 @@ interface ExploreRepository {
         BaseRepository(),
         ExploreRepository {
 
-        override fun explore(page: Int, offset: Int): Either<Failure, MutableList<Episode>> {
-            return request(api.explore(page = page, offset = offset)) { it.response }
-        }
+        override fun explore(page: Int, offset: Int) =
+            request(api.explore(page = page, offset = offset)) { it.response }
     }
 }

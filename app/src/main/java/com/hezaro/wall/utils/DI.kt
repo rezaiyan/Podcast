@@ -3,7 +3,7 @@ package com.hezaro.wall.utils
 import android.preference.PreferenceManager
 import com.hezaro.wall.data.utils.provideRetrofit
 import com.hezaro.wall.domain.ExploreRepository
-import com.hezaro.wall.domain.LoginRepository
+import com.hezaro.wall.domain.MainRepository
 import com.hezaro.wall.domain.PlayerRepository
 import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.feature.core.main.MainViewModel
@@ -20,7 +20,7 @@ val module: Module = module {
     viewModel { ExploreViewModel(get()) }
     single { ExploreRepository.ExploreRepositoryImpl(get()) } bind ExploreRepository::class
     viewModel { MainViewModel(get(), get()) }
-    single { LoginRepository.LoginRepositoryImpl(get(), get()) } bind LoginRepository::class
+    single { MainRepository.MainRepositoryImpl(get(), get()) } bind MainRepository::class
     viewModel { ProfileViewModel(get()) }
     single { ProfileRepository.ProfileRepositoryImpl(get()) } bind ProfileRepository::class
     single { PlayerRepository.PlayerRepositoryImpl(get()) } bind PlayerRepository::class

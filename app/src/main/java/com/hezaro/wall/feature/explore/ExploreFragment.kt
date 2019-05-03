@@ -34,12 +34,12 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     override fun invoke(episode: Episode, index: Int) {
-        setMargin()
+        liftExploreList()
         playerFragment.openMiniPlayer(episode)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        vm.result.value?.let {
+        vm.explore.value?.let {
             outState.putParcelable(SAVE_INSTANCE_EPISODES, Playlist(ArrayList(it)))
 
         }
@@ -50,7 +50,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
             it.getParcelable<Playlist>(SAVE_INSTANCE_EPISODES)?.let { playlist ->
-                vm.result.value = playlist.getItems()
+                vm.explore.value = playlist.getItems()
             }
         }
     }
@@ -92,7 +92,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         }
 
         with(vm) {
-            observe(result, ::onSuccess)
+            observe(explore, ::onSuccess)
             failure(failure, ::onFailure)
             explore(exploreList.page)
             exploreList.page++
@@ -107,7 +107,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         }
     }
 
-    private fun setMargin() {
+    private fun liftExploreList() {
         val params = exploreList.layoutParams as FrameLayout.LayoutParams
         if (params.bottomMargin == 0) {
             val animator =

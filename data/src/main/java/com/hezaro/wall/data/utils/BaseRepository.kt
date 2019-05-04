@@ -21,17 +21,29 @@ open class BaseRepository {
                 when {
                     response.isSuccessful -> Either.Right(transform((response.body()!!)))
                     (!response.isSuccessful && errorBody != null) -> {
-                        if (response.code() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-                            Either.Left(Failure.ServerError(response.code(), "Your API key is incorrect"))
-                        } else {
-                            val moshi = Moshi.Builder().build()
-                            val jsonAdapter = moshi.adapter(ErrorModel::class.java)
-                            val errorModel = jsonAdapter.fromJson(errorBody.string())
+                        when {
+                            response.code() >= HttpURLConnection.HTTP_INTERNAL_ERROR -> Either.Left(
+                                Failure.ServerError(
+                                    response.code(),
+                                    "Your API key is incorrect"
+                                )
+                            )
+                            response.code() != HttpURLConnection.HTTP_OK -> Either.Left(
+                                Failure.ServerError(
+                                    response.code(),
+                                    "Payload is invalid"
+                                )
+                            )
+                            else -> {
+                                val moshi = Moshi.Builder().build()
+                                val jsonAdapter = moshi.adapter(ErrorModel::class.java)
+                                val errorModel = jsonAdapter.fromJson(errorBody.string())
 
-                            val errorMessage = errorModel!!.msg
-                            val errorCode = response.code()
+                                val errorMessage = errorModel!!.msg
+                                val errorCode = response.code()
 
-                            Either.Left(Failure.ServerError(errorCode, errorMessage))
+                                Either.Left(Failure.ServerError(errorCode, errorMessage))
+                            }
                         }
 
                     }

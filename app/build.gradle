@@ -49,6 +49,9 @@ dependencies {
     implementation Libraries.firebaseMessaging
     implementation Libraries.exoPlayerCore
     implementation Libraries.exoPlayerUi
+    androidTestImplementation TestLibraries.rules
+    androidTestImplementation TestLibraries.espressoCore
+    androidTestImplementation TestLibraries.espressoContrib
 }
 
 apply plugin: 'com.google.gms.google-services'

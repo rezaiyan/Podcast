@@ -175,6 +175,7 @@ object TestLibraries {
     val rules = "androidx.test:rules:1.1.0"
     val espressoCore = "androidx.test.espresso:espresso-core:3.1.0"
     val espressoIntent = "androidx.test.espresso:espresso-intents:3.1.0"
+    val espressoContrib = "androidx.test.espresso:espresso-contrib:3.1.0"
     val xjunit = "androidx.test.ext:junit:1.0.0"
     val mockito = "org.mockito:mockito-core:${Versions.mockito}"
     val assertjCore = "org.assertj:assertj-core:${Versions.assertjCore}"

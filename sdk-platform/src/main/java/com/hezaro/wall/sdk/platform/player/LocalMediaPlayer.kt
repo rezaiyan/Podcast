@@ -20,16 +20,10 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
+import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import timber.log.Timber
-import java.io.File
 import java.lang.ref.WeakReference
 
 class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, private val context: Context) :
@@ -59,6 +53,11 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
 
     override val isPlaying: Boolean
         get() = exoPlayer!!.playWhenReady
+
+    private val dataSourceFactory by lazy {
+        PlayerDownloadHelper(context)
+            .buildDataSourceFactory()
+    }
 
     init {
         mediaPlayerListener.get()!!.setPlayer(this)
@@ -211,9 +210,6 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
 
     private fun buildMediaSource(mEpisode: Episode): MediaSource {
         val uri = Uri.parse(mEpisode.remoteMediaUrl)
-        val dataSourceFactory = getCacheDataSource(
-            File(context.cacheDir, PODCAST_CACHE_DIR)
-        )
         isStreaming = true
 
         if (uri != null) {
@@ -224,6 +220,7 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         throw IllegalStateException("Unable to build media source")
     }
 
+/*
     private fun getCacheDataSource(cacheDir: File): CacheDataSourceFactory {
         if (cache == null) {
             cache = SimpleCache(cacheDir, LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE.toLong()))
@@ -239,16 +236,12 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
             CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS,
             CacheDataSource.DEFAULT_MAX_CACHE_FILE_SIZE
         )
-    }
+    }*/
+
 
     companion object {
 
         private val TAG = LocalMediaPlayer::class.java.simpleName
 
-        private val MAX_CACHE_SIZE = 250000000
-
-        private val PODCAST_CACHE_DIR = "podcast-cache"
-
-        private var cache: SimpleCache? = null
     }
 }

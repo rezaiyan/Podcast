@@ -1,6 +1,5 @@
 package com.hezaro.wall.player
 
-import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
@@ -16,6 +15,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
 import com.hezaro.wall.R
+import com.hezaro.wall.feature.core.main.MainActivity
 import com.hezaro.wall.notification.player.NotificationHelper
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.services.MediaPlayerService
@@ -27,7 +27,6 @@ import com.squareup.picasso.Target
 
 class PlayerNotificationHelper(
     private val context: Context,
-    activity: Activity,
     private val service: MediaPlayerService
 ) : NotificationHelper, MediaDescriptionAdapter, NotificationListener {
 
@@ -41,7 +40,7 @@ class PlayerNotificationHelper(
         .getActivity(
             context,
             REQUEST_CODE,
-            Intent(context, activity.javaClass),
+            Intent(context, MainActivity::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 

@@ -9,5 +9,7 @@ dependencies {
     testImplementation TestLibraries.kluent
     testImplementation TestLibraries.mockitoKotlin
     testImplementation TestLibraries.junit
+    testImplementation TestLibraries.okhttpMockServer
+    testImplementation TestLibraries.retrofitMock
 }
 

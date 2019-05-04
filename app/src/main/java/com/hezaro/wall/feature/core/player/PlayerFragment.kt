@@ -91,11 +91,11 @@ class PlayerFragment : BaseFragment() {
                         playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
                 }
                 BottomSheetBehavior.STATE_EXPANDED -> {
-                    playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    collapse()
                 }
             }
         }
-        minimize.setOnClickListener { playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED }
+        minimize.setOnClickListener { collapse() }
         exo_rew.setOnClickListener { MediaPlayerServiceHelper.seekBackward(requireContext()) }
         exo_ffwd.setOnClickListener { MediaPlayerServiceHelper.seekForward(requireContext()) }
         playPause.setOnClickListener { if (!isBuffering) doOnPlayer(ACTION_PLAY_PAUSE) }

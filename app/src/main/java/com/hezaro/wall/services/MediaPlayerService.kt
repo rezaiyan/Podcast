@@ -1,6 +1,5 @@
 package com.hezaro.wall.services
 
-import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import com.hezaro.wall.data.model.Status
 import com.hezaro.wall.player.MediaPlayerListenerImpl
 import com.hezaro.wall.player.MediaSessionHelper
 import com.hezaro.wall.player.PlayerNotificationHelper
-import com.hezaro.wall.receivers.HeadsetReceiver
 import com.hezaro.wall.sdk.platform.player.LocalMediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
@@ -52,13 +50,9 @@ class MediaPlayerService : Service() {
 
     var currentEpisode: Episode? = null
 
-    private var headsetReceiverIsRegistered: Boolean = false
-
     private var mServiceBound = false
 
-    private val headsetReceiver: HeadsetReceiver by lazy { HeadsetReceiver { mediaPlayer?.pausePlayback() } }
-
-    private lateinit var notificationHelper: PlayerNotificationHelper
+    private val notificationHelper: PlayerNotificationHelper by lazy { PlayerNotificationHelper(context, this) }
 
     private val context by lazy<Context> { this }
 
@@ -73,9 +67,8 @@ class MediaPlayerService : Service() {
             get() = this@MediaPlayerService
     }
 
-    fun serviceConnected(activity: Activity) {
+    fun serviceConnected() {
 
-        notificationHelper = PlayerNotificationHelper(context, activity, this)
 
         val mediaPlayerListener = MediaPlayerListenerImpl(
             context, notificationHelper, currentEpisode,
@@ -176,8 +169,8 @@ class MediaPlayerService : Service() {
         }
     }
 
-    private fun addPlaylist(playlist: Playlist?) {
-        if (playlist != null) mediaPlayer!!.concatPlaylist(playlist)
+    private fun addPlaylist(playlist: Playlist) {
+        if (playlist != null) mediaPlayer?.concatPlaylist(playlist)
         else Timber.w("Player is playing, episode cannot be null")
     }
 

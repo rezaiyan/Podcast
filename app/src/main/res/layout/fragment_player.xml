@@ -154,6 +154,7 @@
         android:minWidth="26dp"
         android:paddingLeft="@dimen/margin_10"
         android:paddingRight="@dimen/margin_10"
+        android:textSize="12sp"
         android:text="1.0x"
         android:textColor="@color/ic_controller"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -13,4 +13,6 @@
     <string name="notification_pause">Pause</string>
     <string name="pref_key_skip_backward">pref_key_skip_backward</string>
     <string name="pref_key_skip_forward">pref_key_skip_forward</string>
+    <string name="search">جستجو</string>
+    <string name="podcast">پادکست</string>
 </resources>

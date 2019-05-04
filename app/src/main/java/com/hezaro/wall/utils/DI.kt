@@ -10,6 +10,7 @@ import com.hezaro.wall.feature.core.main.MainViewModel
 import com.hezaro.wall.feature.core.player.PlayerViewModel
 import com.hezaro.wall.feature.explore.ExploreViewModel
 import com.hezaro.wall.feature.profile.ProfileViewModel
+import com.hezaro.wall.feature.search.SearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
@@ -25,6 +26,7 @@ val module: Module = module {
     single { ProfileRepository.ProfileRepositoryImpl(get()) } bind ProfileRepository::class
     single { PlayerRepository.PlayerRepositoryImpl(get()) } bind PlayerRepository::class
     viewModel { PlayerViewModel(get()) }
+    viewModel { SearchViewModel() }
 
     single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
 

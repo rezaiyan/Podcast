@@ -42,18 +42,11 @@ class PlayerFragment : BaseFragment() {
     private var isExpanded = false
     private val vm: PlayerViewModel by inject()
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
-    private var sheetState = BottomSheetBehavior.STATE_HIDDEN
-        set(value) {
-            if (value == BottomSheetBehavior.STATE_COLLAPSED)
-                (activity as BaseActivity).progressbarMargin()
-            playerSheetBehavior?.state = value
-            field = value
-        }
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     fun setBehavior(playerSheetBehavior: BottomSheetBehavior<View>) {
         this.playerSheetBehavior = playerSheetBehavior
-        sheetState = BottomSheetBehavior.STATE_HIDDEN
+        playerSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         playerSheetBehavior.setBottomSheetCallback(bottomSheetCallback)
     }
 
@@ -61,7 +54,7 @@ class PlayerFragment : BaseFragment() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (isBuffering && newState == BottomSheetBehavior.STATE_DRAGGING)
-                sheetState = BottomSheetBehavior.STATE_COLLAPSED
+                playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
             when (newState) {
                 BottomSheetBehavior.STATE_EXPANDED -> {
@@ -95,14 +88,14 @@ class PlayerFragment : BaseFragment() {
             when (playerSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
                     if (!isBuffering)
-                        sheetState = BottomSheetBehavior.STATE_EXPANDED
+                        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
                 }
                 BottomSheetBehavior.STATE_EXPANDED -> {
-                    sheetState = BottomSheetBehavior.STATE_COLLAPSED
+                    playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
         }
-        minimize.setOnClickListener { sheetState = BottomSheetBehavior.STATE_COLLAPSED }
+        minimize.setOnClickListener { playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED }
         exo_rew.setOnClickListener { MediaPlayerServiceHelper.seekBackward(requireContext()) }
         exo_ffwd.setOnClickListener { MediaPlayerServiceHelper.seekForward(requireContext()) }
         playPause.setOnClickListener { if (!isBuffering) doOnPlayer(ACTION_PLAY_PAUSE) }
@@ -154,17 +147,17 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun expand() {
-        sheetState = BottomSheetBehavior.STATE_EXPANDED
+        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    fun isExpand() = sheetState == BottomSheetBehavior.STATE_EXPANDED
+    fun isExpand() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED
 
     fun collapse() {
-        if (sheetState == BottomSheetBehavior.STATE_EXPANDED)
-            sheetState = BottomSheetBehavior.STATE_COLLAPSED
+        playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun openMiniPlayer(episode: Episode) {
+        (activity as BaseActivity).progressbarMargin()
         playerSheetBehavior?.peekHeight =
             resources.getDimension(R.dimen.mini_player_height).toInt()
         MediaPlayerServiceHelper.playEpisode(requireContext(), episode)
@@ -173,6 +166,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun updateMiniPlayer(episode: Episode) {
+        (activity as BaseActivity).progressbarMargin()
         doOnPlayer(ACTION_PLAY_PAUSE)
         doOnPlayer(ACTION_PLAY_PAUSE)
         playerSheetBehavior?.peekHeight =
@@ -217,5 +211,5 @@ class PlayerFragment : BaseFragment() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
     }
 
-    fun ishidden() = sheetState == BottomSheetBehavior.STATE_HIDDEN
+    fun ishidden() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_HIDDEN
 }

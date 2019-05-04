@@ -187,7 +187,6 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        val playerFragment = (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!!
         if (playerFragment.isExpand())
             playerFragment.collapse()
         else {

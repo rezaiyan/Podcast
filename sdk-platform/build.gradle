@@ -9,6 +9,7 @@ dependencies {
     implementation SupportLibraries.design
     implementation Libraries.retrofit
     implementation Libraries.timber
+    implementation Libraries.rxJava
     implementation Libraries.coroutinesCore
     implementation Libraries.exoPlayerCore
     implementation Libraries.exoPlayerUi

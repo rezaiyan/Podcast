@@ -1,7 +1,7 @@
 package com.hezaro.wall.data.utils
 
 import com.hezaro.wall.data.model.ErrorModel
-import com.hezaro.wall.data.model.Explore
+import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
@@ -21,9 +21,9 @@ class BaseRepositoryBot {
 
     private var api = mock(ApiService::class)
     @Suppress("UNCHECKED_CAST")
-    private var call = mock(Call::class) as Call<Explore>?
+    private var call = mock(Call::class) as Call<com.hezaro.wall.data.model.Response<UserInfo>>?
     @Suppress("UNCHECKED_CAST")
-    private var response1 = mock(Response::class) as Response<Explore>?
+    private var response1 = mock(Response::class) as Response<com.hezaro.wall.data.model.Response<UserInfo>>?
     private var repository = BaseRepository()
     private val errorMessage = "اطلاعات برای اهراز هویت ارسال نشده است"
     val errorResponse = Response.error<ErrorModel>(
@@ -36,19 +36,19 @@ class BaseRepositoryBot {
         ).message("Error message test").build()
     )
 
-    fun withThisResponse(response: Response<Explore>?): BaseRepositoryBot {
+    fun withThisResponse(response: Response<com.hezaro.wall.data.model.Response<UserInfo>>?): BaseRepositoryBot {
         this.response1 = response
         return this
     }
 
-    fun withThisCall(call: Call<Explore>?): BaseRepositoryBot {
+    fun withThisCall(call: Call<com.hezaro.wall.data.model.Response<UserInfo>>?): BaseRepositoryBot {
         this.call = call
         return this
     }
 
 
     fun loginReturnsThiscall(): BaseRepositoryBot {
-        Mockito.`when`(api.explore()).thenReturn(call)
+        Mockito.`when`(api.login("id_token")).thenReturn(call)
         return this
     }
 
@@ -65,29 +65,31 @@ class BaseRepositoryBot {
     }
     @Suppress("RedundantLambdaArrow")
     fun verifyNullResponse() {
-        val onResult = { _: Explore -> Either.Left(Failure.NetworkConnection()) }
-        val result = repository.request(api.explore(), onResult)
+        val onResult =
+            { _: com.hezaro.wall.data.model.Response<UserInfo> -> Either.Left(Failure.NetworkConnection()) }
+        val result = repository.request(api.login("id_token"), onResult)
 
         result.either({ failure -> failure shouldBeInstanceOf Failure.NetworkConnection::class.java }, {})
     }
     @Suppress("RedundantLambdaArrow")
     fun verifyException() {
-        val onResult = { _: Explore -> Either.Left(Failure.FeatureFailure(Throwable())) }
-        val result = repository.request(api.explore(), onResult)
+        val onResult =
+            { _: com.hezaro.wall.data.model.Response<UserInfo> -> Either.Left(Failure.FeatureFailure(Throwable())) }
+        val result = repository.request(api.login("id_token"), onResult)
 
         result.either({ failure -> failure shouldBeInstanceOf Failure.FeatureFailure::class.java }, {})
     }
 
     fun verifySuccessful() {
-        val onResult = { explore: Explore -> Either.Right(explore) }
-        val result = repository.request(api.explore(), onResult)
+        val onResult = { userInfo: com.hezaro.wall.data.model.Response<UserInfo> -> Either.Right(userInfo) }
+        val result = repository.request(api.login("id_token"), onResult)
 
         result.either({ }, { response -> response shouldBeInstanceOf Either.Right::class.java })
     }
 
     fun verifyUnsuccessful() {
-        val onResult = { explore: Explore -> Either.Right(explore) }
-        val result = repository.request(api.explore(), onResult)
+        val onResult = { userInfo: com.hezaro.wall.data.model.Response<UserInfo> -> Either.Right(userInfo) }
+        val result = repository.request(api.login("id_token"), onResult)
 
         result.either({ failure ->
             failure shouldBeInstanceOf Failure.ServerError::class.java

@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
 import com.hezaro.wall.R
+import com.hezaro.wall.notification.player.NotificationHelper
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.utils.fastForwardIncrementMs

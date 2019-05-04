@@ -3,8 +3,8 @@ package com.hezaro.wall.notification
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.hezaro.wall.R.string
-import com.hezaro.wall.player.GeneralNotificationHelper
-import com.hezaro.wall.player.NotificationBody
+import com.hezaro.wall.notification.player.GeneralNotificationHelper
+import com.hezaro.wall.notification.player.NotificationBody
 import org.json.JSONObject
 import timber.log.Timber
 

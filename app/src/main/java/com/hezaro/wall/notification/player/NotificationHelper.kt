@@ -1,4 +1,4 @@
-package com.hezaro.wall.player
+package com.hezaro.wall.notification.player
 
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 

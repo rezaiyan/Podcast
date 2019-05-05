@@ -7,7 +7,11 @@ class Podcast : Parcelable {
 
     var id: Int = -1
 
+    var episodes_count: Int = -1
+
     var title: String? = ""
+
+    var cover: String? = ""
 
     var website: String? = ""
 
@@ -15,7 +19,9 @@ class Podcast : Parcelable {
 
     constructor(source: Parcel) {
         id = source.readInt()
+        episodes_count = source.readInt()
         title = source.readString()
+        cover = source.readString()
         website = source.readString()
         creator = source.readString()
     }
@@ -24,7 +30,9 @@ class Podcast : Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
+        parcel.writeInt(episodes_count)
         parcel.writeString(title)
+        parcel.writeString(cover)
         parcel.writeString(website)
         parcel.writeString(creator)
     }

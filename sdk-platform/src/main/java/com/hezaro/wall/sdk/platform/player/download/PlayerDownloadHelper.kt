@@ -14,17 +14,14 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
-import com.hezaro.wall.sdk.platform.BuildConfig
+import com.hezaro.wall.sdk.platform.R
 import java.io.File
 
-/**
- * Placeholder application to facilitate overriding Application methods for debugging and testing.
- */
 class PlayerDownloadHelper(context: Context) {
 
     private val context: Context = context.applicationContext
 
-    private val userAgent: String = Util.getUserAgent(context, "Wall")
+    private val userAgent: String = Util.getUserAgent(context, context.getString(R.string.app_name))
 
     private var downloadDirectory: File? = null
 
@@ -47,13 +44,6 @@ class PlayerDownloadHelper(context: Context) {
         return DefaultHttpDataSourceFactory(userAgent)
     }
 
-    /**
-     * Returns whether extension renderers should be used.
-     */
-    fun useExtensionRenderers(): Boolean {
-        return "withExtensions" == BuildConfig.FLAVOR
-    }
-
     fun getDownloadManager(): DownloadManager? {
         initDownloadManager()
         return dlManager
@@ -66,9 +56,7 @@ class PlayerDownloadHelper(context: Context) {
 
     @Synchronized
     private fun initDownloadManager() {
-        if (dlManager ==
-            /* eventListener= */ null
-        ) {
+        if (dlManager == null) {
             val downloaderConstructorHelper =
                 DownloaderConstructorHelper(getDownloadCache(), buildHttpDataSourceFactory())
             dlManager = DownloadManager(
@@ -125,6 +113,7 @@ class PlayerDownloadHelper(context: Context) {
         private val DOWNLOAD_CONTENT_DIRECTORY = "wallpodcast"
 
         private val MAX_SIMULTANEOUS_DOWNLOADS = 2
+
         private var downloadCache: Cache? = null
     }
 }

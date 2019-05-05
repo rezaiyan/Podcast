@@ -162,9 +162,7 @@ class DownloadTracker(
         DownloadService.startWithAction(context, PlayerDownloadService::class.java, action, true)
     }
 
-    private fun getDownloadHelper(uri: Uri): DownloadHelper {
-        return ProgressiveDownloadHelper(uri)
-    }
+    private fun getDownloadHelper(uri: Uri) = ProgressiveDownloadHelper(uri)
 
     private inner class StartDownloadDialogHelper(
         activity: Activity, private val downloadHelper: DownloadHelper, private val name: String

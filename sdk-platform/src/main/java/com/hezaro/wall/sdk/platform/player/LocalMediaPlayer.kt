@@ -118,7 +118,7 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
             if (currentIndex > 0 && exoPlayer!!.currentTimeline.windowCount > 0 &&
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
             ) {
-                exoPlayer!!.seekTo(currentIndex, 0)
+                exoPlayer!!.seekTo(currentIndex, episode.state)
                 exoPlayer!!.playWhenReady = true
             }
         }
@@ -219,25 +219,6 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         }
         throw IllegalStateException("Unable to build media source")
     }
-
-/*
-    private fun getCacheDataSource(cacheDir: File): CacheDataSourceFactory {
-        if (cache == null) {
-            cache = SimpleCache(cacheDir, LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE.toLong()))
-        }
-
-        val upstream = DefaultHttpDataSourceFactory(
-            "wall.userAgent", null,
-            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true
-        )
-        return CacheDataSourceFactory(
-            cache, upstream,
-            CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS,
-            CacheDataSource.DEFAULT_MAX_CACHE_FILE_SIZE
-        )
-    }*/
-
 
     companion object {
 

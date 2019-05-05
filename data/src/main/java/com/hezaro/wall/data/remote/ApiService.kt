@@ -11,6 +11,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 private const val BASE = "api/v1"
@@ -27,4 +28,8 @@ interface ApiService {
     @FormUrlEncoded
     @POST("$BASE/version")
     fun version(@Field("version_code") version_code: Int = BuildConfig.VERSION_CODE): Call<Response<Version>>
+
+    @FormUrlEncoded
+    @POST("$BASE/{episode_id}/state")
+    fun sendLastPosition(@Path("episode_id") episode_id: Int, @Field("state") state: Long): Call<Response<Any>>
 }

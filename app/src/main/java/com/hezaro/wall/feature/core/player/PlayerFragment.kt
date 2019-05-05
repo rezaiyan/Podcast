@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.fragment_player.miniPlayerLayout
 import kotlinx.android.synthetic.main.fragment_player.miniPlayerProgressBar
 import kotlinx.android.synthetic.main.fragment_player.minimize
 import kotlinx.android.synthetic.main.fragment_player.playPause
+import kotlinx.android.synthetic.main.fragment_player.playerView
 import kotlinx.android.synthetic.main.fragment_player.speedChooser
 import kotlinx.android.synthetic.main.fragment_player.subtitle
 import kotlinx.android.synthetic.main.fragment_player.title
@@ -160,6 +161,7 @@ class PlayerFragment : BaseFragment() {
 
     fun openMiniPlayer(episode: Episode) {
         this.currentEpisode = episode
+        vm.savePosition(currentEpisode!!.id, playerView.player.currentPosition)
         (activity as BaseActivity).progressbarMargin()
         playerSheetBehavior?.peekHeight =
             resources.getDimension(R.dimen.mini_player_height).toInt()
@@ -202,6 +204,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onBackPressed() {
+
         collapse()
     }
 

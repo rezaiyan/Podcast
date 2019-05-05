@@ -24,7 +24,7 @@ val module: Module = module {
     single { MainRepository.MainRepositoryImpl(get(), get()) } bind MainRepository::class
     viewModel { ProfileViewModel(get()) }
     single { ProfileRepository.ProfileRepositoryImpl(get()) } bind ProfileRepository::class
-    single { PlayerRepository.PlayerRepositoryImpl(get()) } bind PlayerRepository::class
+    single { PlayerRepository.PlayerRepositoryImpl(get(), get()) } bind PlayerRepository::class
     viewModel { PlayerViewModel(get()) }
     viewModel { SearchViewModel() }
 

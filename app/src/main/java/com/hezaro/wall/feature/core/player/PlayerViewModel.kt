@@ -8,4 +8,7 @@ class PlayerViewModel(private val repository: PlayerRepository) : BaseViewModel(
 
     fun speed(speed: Float) = launch(job) { repository.setSpeed(speed) }
     fun defaultSpeed() = repository.getSpeed()
+    fun savePosition(id: Int, lastState: Long) = launch(job) {
+        repository.sendLastPosition(id, lastState)
+    }
 }

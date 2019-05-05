@@ -92,12 +92,12 @@ class DownloadTracker(
         } else trackedDownloadStates[uri]!!.keys
     }
 
-    fun toggleDownload(activity: Activity, name: String, uri: Uri, extension: String) {
+    fun toggleDownload(activity: Activity, name: String, uri: Uri) {
         if (isDownloaded(uri)) {
-            val removeAction = getDownloadHelper(uri, extension).getRemoveAction(Util.getUtf8Bytes(name))
+            val removeAction = getDownloadHelper(uri).getRemoveAction(Util.getUtf8Bytes(name))
             startServiceWithAction(removeAction)
         } else {
-            val helper = StartDownloadDialogHelper(activity, getDownloadHelper(uri, extension), name)
+            val helper = StartDownloadDialogHelper(activity, getDownloadHelper(uri), name)
             helper.prepare()
         }
     }
@@ -162,7 +162,7 @@ class DownloadTracker(
         DownloadService.startWithAction(context, PlayerDownloadService::class.java, action, true)
     }
 
-    private fun getDownloadHelper(uri: Uri, extension: String): DownloadHelper {
+    private fun getDownloadHelper(uri: Uri): DownloadHelper {
         return ProgressiveDownloadHelper(uri)
     }
 

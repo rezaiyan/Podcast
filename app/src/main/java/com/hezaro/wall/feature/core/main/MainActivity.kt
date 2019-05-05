@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
@@ -30,9 +29,6 @@ import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
-import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
-import com.hezaro.wall.sdk.platform.player.download.DownloadTracker.Listener
-import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.RC_SIGN_IN
@@ -43,9 +39,7 @@ import kotlinx.android.synthetic.main.toolbar.toolbar
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class MainActivity : BaseActivity(), Listener {
-    override fun onDownloadsChanged() {
-    }
+class MainActivity : BaseActivity() {
 
     override fun fragment() = ExploreFragment()
 
@@ -56,11 +50,6 @@ class MainActivity : BaseActivity(), Listener {
     override fun progressBar(): ProgressBar = progressBar
     override fun fragmentContainer() = R.id.fragmentContainer
     private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }
-    private val downloader: DownloadTracker by lazy {
-        PlayerDownloadHelper(
-            applicationContext
-        ).dlTracker!!
-    }
 
     var playerService: MediaPlayerService? = null
     private val serviceConnection = object : ServiceConnection {
@@ -85,14 +74,13 @@ class MainActivity : BaseActivity(), Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
+        startService(Intent(this, MediaPlayerService::class.java))
+
         with(vm) {
             observe(login, ::onLogin)
-            failure(failure, ::onFailure)
             observe(version, ::onVersion)
-            version()
+            failure(failure, ::onFailure)
         }
-
-        startService(Intent(this, MediaPlayerService::class.java))
 
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener { task ->
@@ -103,10 +91,6 @@ class MainActivity : BaseActivity(), Listener {
         prepareGoogleSignIn()
     }
 
-    fun startDownload(episode: Episode) {
-        downloader.toggleDownload(this, episode.title, Uri.parse(episode.source), ".mp3")
-    }
-
     private fun bindService() {
         bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
     }
@@ -115,8 +99,8 @@ class MainActivity : BaseActivity(), Listener {
         playerFragment.collapse(); addFragment(SearchFragment())
     }
 
-    fun episode() {
-        val fragment = EpisodeFragment()
+    fun episode(episode: Episode) {
+        val fragment = EpisodeFragment.newInstance(episode)
         playerFragment.collapse(); addFragment(fragment)
     }
 
@@ -138,13 +122,11 @@ class MainActivity : BaseActivity(), Listener {
 
     override fun onStop() {
         super.onStop()
-        downloader.removeListener(this)
         unbindService(serviceConnection)
     }
 
     override fun onStart() {
         super.onStart()
-        downloader.addListener(this)
         bindService()
         val account = googleSignInAccount()
         updateUI(account)
@@ -194,7 +176,7 @@ class MainActivity : BaseActivity(), Listener {
     }
 
     private fun onLogin(it: UserInfo) {
-        profile.load(it.avatar, CircleTransform())
+        profile.load(it.avatar, transformation = CircleTransform())
     }
 
     private fun onVersion(it: Version) {
@@ -214,4 +196,6 @@ class MainActivity : BaseActivity(), Listener {
             super.onBackPressed()
         }
     }
+
+    fun isPlayerExpand() = playerFragment.isExpand()
 }

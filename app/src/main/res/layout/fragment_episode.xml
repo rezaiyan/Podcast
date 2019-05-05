@@ -1,22 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hezaro.wall.sdk.platform.utils.PullDismissLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorPrimaryDark"
-    android:clickable="true"
-    android:focusable="true"
+    android:id="@+id/pullLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true">
 
-    <TextView
-        android:id="@+id/episodeTitle"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/trafic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@tools:sample/last_names" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/podcastCover"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_play"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/episodeCover"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@id/podcastCover"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="2.0"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/podcastTitle"
+            style="@style/CustomTitleTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10"
+            android:ellipsize="start"
+            android:fontFamily="@font/trafic"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="@id/podcastCover"
+            app:layout_constraintTop_toTopOf="@id/podcastCover"
+            tools:text="عنوان تست" />
+
+        <TextView
+            android:id="@+id/podcasterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_16"
+            android:ellipsize="start"
+            android:fontFamily="@font/trafic"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="@id/podcastCover"
+            app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
+            tools:text="عنوان تست" />
+
+        <ImageView
+            android:id="@+id/playedCountIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="@dimen/margin_8"
+            android:background="@drawable/bg_speed"
+            android:padding="4dp"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@id/podcastCover"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/playedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4"
+            android:maxLength="4"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playedCountIcon"
+            app:layout_constraintStart_toEndOf="@+id/playedCountIcon"
+            app:layout_constraintTop_toTopOf="@+id/playedCountIcon"
+            tools:text="432" />
+
+        <ImageView
+            android:id="@+id/voteCountIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:layout_marginStart="@dimen/margin_16"
+            android:src="@drawable/ic_favorite"
+            app:layout_constraintBottom_toBottomOf="@id/podcastCover"
+            app:layout_constraintStart_toEndOf="@+id/playedCount" />
+
+        <TextView
+            android:id="@+id/voteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_4"
+            android:maxLength="4"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/voteCountIcon"
+            app:layout_constraintStart_toEndOf="@+id/voteCountIcon"
+            app:layout_constraintTop_toTopOf="@+id/voteCountIcon"
+            tools:text="432" />
+
+        <TextView
+            android:id="@+id/episodeTitle"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_20"
+            android:ellipsize="start"
+            android:fontFamily="@font/trafic"
+            android:singleLine="true"
+            android:textColor="@color/colorTextPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/episodeCover"
+            tools:text="@tools:sample/last_names" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_20"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/episodeTitle">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <WebView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+            </FrameLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.hezaro.wall.sdk.platform.utils.PullDismissLayout>

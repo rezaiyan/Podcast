@@ -6,7 +6,7 @@ import com.hezaro.wall.R
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
-import com.squareup.picasso.Picasso
+import com.hezaro.wall.sdk.platform.ext.load
 import kotlinx.android.synthetic.main.fragment_profile.avatar
 import org.koin.android.ext.android.inject
 
@@ -26,7 +26,7 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun onSuccess(userInfo: UserInfo) {
-        Picasso.get().load("").into(avatar)
+        avatar.load("")
     }
 
     private fun onFailure(failure: Failure) {

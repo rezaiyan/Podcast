@@ -14,6 +14,7 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.core.main.MainActivity
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
+import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.ACTION_EPISODE
@@ -21,7 +22,6 @@ import com.hezaro.wall.utils.ACTION_EPISODE_GET
 import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
 import com.hezaro.wall.utils.ACTION_PLAY_PAUSE
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_player.episodeInfo
 import kotlinx.android.synthetic.main.fragment_player.logo
 import kotlinx.android.synthetic.main.fragment_player.miniPlayerLayout
@@ -40,6 +40,7 @@ class PlayerFragment : BaseFragment() {
     override fun tag(): String = this::class.java.simpleName
     private var isBuffering = false
     private var isExpanded = false
+    private var currentEpisode: Episode? = null
     private val vm: PlayerViewModel by inject()
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
@@ -83,7 +84,7 @@ class PlayerFragment : BaseFragment() {
         speedChooser.setOnClickListener {
             speedPicker.show(vm.defaultSpeed())
         }
-        episodeInfo.setOnClickListener { activity.episode() }
+        episodeInfo.setOnClickListener { activity.episode(currentEpisode!!) }
         miniPlayerLayout.setOnClickListener {
             when (playerSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
@@ -118,8 +119,8 @@ class PlayerFragment : BaseFragment() {
 
                 when (intent.action) {
                     ACTION_EPISODE -> {
-                        val episode = intent.getParcelableExtra<Episode>(ACTION_EPISODE_GET)
-                        updatePlayerView(episode)
+                        currentEpisode = intent.getParcelableExtra(ACTION_EPISODE_GET)
+                        updatePlayerView()
                     }
                     ACTION_PLAYER -> {
                         val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
@@ -151,37 +152,42 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun isExpand() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED
+    fun isCollapsed() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_COLLAPSED
 
     fun collapse() {
         playerSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun openMiniPlayer(episode: Episode) {
+        this.currentEpisode = episode
         (activity as BaseActivity).progressbarMargin()
         playerSheetBehavior?.peekHeight =
             resources.getDimension(R.dimen.mini_player_height).toInt()
         MediaPlayerServiceHelper.playEpisode(requireContext(), episode)
-        updatePlayerView(episode)
+        updatePlayerView()
         collapse()
     }
 
     fun updateMiniPlayer(episode: Episode) {
+        this.currentEpisode = episode
         (activity as BaseActivity).progressbarMargin()
         doOnPlayer(ACTION_PLAY_PAUSE)
         doOnPlayer(ACTION_PLAY_PAUSE)
         playerSheetBehavior?.peekHeight =
             resources.getDimension(R.dimen.mini_player_height).toInt()
-        updatePlayerView(episode)
+        updatePlayerView()
         collapse()
         isBuffering = false
         miniPlayerProgressBar.visibility = View.INVISIBLE
         playPause.setImageResource(R.drawable.ic_pause)
     }
 
-    private fun updatePlayerView(episode: Episode) {
-        title.text = episode.title
-        subtitle.text = episode.podcast?.creator
-        Picasso.get().load(episode.cover).into(logo)
+    private fun updatePlayerView() {
+        currentEpisode!!.let {
+            title.text = it.title
+            subtitle.text = it.podcast?.creator
+            logo.load(it.cover)
+        }
     }
 
     private fun showMinimize(beMinimize: Boolean) {

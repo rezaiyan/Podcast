@@ -18,12 +18,12 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.sdk.platform.ext.loadWith
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
 import com.hezaro.wall.utils.MEDIA_SESSION_ACTIONS
-import com.hezaro.wall.utils.load
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
@@ -117,7 +117,7 @@ class MediaSessionHelper(private val context: Context, private val mediaPlayer: 
 
         mediaPlayer.getCurrentEpisode()?.let {
             Picasso.get()
-                .load(it.cover, R.drawable.ic_placeholder)
+                .loadWith(it.cover, R.drawable.ic_placeholder)
                 .error(R.drawable.ic_placeholder)
                 .into(object : Target {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {

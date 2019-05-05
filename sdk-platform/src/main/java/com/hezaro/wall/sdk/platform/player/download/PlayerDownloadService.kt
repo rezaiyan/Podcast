@@ -19,7 +19,7 @@ class PlayerDownloadService : DownloadService(
 ) {
 
     override fun getDownloadManager(): DownloadManager {
-        return PlayerDownloadHelper(applicationContext).dlManager!!
+        return PlayerDownloadHelper(applicationContext).getDownloadManager()!!
     }
 
     override fun getScheduler(): PlatformScheduler? {

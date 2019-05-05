@@ -2,6 +2,7 @@ package com.hezaro.wall.sdk.platform.player.download
 
 import android.content.Context
 import com.google.android.exoplayer2.offline.DownloadManager
+import com.google.android.exoplayer2.offline.DownloaderConstructorHelper
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
@@ -13,6 +14,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
+import com.hezaro.wall.sdk.platform.BuildConfig
 import java.io.File
 
 /**
@@ -26,9 +28,9 @@ class PlayerDownloadHelper(context: Context) {
 
     private var downloadDirectory: File? = null
 
-    var dlManager: DownloadManager? = null
+    private var dlManager: DownloadManager? = null
 
-    var dlTracker: DownloadTracker? = null
+    private var dlTracker: DownloadTracker? = null
 
     /**
      * Returns a [DataSource.Factory].
@@ -43,6 +45,44 @@ class PlayerDownloadHelper(context: Context) {
      */
     private fun buildHttpDataSourceFactory(): HttpDataSource.Factory {
         return DefaultHttpDataSourceFactory(userAgent)
+    }
+
+    /**
+     * Returns whether extension renderers should be used.
+     */
+    fun useExtensionRenderers(): Boolean {
+        return "withExtensions" == BuildConfig.FLAVOR
+    }
+
+    fun getDownloadManager(): DownloadManager? {
+        initDownloadManager()
+        return dlManager
+    }
+
+    fun getDownloadTracker(): DownloadTracker? {
+        initDownloadManager()
+        return dlTracker
+    }
+
+    @Synchronized
+    private fun initDownloadManager() {
+        if (dlManager ==
+            /* eventListener= */ null
+        ) {
+            val downloaderConstructorHelper =
+                DownloaderConstructorHelper(getDownloadCache(), buildHttpDataSourceFactory())
+            dlManager = DownloadManager(
+                downloaderConstructorHelper,
+                MAX_SIMULTANEOUS_DOWNLOADS,
+                DownloadManager.DEFAULT_MIN_RETRY_COUNT,
+                File(getDownloadDirectory(), DOWNLOAD_ACTION_FILE)
+            )
+            dlTracker = DownloadTracker(
+                context,
+                File(getDownloadDirectory(), DOWNLOAD_TRACKER_ACTION_FILE)
+            )
+            dlManager!!.addListener(dlTracker)
+        }
     }
 
     @Synchronized
@@ -78,8 +118,13 @@ class PlayerDownloadHelper(context: Context) {
 
     companion object {
 
+        private val DOWNLOAD_ACTION_FILE = "actions"
+
+        private val DOWNLOAD_TRACKER_ACTION_FILE = "tracked_actions"
+
         private val DOWNLOAD_CONTENT_DIRECTORY = "wallpodcast"
 
+        private val MAX_SIMULTANEOUS_DOWNLOADS = 2
         private var downloadCache: Cache? = null
     }
 }

@@ -3,8 +3,11 @@ package com.hezaro.wall.data.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
 import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.remote.ApiService
+import com.hezaro.wall.sdk.base.extention.JWT
+import com.hezaro.wall.sdk.base.extention.get
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.orhanobut.logger.Logger
 import okhttp3.Cache
@@ -27,7 +30,7 @@ fun ModuleDefinition.provideRetrofit(): ApiService {
 }
 
 fun ModuleDefinition.provideHttpClient(): OkHttpClient {
-
+    val jwt = PreferenceManager.getDefaultSharedPreferences(androidContext()).get(JWT, "")
     val clientBuilder = OkHttpClient.Builder()
         .cache(provideCache())
         .addNetworkInterceptor(networkCacheProvider())
@@ -35,6 +38,7 @@ fun ModuleDefinition.provideHttpClient(): OkHttpClient {
         .readTimeout(5, SECONDS)
         .connectTimeout(10, SECONDS)
         .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
+        .addInterceptor(setHeader("Authorization", "Barear$jwt"))
 
     val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
         if (message.isJson())

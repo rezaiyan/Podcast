@@ -32,6 +32,8 @@ dependencies {
     implementation Libraries.kotlin
     implementation Libraries.ktx
     implementation Libraries.timber
+    implementation Libraries.coroutinesAdapter
+    implementation Libraries.gsonConverter
     implementation Libraries.logger
     implementation Libraries.koinCore
     implementation Libraries.koinAndroid

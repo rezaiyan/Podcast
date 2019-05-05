@@ -6,5 +6,6 @@ data class Response<T>(
 )
 
 data class Meta(
-    var status: Int
+    val status: Int,
+    val message: String
 )

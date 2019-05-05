@@ -23,7 +23,6 @@ dependencies {
     implementation Libraries.coroutinesAdapter
     implementation Libraries.coroutinesAndroid
     implementation Libraries.koinAndroid
-    implementation Libraries.gsonConverter
     implementation SupportLibraries.annotation
 
     testImplementation project(Modules.sdkTest)

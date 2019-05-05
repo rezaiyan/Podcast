@@ -8,7 +8,7 @@ import com.hezaro.wall.notification.player.NotificationBody
 import org.json.JSONObject
 import timber.log.Timber
 
-class WallFirebaseMessagingService : FirebaseMessagingService() {
+class MessagingService : FirebaseMessagingService() {
 
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {

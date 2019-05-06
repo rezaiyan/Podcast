@@ -175,7 +175,7 @@ class PullDismissLayout : FrameLayout {
         override fun onViewReleased(view: View, xv: Float, yv: Float) {
             dismissed =
                 dragPercent >= 0.50f || Math.abs(xv) > pullDismissLayout.minFlingVelocity && dragPercent > 0.20f
-            val finalTop = if (dismissed) pullDismissLayout.height else startTop
+            val finalTop = if (dismissed) pullDismissLayout.height else 0
             pullDismissLayout.dragHelper!!.settleCapturedViewAt(0, finalTop)
             pullDismissLayout.invalidate()
         }

@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
@@ -96,7 +97,6 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
                 }
             }
         }
-
         val beReset = exoPlayer!!.currentWindowIndex > 0 || isPlaying
         if (!beReset) {
             exoPlayer!!.prepare(concatenatingMediaSource)
@@ -114,12 +114,11 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         this.episode = episode
         if (playlist != null) {
             val currentIndex = playlist!!.getIndex(episode)
-
             if (currentIndex > 0 && exoPlayer!!.currentTimeline.windowCount > 0 &&
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
             ) {
                 exoPlayer!!.seekTo(currentIndex, episode.state)
-                exoPlayer!!.playWhenReady = true
+                exoPlayer!!.playWhenReady = episode.lastPlayed == 0
             }
         }
     }
@@ -197,9 +196,9 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
+        exoPlayer!!.retry()
         Toast.makeText(context, error!!.cause!!.message, Toast.LENGTH_SHORT).show()
         Timber.w(error, "Player error encountered")
-        stopPlayback()
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -209,7 +208,7 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
     }
 
     private fun buildMediaSource(mEpisode: Episode): MediaSource {
-        val uri = Uri.parse(mEpisode.remoteMediaUrl)
+        val uri = Uri.parse(mEpisode.source)
         isStreaming = true
 
         if (uri != null) {
@@ -223,6 +222,5 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
     companion object {
 
         private val TAG = LocalMediaPlayer::class.java.simpleName
-
     }
 }

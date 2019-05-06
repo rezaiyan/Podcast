@@ -31,5 +31,5 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("$BASE/{episode_id}/state")
-    fun sendLastPosition(@Path("episode_id") episode_id: Int, @Field("state") state: Long): Call<Response<Any>>
+    fun sendLastPosition(@Path("episode_id") episode_id: Long, @Field("state") state: Long): Call<Response<Any>>
 }

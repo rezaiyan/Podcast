@@ -112,7 +112,7 @@ class MediaPlayerService : Service() {
                         mediaPlayer?.selectTrack(it)
                     }
                 }
-                ACTION_PLAY_PLAYLIST -> addPlaylist(intent.extras!!.getParcelable(PARAM_PLAYLIST))
+                ACTION_PLAY_PLAYLIST -> addPlaylist(intent.extras!!.getParcelable(PARAM_PLAYLIST)!!)
                 ACTION_RESUME_PLAYBACK -> mediaPlayer!!.resumePlayback()
                 ACTION_PLAY_PAUSE -> if (mediaPlayer!!.isPlaying) {
                     mediaPlayer!!.pausePlayback()
@@ -163,7 +163,7 @@ class MediaPlayerService : Service() {
     }
 
     private fun endPlayback(cancelNotification: Boolean) {
-        currentEpisode?.status = Status.PLAYED
+        currentEpisode?.playStatus = Status.PLAYED
         if (cancelNotification) {
             notificationHelper.onHide()
         }
@@ -171,7 +171,7 @@ class MediaPlayerService : Service() {
 
     private fun addPlaylist(playlist: Playlist) {
         if (playlist != null) mediaPlayer?.concatPlaylist(playlist)
-        else Timber.w("Player is playing, episode cannot be null")
+        else Timber.w("Player is playing, openEpisodeInfo cannot be null")
     }
 
     @Suppress("NAME_SHADOWING")

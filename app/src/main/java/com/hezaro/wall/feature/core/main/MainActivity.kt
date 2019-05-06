@@ -38,6 +38,7 @@ import kotlinx.android.synthetic.main.toolbar.profile
 import kotlinx.android.synthetic.main.toolbar.toolbar
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.io.IOException
 
 class MainActivity : BaseActivity() {
 
@@ -79,16 +80,19 @@ class MainActivity : BaseActivity() {
         with(vm) {
             observe(login, ::onLogin)
             observe(version, ::onVersion)
+            observe(episode, ::onLoadLastPlayedEpisode)
             failure(failure, ::onFailure)
         }
 
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener { task ->
-                val token = task.result?.token
-                Timber.i("onNewIntent firebaseToken = $token")
-
-            }
         prepareGoogleSignIn()
+    }
+
+    fun loadLastPlayedEpisode() {
+        vm.retrieveLatestEpisode()
+    }
+
+    private fun onLoadLastPlayedEpisode(episode: Episode) {
+        playerFragment.onLoadLastPlayedEpisode(episode)
     }
 
     private fun bindService() {
@@ -99,9 +103,9 @@ class MainActivity : BaseActivity() {
         playerFragment.collapse(); addFragment(SearchFragment())
     }
 
-    fun episode(episode: Episode) {
+    fun openEpisodeInfo(episode: Episode) {
         val fragment = EpisodeFragment.newInstance(episode)
-        playerFragment.collapse(); addFragment(fragment)
+        addFragment(fragment)
     }
 
     fun profile() {
@@ -160,7 +164,7 @@ class MainActivity : BaseActivity() {
             // Signed in successfully, show authenticated UI.
             updateUI(account)
         } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
+            // The ApiException playStatus code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class listenerReference for more information.
             Timber.w("signInResult:failed code=" + e.statusCode)
             updateUI(null)

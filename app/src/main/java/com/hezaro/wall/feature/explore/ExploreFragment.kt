@@ -169,6 +169,8 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         val playlist = Playlist(ArrayList(nonFilterEpisodes))
         exploreAdapter.addEpisode(playlist.getItems())
         MediaPlayerServiceHelper.playPlaylist(requireContext(), playlist)
+        if (exploreAdapter.itemCount==episodes.size)//Means Its first response: To prepare last played episode we should retrieve that here because playlist must be prepared
+            activity.loadLastPlayedEpisode()
     }
 
     private fun onFailure(failure: Failure) {

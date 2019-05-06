@@ -8,6 +8,7 @@ import com.google.android.exoplayer2.ui.DownloadNotificationUtil
 import com.google.android.exoplayer2.util.NotificationUtil
 import com.google.android.exoplayer2.util.Util
 import com.hezaro.wall.sdk.platform.R
+import org.koin.android.ext.android.inject
 
 /** A service for downloading media.  */
 class PlayerDownloadService : DownloadService(
@@ -16,8 +17,9 @@ class PlayerDownloadService : DownloadService(
     CHANNEL_ID,
     R.string.exo_download_notification_channel_name
 ) {
+    val downloadHelper: PlayerDownloadHelper by inject()
 
-    override fun getDownloadManager() = PlayerDownloadHelper(applicationContext).getDownloadManager()!!
+    override fun getDownloadManager() = downloadHelper.getDownloadManager()!!
     override fun getScheduler() = PlatformScheduler(this, JOB_ID)
 
     override fun getForegroundNotification(taskStates: Array<TaskState>?): Notification {

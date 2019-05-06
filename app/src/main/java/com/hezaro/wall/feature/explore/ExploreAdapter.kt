@@ -43,7 +43,7 @@ class ExploreAdapter(
             itemView.let {
 
                 episode.run {
-                    if (status == IN_PROGRESS)
+                    if (playStatus == IN_PROGRESS)
                         itemView.setBackgroundColor(itemView.context.resources.getColor(R.color.colorTextSecondary))
                     it.logo.load(cover)
                     it.title.text = title

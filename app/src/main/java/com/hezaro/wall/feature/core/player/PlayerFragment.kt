@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.session.PlaybackState
 import android.os.Bundle
 import android.view.View
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -41,7 +42,7 @@ class PlayerFragment : BaseFragment() {
     override fun tag(): String = this::class.java.simpleName
     private var isBuffering = false
     private var isExpanded = false
-    private var currentEpisode: Episode? = null
+    var currentEpisode: Episode? = null
     private val vm: PlayerViewModel by inject()
     private var playerSheetBehavior: BottomSheetBehavior<View>? = null
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
@@ -130,6 +131,8 @@ class PlayerFragment : BaseFragment() {
                     ACTION_EPISODE -> {
                         currentEpisode = intent.getParcelableExtra(ACTION_EPISODE_GET)
                         updatePlayerView()
+                        currentEpisode!!.state = playerView.player.currentPosition
+                        vm.saveLatestEpisode(currentEpisode!!)
                     }
                     ACTION_PLAYER -> {
                         val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
@@ -148,6 +151,10 @@ class PlayerFragment : BaseFragment() {
                                 isBuffering = false
                                 miniPlayerProgressBar.visibility = View.INVISIBLE
                                 playPause.setImageResource(R.drawable.ic_play)
+                                currentEpisode?.let {
+                                    it.state = playerView.player.currentPosition
+                                    vm.saveLatestEpisode(it)
+                                }
                             }
                         }
                     }
@@ -180,22 +187,29 @@ class PlayerFragment : BaseFragment() {
 
     fun updateMiniPlayer(episode: Episode) {
         this.currentEpisode = episode
-        (activity as BaseActivity).progressbarMargin()
         doOnPlayer(ACTION_PLAY_PAUSE)
         doOnPlayer(ACTION_PLAY_PAUSE)
         playerSheetBehavior?.peekHeight =
             resources.getDimension(R.dimen.mini_player_height).toInt()
         updatePlayerView()
         collapse()
+        (activity as BaseActivity).progressbarMargin()
         isBuffering = false
         miniPlayerProgressBar.visibility = View.INVISIBLE
         playPause.setImageResource(R.drawable.ic_pause)
     }
 
+    fun onLoadLastPlayedEpisode(episode: Episode) {
+        if (!playerView.player.playWhenReady) {
+            currentEpisode = episode
+            openMiniPlayer(episode)
+        }
+    }
+
     private fun updatePlayerView() {
         currentEpisode!!.let {
             title.text = it.title
-            subtitle.text = it.podcast?.creator
+            subtitle.text = it.podcast.creator
             logo.load(it.cover)
         }
     }

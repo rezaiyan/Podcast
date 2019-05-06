@@ -46,7 +46,7 @@ class MediaPlayerListenerImpl(
                 }
             }
             MediaPlayerState.STATE_ENDED -> {
-                currentEpisode?.status = Status.PLAYED
+                currentEpisode?.playStatus = Status.PLAYED
                 mediaPlayer.next()
             }
             MediaPlayerState.STATE_IDLE -> updateEpisode(state)
@@ -54,16 +54,16 @@ class MediaPlayerListenerImpl(
     }
 
     private fun updateEpisode(state: Int) {
-        Timber.d("Updating episode, state: %d", state)
-        if (::mediaPlayer.isInitialized || currentEpisode?.id == -1) {
+        Timber.d("Updating openEpisodeInfo, state: %d", state)
+        if (::mediaPlayer.isInitialized || currentEpisode?.id == -1L) {
             return
         }
 
         when (state) {
             STATE_PLAYING ->
-                currentEpisode?.status = Status.IN_PROGRESS
+                currentEpisode?.playStatus = Status.IN_PROGRESS
             MediaPlayerState.STATE_PAUSED, MediaPlayerState.STATE_IDLE -> {
-                currentEpisode?.status = Status.PLAYED
+                currentEpisode?.playStatus = Status.PLAYED
             }
             else -> throw IllegalArgumentException(
                 "Incorrect state for showing addPlaylist pause notification"

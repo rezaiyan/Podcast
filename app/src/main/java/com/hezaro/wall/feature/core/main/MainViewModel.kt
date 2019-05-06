@@ -1,6 +1,7 @@
 package com.hezaro.wall.feature.core.main
 
 import androidx.lifecycle.MutableLiveData
+import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.model.Version
 import com.hezaro.wall.domain.MainRepository
@@ -14,6 +15,7 @@ class MainViewModel(private val repository: MainRepository, private val playerRe
 
     var login: MutableLiveData<UserInfo> = MutableLiveData()
     var version: MutableLiveData<Version> = MutableLiveData()
+    var episode: MutableLiveData<Episode> = MutableLiveData()
 
     fun login(idToken: String) = launch(job) {
         isExecute = true
@@ -35,5 +37,10 @@ class MainViewModel(private val repository: MainRepository, private val playerRe
     private fun onLogin(it: UserInfo) {
         isExecute = false
         launch(Dispatchers.Main) { login.value = it }
+    }
+
+    fun retrieveLatestEpisode() = launch {
+        val it = repository.retrieveLatestPlayedEpisode()
+        launch(Dispatchers.Main) { it?.let { episode.value = it } }
     }
 }

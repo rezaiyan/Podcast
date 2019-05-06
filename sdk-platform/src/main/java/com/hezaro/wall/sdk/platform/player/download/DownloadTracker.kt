@@ -59,7 +59,7 @@ class DownloadTracker(
         /**
          * Called when the tracked downloads changed.
          */
-        fun onDownloadsChanged()
+        fun onDownloadsChanged(isDownload: Boolean)
     }
 
     init {
@@ -82,7 +82,7 @@ class DownloadTracker(
         listeners.remove(listener)
     }
 
-    private fun isDownloaded(uri: Uri): Boolean {
+    fun isDownloaded(uri: Uri): Boolean {
         return trackedDownloadStates.containsKey(uri)
     }
 
@@ -94,12 +94,20 @@ class DownloadTracker(
 
     fun toggleDownload(activity: Activity, name: String, uri: Uri) {
         if (isDownloaded(uri)) {
-            val removeAction = getDownloadHelper(uri).getRemoveAction(Util.getUtf8Bytes(name))
-            startServiceWithAction(removeAction)
+            removeDownload(uri, name)
         } else {
-            val helper = StartDownloadDialogHelper(activity, getDownloadHelper(uri), name)
-            helper.prepare()
+            startDownload(activity, name, uri)
         }
+    }
+
+    fun removeDownload(uri: Uri, name: String) {
+        val removeAction = getDownloadHelper(uri).getRemoveAction(Util.getUtf8Bytes(name))
+        startServiceWithAction(removeAction)
+    }
+
+    fun startDownload(activity: Activity, name: String, uri: Uri) {
+        val helper = StartDownloadDialogHelper(activity, getDownloadHelper(uri), name)
+        helper.prepare()
     }
 
     override fun onInitialized(downloadManager: DownloadManager) {
@@ -112,7 +120,7 @@ class DownloadTracker(
         if (action.isRemoveAction && taskState.state == TaskState.STATE_COMPLETED || !action.isRemoveAction && taskState.state == TaskState.STATE_FAILED) {
             // A download has been removed, or has failed. Stop tracking it.
             if (trackedDownloadStates.remove(uri) != null) {
-                handleTrackedDownloadStatesChanged()
+                handleTrackedDownloadStatesChanged(false)
             }
         }
     }
@@ -134,9 +142,9 @@ class DownloadTracker(
         }
     }
 
-    private fun handleTrackedDownloadStatesChanged() {
+    private fun handleTrackedDownloadStatesChanged(isDownload: Boolean) {
         for (listener in listeners) {
-            listener.onDownloadsChanged()
+            listener.onDownloadsChanged(isDownload)
         }
         val actions = trackedDownloadStates.values.toTypedArray()
         actionFileWriteHandler.post {
@@ -154,7 +162,7 @@ class DownloadTracker(
             return
         }
         trackedDownloadStates[action.uri] = action
-        handleTrackedDownloadStatesChanged()
+        handleTrackedDownloadStatesChanged(true)
         startServiceWithAction(action)
     }
 

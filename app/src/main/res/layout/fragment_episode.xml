@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_play"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +29,6 @@
             android:layout_height="100dp"
             android:layout_marginEnd="@dimen/margin_20"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_play"
             app:layout_constraintBottom_toBottomOf="@id/podcastCover"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -72,7 +70,7 @@
             android:layout_height="16dp"
             android:layout_margin="@dimen/margin_8"
             android:background="@drawable/bg_speed"
-            android:padding="4dp"
+            android:padding="2dp"
             android:src="@drawable/ic_play"
             app:layout_constraintBottom_toBottomOf="@id/podcastCover"
             app:layout_constraintStart_toStartOf="parent" />
@@ -114,6 +112,15 @@
             tools:text="432" />
 
         <TextView
+            android:id="@+id/downloadStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_20"
+            android:text="Download"
+            android:textColor="@color/colorTextSecondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/episodeCover" />
+        <TextView
             android:id="@+id/episodeTitle"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="wrap_content"
@@ -126,7 +133,6 @@
             android:textColor="@color/colorTextPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/episodeCover"
             tools:text="@tools:sample/last_names" />
 

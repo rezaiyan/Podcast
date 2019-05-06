@@ -29,7 +29,7 @@ class BaseRepositoryBot {
     val errorResponse = Response.error<ErrorModel>(
             ResponseBody.create(
                     MediaType.parse("application/json"),
-                    "{\"status\":false,\"msg\":\"$errorMessage\",\"success\":false}"
+                "{\"playStatus\":false,\"msg\":\"$errorMessage\",\"success\":false}"
             ),
         okhttp3.Response.Builder().request(Request.Builder().url("http://wall.hezaro.com").build()).code(401).protocol(
             Protocol.HTTP_1_1

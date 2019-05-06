@@ -9,8 +9,7 @@ object App {
 }
 
 object GradleDir {
-    val kotlin = "../common-kotlin-library.gradle"
-    val android = "../common-android-library.gradle"
+    val android = "../android-library.gradle"
 }
 
 object BuildPlugins {
@@ -87,6 +86,8 @@ object Versions {
     val rxJava = "2.2.0"
     val rxAndroid = "2.1.0"
 
+    val room = "2.1.0-alpha07"
+
 }
 
 object Libraries {
@@ -101,6 +102,10 @@ object Libraries {
     val coroutinesAdapter = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.coroutinesAdapter}"
 
     val timber = "com.jakewharton.timber:timber:${Versions.timber}"
+
+    val roomCoroutines = "androidx.room:room-ktx:${Versions.room}"
+    val roomRuntime = "androidx.room:room-runtime:${Versions.room}"
+    val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
 
 
     val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"

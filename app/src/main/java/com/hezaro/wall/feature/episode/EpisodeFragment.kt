@@ -1,5 +1,6 @@
 package com.hezaro.wall.feature.episode
 
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -24,6 +25,7 @@ import com.hezaro.wall.utils.ACTION_PLAYER
 import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
 import com.hezaro.wall.utils.PARAM_EPISODE
 import kotlinx.android.synthetic.main.fragment_episode.description
+import kotlinx.android.synthetic.main.fragment_episode.downloadStatus
 import kotlinx.android.synthetic.main.fragment_episode.episodeCover
 import kotlinx.android.synthetic.main.fragment_episode.episodeTitle
 import kotlinx.android.synthetic.main.fragment_episode.playedCount
@@ -32,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
 import kotlinx.android.synthetic.main.fragment_episode.podcasterName
 import kotlinx.android.synthetic.main.fragment_episode.pullLayout
 import kotlinx.android.synthetic.main.fragment_episode.voteCount
+import org.koin.android.ext.android.inject
 
 class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTracker.Listener {
 
@@ -42,7 +45,12 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     override fun tag(): String = this::class.java.simpleName
 
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
+
+    private val downloadHelper: PlayerDownloadHelper by inject()
+    private val vm: EpisodeViewModel by inject()
+
     private var downloader: DownloadTracker? = null
+    private var currentEpisode: Episode? = null
 
     companion object {
         fun newInstance(episode: Episode) = EpisodeFragment().also {
@@ -54,24 +62,38 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        downloader = PlayerDownloadHelper(
-            context!!.applicationContext
-        ).getDownloadTracker()!!
-
-        val episode = arguments?.getParcelable<Episode>(PARAM_EPISODE)
+        downloader = downloadHelper.getDownloadTracker()!!
+        downloader!!.addListener(this)
+        currentEpisode = arguments?.getParcelable(PARAM_EPISODE)
         pullLayout.setListener(this)
-        updateView(episode!!)
+
+        updateView()
+        episodeCover.setOnClickListener {
+            val uri = Uri.parse(currentEpisode!!.source)
+            val title = currentEpisode!!.title
+            if (downloader!!.isDownloaded(uri))
+                removeDownloadDialog(title, uri)
+            else
+                downloader!!.startDownload(activity, title, uri)
+        }
     }
 
-    fun startDownload(episode: Episode) {
-        downloader!!.toggleDownload(activity, episode.title, Uri.parse(episode.source))
+    private fun removeDownloadDialog(title: String, uri: Uri) {
+        val alertDialog = AlertDialog.Builder(context, android.R.style.Widget_Material_Light_ButtonBar_AlertDialog)
+        alertDialog.setMessage("حذف از دانلودها")
+        alertDialog.setNegativeButton("خیر") { _a, _ -> _a.dismiss() }
+        alertDialog.setNegativeButton("بله") { _, _ -> downloader!!.removeDownload(uri, title) }
+        alertDialog.create().show()
     }
 
-    override fun onDownloadsChanged() {
+    override fun onDownloadsChanged(isDownload: Boolean) {
+        if (downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source)))
+            vm.save(currentEpisode!!)
+        else vm.delete(currentEpisode!!)
+        updateView()
     }
 
     override fun onStart() {
-        downloader!!.addListener(this)
         LocalBroadcastManager.getInstance(context!!)
             .registerReceiver(receiver, IntentFilter(ACTION_EPISODE).also { it.addAction(ACTION_PLAYER) })
         super.onStart()
@@ -89,8 +111,8 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
                 when (intent.action) {
                     ACTION_EPISODE -> {
-                        val currentEpisode = intent.getParcelableExtra<Episode>(ACTION_EPISODE_GET)
-                        updateView(currentEpisode)
+                        currentEpisode = intent.getParcelableExtra(ACTION_EPISODE_GET)
+                        updateView()
                     }
                     ACTION_PLAYER -> {
                         val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
@@ -108,13 +130,18 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
         }
     }
 
-    private fun updateView(currentEpisode: Episode) {
-        currentEpisode.let {
+    private fun updateView() {
+        val downloaded = downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source))
+        if (downloaded)
+            downloadStatus.text = "دانلود شده"
+        else downloadStatus.text = "دانلود نشده"
 
-            podcastCover.loadBlur(it.podcast?.cover!!)
+        currentEpisode?.let {
+
+            podcastCover.loadBlur(it.podcast.cover)
             episodeCover.load(it.cover)
             episodeTitle.text = it.title
-            podcastTitle.text = it.podcast?.title
+            podcastTitle.text = it.podcast.title
             podcasterName.text = it.creator
             playedCount.text = it.views.toString()
             voteCount.text = it.votes.toString()

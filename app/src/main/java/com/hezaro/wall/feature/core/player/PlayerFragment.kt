@@ -73,9 +73,14 @@ class PlayerFragment : BaseFragment() {
             }
         }
 
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            if (showInfo && slideOffset < 0.5F) {
+                activity.openEpisodeInfo(currentEpisode!!)
+                showInfo = false
+            }
+        }
     }
-
+    var showInfo = false
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,7 +90,10 @@ class PlayerFragment : BaseFragment() {
         speedChooser.setOnClickListener {
             speedPicker.show(vm.defaultSpeed())
         }
-        episodeInfo.setOnClickListener { activity.episode(currentEpisode!!) }
+        episodeInfo.setOnClickListener {
+            collapse()
+            showInfo = true
+        }
         miniPlayerLayout.setOnClickListener {
             when (playerSheetBehavior?.state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {

@@ -2,44 +2,42 @@ package com.hezaro.wall.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
-class Podcast : Parcelable {
+class Podcast(
+    var id: Int = 0,
+    var title: String = "",
+    var website: String = "",
+    var creator: String = "",
+    @SerializedName("episodes_count")
+    var episodeCount: Int = 0,
+    var cover: String = ""
 
-    var id: Int = -1
+) : Parcelable {
 
-    var episodes_count: Int = -1
-
-    var title: String? = ""
-
-    var cover: String? = ""
-
-    var website: String? = ""
-
-    var creator: String? = ""
-
-    constructor(source: Parcel) {
+    constructor(source: Parcel) : this() {
         id = source.readInt()
-        episodes_count = source.readInt()
-        title = source.readString()
-        cover = source.readString()
-        website = source.readString()
-        creator = source.readString()
+        title = source.readString()!!
+        website = source.readString()!!
+        creator = source.readString()!!
+        episodeCount = source.readInt()
+        cover = source.readString()!!
     }
 
     override fun describeContents() = 0
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
-        parcel.writeInt(episodes_count)
         parcel.writeString(title)
-        parcel.writeString(cover)
         parcel.writeString(website)
         parcel.writeString(creator)
+        parcel.writeInt(episodeCount)
+        parcel.writeString(cover)
     }
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<Podcast> = object : Parcelable.Creator<Podcast> {
+        var CREATOR: Parcelable.Creator<Podcast> = object : Parcelable.Creator<Podcast> {
             override fun createFromParcel(source: Parcel): Podcast = Podcast(source)
             override fun newArray(size: Int): Array<Podcast?> = arrayOfNulls(size)
         }

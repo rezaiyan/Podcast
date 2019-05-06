@@ -24,7 +24,11 @@ dependencies {
     implementation Libraries.coroutinesAndroid
     implementation Libraries.koinAndroid
     implementation Libraries.gsonConverter
+    implementation Libraries.gson
     implementation SupportLibraries.annotation
+
+    implementation Libraries.roomRuntime
+    kapt Libraries.roomCompiler
 
     testImplementation project(Modules.sdkTest)
     testImplementation TestLibraries.kotlin

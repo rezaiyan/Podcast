@@ -1,6 +1,7 @@
 package com.hezaro.wall.sdk.platform.ext
 
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.webkit.URLUtil
 import android.widget.ImageView
@@ -33,7 +34,7 @@ fun ImageView.loadBlur(
         }
 
         override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom?) {
-            setImageBitmap(BlurImage.fastblur(bitmap, 1f, 30))
+            background = BitmapDrawable(resources, BlurImage.blur(context, bitmap))
         }
     })
 }

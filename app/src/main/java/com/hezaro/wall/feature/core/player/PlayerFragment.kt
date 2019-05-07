@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.session.PlaybackState
 import android.os.Bundle
 import android.view.View
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -163,9 +162,7 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    fun expand() {
-        playerSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-    }
+    fun isOpen() = currentEpisode != null
 
     fun isExpand() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED
     fun isCollapsed() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_COLLAPSED
@@ -216,13 +213,14 @@ class PlayerFragment : BaseFragment() {
 
     private fun showMinimize(beMinimize: Boolean) {
 
-        if (beMinimize) {
-            minimize.visibility = View.VISIBLE
-            playPause.visibility = View.INVISIBLE
-        } else {
-            playPause.visibility = View.VISIBLE
-            minimize.visibility = View.INVISIBLE
-        }
+        if (minimize != null && playPause != null)
+            if (beMinimize) {
+                minimize.visibility = View.VISIBLE
+                playPause.visibility = View.INVISIBLE
+            } else {
+                playPause.visibility = View.VISIBLE
+                minimize.visibility = View.INVISIBLE
+            }
     }
 
     override fun onBackPressed() {

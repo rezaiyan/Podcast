@@ -8,6 +8,10 @@ import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import kotlinx.android.synthetic.main.fragment_profile.avatar
+import kotlinx.android.synthetic.main.fragment_profile.email
+import kotlinx.android.synthetic.main.fragment_profile.tabLayout
+import kotlinx.android.synthetic.main.fragment_profile.username
+import kotlinx.android.synthetic.main.fragment_profile.viewpager
 import org.koin.android.ext.android.inject
 
 class ProfileFragment : BaseFragment() {
@@ -16,6 +20,10 @@ class ProfileFragment : BaseFragment() {
 
     private val vm: ProfileViewModel by inject()
 
+    companion object {
+        fun getInstance() = ProfileFragment()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -23,10 +31,17 @@ class ProfileFragment : BaseFragment() {
             observe(userInfo, ::onSuccess)
             failure(failure, ::onFailure)
         }
+
+        viewpager.adapter = PagerAdapter(childFragmentManager)
+        tabLayout.setupWithViewPager(viewpager)
     }
 
     private fun onSuccess(userInfo: UserInfo) {
-        avatar.load("")
+        userInfo.let {
+            avatar.load(it.avatar)
+            username.text = it.username
+            email.text = it.email
+        }
     }
 
     private fun onFailure(failure: Failure) {

@@ -22,6 +22,8 @@ const val ACTION_PLAY_EPISODE = "com.hezaro.wall.playNew"
 
 const val ACTION_PLAY_PLAYLIST = "com.hezaro.wall.concatPlaylist"
 
+const val ACTION_CLEAR_PLAYLIST = "com.hezaro.wall.clearPlaylist"
+
 const val ACTION_RESUME_PLAYBACK = "com.hezaro.wall.addPlaylist"
 
 const val ACTION_PAUSE = "com.hezaro.wall.pause"

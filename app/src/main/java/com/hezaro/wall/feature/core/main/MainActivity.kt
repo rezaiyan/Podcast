@@ -8,13 +8,13 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.iid.FirebaseInstanceId
 import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.Episode
@@ -38,7 +38,6 @@ import kotlinx.android.synthetic.main.toolbar.profile
 import kotlinx.android.synthetic.main.toolbar.toolbar
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import java.io.IOException
 
 class MainActivity : BaseActivity() {
 
@@ -51,6 +50,8 @@ class MainActivity : BaseActivity() {
     override fun progressBar(): ProgressBar = progressBar
     override fun fragmentContainer() = R.id.fragmentContainer
     private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }
+
+    var updateEpisode: MutableLiveData<Episode> = MutableLiveData()
 
     var playerService: MediaPlayerService? = null
     private val serviceConnection = object : ServiceConnection {
@@ -109,11 +110,11 @@ class MainActivity : BaseActivity() {
     }
 
     fun profile() {
-        if (googleSignInAccount() == null) {
-            signIn()
-        } else {
-            playerFragment.collapse();addFragment(ProfileFragment())
-        }
+//        if (googleSignInAccount() == null) {
+//            signIn()
+//        } else {
+        playerFragment.collapse();addFragment(ProfileFragment.getInstance())
+//        }
     }
 
     private fun prepareGoogleSignIn() {
@@ -202,4 +203,5 @@ class MainActivity : BaseActivity() {
     }
 
     fun isPlayerExpand() = playerFragment.isExpand()
+    fun isPlayerOpen() = playerFragment.isOpen()
 }

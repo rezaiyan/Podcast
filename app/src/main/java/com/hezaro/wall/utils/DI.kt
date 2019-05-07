@@ -25,13 +25,13 @@ val module: Module = module {
     single { EpisodeRepository.EpisodeRepositoryImpl(get()) } bind EpisodeRepository::class
 
     viewModel { ExploreViewModel(get()) }
-    single { ExploreRepository.ExploreRepositoryImpl(get()) } bind ExploreRepository::class
+    single { ExploreRepository.ExploreRepositoryImpl(get(), get()) } bind ExploreRepository::class
 
     viewModel { MainViewModel(get(), get()) }
     single { MainRepository.MainRepositoryImpl(get(), get(), get()) } bind MainRepository::class
 
     viewModel { ProfileViewModel(get()) }
-    single { ProfileRepository.ProfileRepositoryImpl(get()) } bind ProfileRepository::class
+    single { ProfileRepository.ProfileRepositoryImpl(get(), get()) } bind ProfileRepository::class
 
     single { PlayerRepository.PlayerRepositoryImpl(get(), get(), get()) } bind PlayerRepository::class
     viewModel { PlayerViewModel(get()) }

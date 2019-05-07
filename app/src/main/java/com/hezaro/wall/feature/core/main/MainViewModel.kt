@@ -10,7 +10,10 @@ import com.hezaro.wall.sdk.platform.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: MainRepository, private val playerRepository: PlayerRepository) :
+class MainViewModel(
+    private val repository: MainRepository? = null,
+    private val playerRepository: PlayerRepository? = null
+) :
     BaseViewModel() {
 
     var login: MutableLiveData<UserInfo> = MutableLiveData()
@@ -19,15 +22,15 @@ class MainViewModel(private val repository: MainRepository, private val playerRe
 
     fun login(idToken: String) = launch(job) {
         isExecute = true
-        repository.login(idToken).either(::onFailure, ::onLogin)
+        repository!!.login(idToken).either(::onFailure, ::onLogin)
     }
 
     fun version() = launch(job) {
         isExecute = true
-        repository.version().either(::onFailure, ::onVersion)
+        repository?.version()?.either(::onFailure, ::onVersion)
     }
 
-    fun defaultSpeed() = playerRepository.getSpeed()
+    fun defaultSpeed() = playerRepository!!.getSpeed()
 
     private fun onVersion(it: Version) {
         isExecute = false
@@ -40,7 +43,7 @@ class MainViewModel(private val repository: MainRepository, private val playerRe
     }
 
     fun retrieveLatestEpisode() = launch {
-        val it = repository.retrieveLatestPlayedEpisode()
+        val it = repository!!.retrieveLatestPlayedEpisode()
         launch(Dispatchers.Main) { it?.let { episode.value = it } }
     }
 }

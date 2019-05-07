@@ -21,6 +21,8 @@ abstract class MediaPlayer(wakeListener: WeakReference<MediaPlayerListener>) {
 
     abstract fun getCurrentEpisode(): Episode?
 
+    abstract fun clearPlaylist()
+
     abstract fun concatPlaylist(playlist: Playlist)
 
     abstract fun resumePlayback()

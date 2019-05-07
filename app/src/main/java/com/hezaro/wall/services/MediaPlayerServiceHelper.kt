@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
+import com.hezaro.wall.utils.ACTION_CLEAR_PLAYLIST
 import com.hezaro.wall.utils.ACTION_PLAY_EPISODE
 import com.hezaro.wall.utils.ACTION_PLAY_PLAYLIST
 import com.hezaro.wall.utils.ACTION_SEEK_BACKWARD
@@ -21,6 +22,12 @@ class MediaPlayerServiceHelper{
             val intent = Intent(context, MediaPlayerService::class.java)
             intent.action = ACTION_PLAY_PLAYLIST
             intent.putExtra(PARAM_PLAYLIST, playlist)
+            context.startService(intent)
+        }
+
+        fun clearPlaylist(context: Context) {
+            val intent = Intent(context, MediaPlayerService::class.java)
+            intent.action = ACTION_CLEAR_PLAYLIST
             context.startService(intent)
         }
 

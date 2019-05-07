@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
@@ -76,6 +75,12 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
             exoPlayer!!.setAudioAttributes(audioAttributes, true)
             mediaPlayerState = MediaPlayerState.STATE_IDLE
         }
+    }
+
+    override fun clearPlaylist() {
+        playlist?.getItems()?.clear()
+        concatenatingMediaSource.clear()
+        playlist = null
     }
 
     override fun getCurrentEpisode(): Episode? {

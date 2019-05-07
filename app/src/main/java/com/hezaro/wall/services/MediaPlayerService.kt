@@ -17,6 +17,7 @@ import com.hezaro.wall.sdk.platform.player.LocalMediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState.STATE_PLAYING
+import com.hezaro.wall.utils.ACTION_CLEAR_PLAYLIST
 import com.hezaro.wall.utils.ACTION_PAUSE
 import com.hezaro.wall.utils.ACTION_PLAY_EPISODE
 import com.hezaro.wall.utils.ACTION_PLAY_PAUSE
@@ -69,7 +70,6 @@ class MediaPlayerService : Service() {
 
     fun serviceConnected() {
 
-
         val mediaPlayerListener = MediaPlayerListenerImpl(
             context, notificationHelper, currentEpisode,
             { this.mediaPlayerState = it },
@@ -79,7 +79,6 @@ class MediaPlayerService : Service() {
 
         mediaSessionHelper = MediaSessionHelper(context, mediaPlayer!!)
         notificationHelper.initNotificationHelper(mediaSessionHelper.sessionToken)
-
     }
 
     override fun onDestroy() {
@@ -113,6 +112,7 @@ class MediaPlayerService : Service() {
                     }
                 }
                 ACTION_PLAY_PLAYLIST -> addPlaylist(intent.extras!!.getParcelable(PARAM_PLAYLIST)!!)
+                ACTION_CLEAR_PLAYLIST -> clearPlaylist()
                 ACTION_RESUME_PLAYBACK -> mediaPlayer!!.resumePlayback()
                 ACTION_PLAY_PAUSE -> if (mediaPlayer!!.isPlaying) {
                     mediaPlayer!!.pausePlayback()
@@ -168,6 +168,8 @@ class MediaPlayerService : Service() {
             notificationHelper.onHide()
         }
     }
+
+    private fun clearPlaylist() = mediaPlayer?.clearPlaylist()
 
     private fun addPlaylist(playlist: Playlist) {
         if (playlist != null) mediaPlayer?.concatPlaylist(playlist)

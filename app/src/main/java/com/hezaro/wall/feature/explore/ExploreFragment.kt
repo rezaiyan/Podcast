@@ -16,8 +16,8 @@ import com.hezaro.wall.data.model.Status.Companion.NEWEST
 import com.hezaro.wall.data.model.Status.Companion.NEWEST_
 import com.hezaro.wall.data.model.Status.Companion.OLDEST
 import com.hezaro.wall.data.model.Status.Companion.OLDEST_
-import com.hezaro.wall.data.model.Status.Companion.SortBy
 import com.hezaro.wall.feature.core.main.MainActivity
+import com.hezaro.wall.feature.core.main.MainViewModel
 import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
@@ -37,6 +37,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     private lateinit var playerSheetBehavior: BottomSheetBehavior<View>
     private lateinit var playerFragment: PlayerFragment
     private val vm: ExploreViewModel by inject()
+    private val mainVm: MainViewModel by inject()
     private lateinit var exploreAdapter: ExploreAdapter
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
@@ -114,9 +115,12 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         menu.menu.add(OLDEST_)
         menu.menu.add(BEST_)
 
-        sort.setOnClickListener {
-            menu.show()
-
+        sort.setOnClickListener { menu.show() }
+        search.setOnClickListener {
+            activity.search()
+        }
+        profile.setOnClickListener {
+            activity.profile()
         }
         menu.setOnMenuItemClickListener {
             when (it.title) {
@@ -133,15 +137,14 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
             }
         }
-        search.setOnClickListener {
-            activity.search()
-        }
-        profile.setOnClickListener {
-            activity.profile()
+
+        activity.updateEpisode.observeForever {
+            exploreAdapter.updateRow(it)
         }
     }
 
-    private fun sortPlaylist(sortBy: @SortBy String): Boolean {
+    private fun sortPlaylist(sortBy: String): Boolean {
+        MediaPlayerServiceHelper.clearPlaylist(context!!)
         exploreList.page = 2
         exploreList.setLoading(true)
         exploreAdapter.clearAll()
@@ -169,7 +172,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         val playlist = Playlist(ArrayList(nonFilterEpisodes))
         exploreAdapter.addEpisode(playlist.getItems())
         MediaPlayerServiceHelper.playPlaylist(requireContext(), playlist)
-        if (exploreAdapter.itemCount==episodes.size)//Means Its first response: To prepare last played episode we should retrieve that here because playlist must be prepared
+        if (exploreAdapter.itemCount == episodes.size)//Means Its first response: To prepare last played episode we should retrieve that here because playlist must be prepared
             activity.loadLastPlayedEpisode()
     }
 

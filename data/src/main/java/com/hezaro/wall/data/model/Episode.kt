@@ -57,6 +57,7 @@ class Episode(
         podcast = parcel.readParcelable(Podcast::class.java.classLoader)!!
         size = parcel.readLong()
         lastPlayed = parcel.readInt()
+        isDownloaded = parcel.readInt()
         playStatus = parcel.readInt()
         creationDate = parcel.readLong()
     }
@@ -79,11 +80,34 @@ class Episode(
         parcel.writeParcelable(podcast, flags)
         parcel.writeLong(size)
         parcel.writeInt(lastPlayed)
+        parcel.writeInt(isDownloaded)
         parcel.writeInt(playStatus)
         parcel.writeLong(creationDate)
     }
 
     override fun describeContents() = 0
+    fun update(e: Episode) {
+        e.let {
+            description = it.description
+            creator = it.creator
+            votes = it.votes
+            views = it.views
+            isLiked = it.isLiked
+            cover = it.cover
+            source = it.source
+            duration = it.duration
+            state = it.state
+            mimeType = it.mimeType
+            publishedTime = it.publishedTime
+            commentCount = it.commentCount
+            podcast = it.podcast
+            size = it.size
+            lastPlayed = it.lastPlayed
+            isDownloaded = it.isDownloaded
+            playStatus = it.playStatus
+            creationDate = it.creationDate
+        }
+    }
 
     companion object {
         @JvmField

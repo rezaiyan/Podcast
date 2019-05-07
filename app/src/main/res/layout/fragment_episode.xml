@@ -111,15 +111,19 @@
             app:layout_constraintTop_toTopOf="@+id/voteCountIcon"
             tools:text="432" />
 
-        <TextView
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/downloadStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/navigator_icon"
+            android:layout_height="@dimen/navigator_icon"
             android:layout_margin="@dimen/margin_20"
-            android:text="Download"
-            android:textColor="@color/colorTextSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/episodeCover" />
+            app:layout_constraintTop_toBottomOf="@id/episodeCover"
+            app:lottie_autoPlay="false"
+            app:lottie_enableMergePathsForKitKatAndAbove="true"
+            app:lottie_rawRes="@raw/download"
+            app:lottie_renderMode="automatic"
+            tools:lottie_progress="74" />
+
         <TextView
             android:id="@+id/episodeTitle"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -148,12 +152,20 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:layout_marginStart="@dimen/margin_20">
 
-                <WebView
+                <TextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp" />
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:lineSpacingExtra="1.1dp"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="14sp"
+                    tools:text="@tools:sample/lorem/random" />
 
             </FrameLayout>
 

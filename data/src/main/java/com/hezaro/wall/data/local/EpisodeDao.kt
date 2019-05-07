@@ -18,6 +18,25 @@ interface EpisodeDao {
     @Delete
     fun delete(episode: Episode)
 
+    @Transaction
+    open fun deleteIfIsNotLastPlayed(episode: Episode) {
+        val e = getLastPlayed()
+        e?.forEach {
+            if (it.lastPlayed != 1) {
+                delete(it)
+            }
+        }
+        episode.lastPlayed = 1
+        episode.creationDate = System.currentTimeMillis()
+        saveLastPlayed(episode)
+    }
+
+    @Query("SELECT * FROM episode")
+    fun getAllEpisodes(): MutableList<Episode>
+
+    @Query("SELECT * FROM episode WHERE isDownloaded = 1")
+    fun getDownloadEpisodes(): MutableList<Episode>
+
     @Query("SELECT * FROM episode WHERE lastPlayed = 1 ORDER BY creationDate DESC LIMIT 1")
     fun getLastPlayedEpisode(): Episode?
 
@@ -29,7 +48,7 @@ interface EpisodeDao {
                 it.lastPlayed = 0
                 saveEpisode(it)
             } else
-                deleteLastPlayed(it.id)
+                delete(it)
         }
         episode.lastPlayed = 1
         episode.creationDate = System.currentTimeMillis()
@@ -39,8 +58,6 @@ interface EpisodeDao {
     @Query("SELECT * FROM episode WHERE lastPlayed = 1")
     fun getLastPlayed(): MutableList<Episode>?
 
-    @Query("DELETE  FROM episode WHERE id = :id")
-    fun deleteLastPlayed(id: Long)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveLastPlayed(episode: Episode)

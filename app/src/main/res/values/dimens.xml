@@ -4,6 +4,7 @@
     <dimen name="margin_10">10dp</dimen>
     <dimen name="margin_4">4dp</dimen>
     <dimen name="navigator_icon">35dp</dimen>
+    <dimen name="item_list_icon">24dp</dimen>
     <dimen name="avatar_size">100dp</dimen>
     <dimen name="margin_20">20dp</dimen>
     <dimen name="margin_16">16dp</dimen>

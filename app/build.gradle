@@ -48,6 +48,7 @@ dependencies {
     implementation Libraries.coroutinesAndroid
     implementation Libraries.picasso
     implementation Libraries.okhttp
+    implementation SupportLibraries.archComponents
     implementation SupportLibraries.appcompat
     implementation SupportLibraries.design
     implementation SupportLibraries.constraintLayout
@@ -57,6 +58,7 @@ dependencies {
     implementation Libraries.firebaseMessaging
     implementation Libraries.exoPlayerCore
     implementation Libraries.exoPlayerUi
+    implementation Libraries.lottie
     androidTestImplementation TestLibraries.rules
     androidTestImplementation TestLibraries.espressoCore
     androidTestImplementation TestLibraries.espressoContrib

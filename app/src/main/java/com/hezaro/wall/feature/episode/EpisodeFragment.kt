@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hezaro.wall.R
@@ -48,7 +50,6 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
     private val downloadHelper: PlayerDownloadHelper by inject()
     private val vm: EpisodeViewModel by inject()
-
     private var downloader: DownloadTracker? = null
     private var currentEpisode: Episode? = null
 
@@ -79,7 +80,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     }
 
     private fun removeDownloadDialog(title: String, uri: Uri) {
-        val alertDialog = AlertDialog.Builder(context, android.R.style.Widget_Material_Light_ButtonBar_AlertDialog)
+        val alertDialog = AlertDialog.Builder(context)
         alertDialog.setMessage("حذف از دانلودها")
         alertDialog.setNegativeButton("خیر") { _a, _ -> _a.dismiss() }
         alertDialog.setNegativeButton("بله") { _, _ -> downloader!!.removeDownload(uri, title) }
@@ -87,10 +88,19 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     }
 
     override fun onDownloadsChanged(isDownload: Boolean) {
-        if (downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source)))
+        val downloaded = downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source))
+        if (downloaded) {
             vm.save(currentEpisode!!)
-        else vm.delete(currentEpisode!!)
-        updateView()
+            downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
+            downloadStatus.speed = 1.0F
+            downloadStatus.playAnimation()
+        } else {
+            vm.delete(currentEpisode!!)
+            downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
+            downloadStatus.speed = -1.0F
+            downloadStatus.playAnimation()
+        }
+        activity.updateEpisode.value = currentEpisode
     }
 
     override fun onStart() {
@@ -133,8 +143,8 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     private fun updateView() {
         val downloaded = downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source))
         if (downloaded)
-            downloadStatus.text = "دانلود شده"
-        else downloadStatus.text = "دانلود نشده"
+            downloadStatus.progress = 0.74f
+        else downloadStatus.progress = 0.12f
 
         currentEpisode?.let {
 
@@ -145,7 +155,11 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
             podcasterName.text = it.creator
             playedCount.text = it.views.toString()
             voteCount.text = it.votes.toString()
-            description.loadDataWithBaseURL(null, it.description, "text/html", "UTF-8", null)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                description.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                description.text = Html.fromHtml(it.description)
+            }
 
         }
     }

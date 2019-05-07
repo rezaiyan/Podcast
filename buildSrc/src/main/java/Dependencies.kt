@@ -87,6 +87,7 @@ object Versions {
     val rxAndroid = "2.1.0"
 
     val room = "2.1.0-alpha07"
+    val lottie = "3.0.1"
 
 }
 
@@ -150,6 +151,7 @@ object Libraries {
 
     val logger = "com.orhanobut:logger:${Versions.logger}"
 
+    val lottie = "com.airbnb.android:lottie:${Versions.lottie}"
     val glide =  "com.github.bumptech.glide:glide:${Versions.glide}"
     val glideCompiler =  "com.github.bumptech.glide:compiler:${Versions.glide}"
 

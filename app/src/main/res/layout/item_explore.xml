@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    app:cardCornerRadius="1dp"
     app:cardBackgroundColor="@color/colorPrimaryDark"
+    app:cardCornerRadius="1dp"
     app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,14 +54,26 @@
             android:ellipsize="end"
             android:fontFamily="@font/trafic"
             android:gravity="right"
-            android:textColor="@color/colorTextSecondary"
             android:maxLines="3"
             android:singleLine="true"
+            android:textColor="@color/colorTextSecondary"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="@tools:sample/lorem/random" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/downloadStatus"
+            android:layout_width="@dimen/item_list_icon"
+            android:layout_height="@dimen/item_list_icon"
+            android:layout_margin="@dimen/margin_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/podcaster"
+            app:lottie_autoPlay="false"
+            app:lottie_enableMergePathsForKitKatAndAbove="true"
+            app:lottie_rawRes="@raw/download"
+            app:lottie_renderMode="automatic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

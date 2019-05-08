@@ -1,15 +1,11 @@
 package com.hezaro.wall.feature.core.player
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
+import com.hezaro.wall.R.drawable
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.core.main.MainActivity
 import com.hezaro.wall.sdk.platform.BaseActivity
@@ -17,10 +13,6 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.services.MediaPlayerServiceHelper
-import com.hezaro.wall.utils.ACTION_EPISODE
-import com.hezaro.wall.utils.ACTION_EPISODE_GET
-import com.hezaro.wall.utils.ACTION_PLAYER
-import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
 import com.hezaro.wall.utils.ACTION_PLAY_PAUSE
 import kotlinx.android.synthetic.main.fragment_player.episodeInfo
 import kotlinx.android.synthetic.main.fragment_player.logo
@@ -32,8 +24,10 @@ import kotlinx.android.synthetic.main.fragment_player.playerView
 import kotlinx.android.synthetic.main.fragment_player.speedChooser
 import kotlinx.android.synthetic.main.fragment_player.subtitle
 import kotlinx.android.synthetic.main.fragment_player.title
+import kotlinx.android.synthetic.main.playback_control.bookmarkStatus
 import kotlinx.android.synthetic.main.playback_control.exo_ffwd
 import kotlinx.android.synthetic.main.playback_control.exo_rew
+import kotlinx.android.synthetic.main.playback_control.likeStatus
 import org.koin.android.ext.android.inject
 
 class PlayerFragment : BaseFragment() {
@@ -109,8 +103,45 @@ class PlayerFragment : BaseFragment() {
         exo_rew.setOnClickListener { MediaPlayerServiceHelper.seekBackward(requireContext()) }
         exo_ffwd.setOnClickListener { MediaPlayerServiceHelper.seekForward(requireContext()) }
         playPause.setOnClickListener { if (!isBuffering) doOnPlayer(ACTION_PLAY_PAUSE) }
+        likeStatus.setOnClickListener {
+
+            vm.sendLikeAction(!currentEpisode!!.isLiked, currentEpisode!!.id)
+
+            if (!currentEpisode!!.isLiked) {
+                currentEpisode!!.votes++
+                likeStatus.setMinAndMaxFrame(50, 100)
+                likeStatus.speed = 1.0F
+                likeStatus.playAnimation()
+                currentEpisode!!.isLiked = true
+            } else {
+                currentEpisode!!.votes--
+                likeStatus.setMinAndMaxFrame(50, 100)
+                likeStatus.speed = -1.0F
+                likeStatus.playAnimation()
+                currentEpisode!!.isLiked = false
+            }
+        }
+        bookmarkStatus.setOnClickListener {
+
+            if (!currentEpisode!!.isLiked) {
+                bookmarkStatus.setMinAndMaxFrame(0, 50)
+                bookmarkStatus.speed = 1.0F
+                bookmarkStatus.playAnimation()
+            } else {
+                bookmarkStatus.setMinAndMaxFrame(0, 50)
+                bookmarkStatus.speed = -1.0F
+                bookmarkStatus.playAnimation()
+            }
+        }
+
     }
 
+    override fun onStop() {
+        currentEpisode?.let {
+            vm.sendLastPosition(it.id, playerView.player.currentPosition)
+        }
+        super.onStop()
+    }
     @SuppressLint("SetTextI18n")
     fun setSpeedListener(it: Float) {
         vm.speed(it)
@@ -122,41 +153,32 @@ class PlayerFragment : BaseFragment() {
         MediaPlayerServiceHelper.sendIntent(requireContext(), action)
     }
 
-    private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent?) {
-            if (intent != null) {
+    fun updateEpisodeView(episode: Episode) {
+        this.currentEpisode = episode
+        updatePlayerView()
+        currentEpisode!!.state = playerView.player.currentPosition
+        vm.saveLatestEpisode(currentEpisode!!)
+    }
 
-                when (intent.action) {
-                    ACTION_EPISODE -> {
-                        currentEpisode = intent.getParcelableExtra(ACTION_EPISODE_GET)
-                        updatePlayerView()
-                        currentEpisode!!.state = playerView.player.currentPosition
-                        vm.saveLatestEpisode(currentEpisode!!)
-                    }
-                    ACTION_PLAYER -> {
-                        val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
-                        when (action) {
-                            MediaPlayerState.STATE_CONNECTING or MediaPlayerState.STATE_CONNECTING -> {
-                                isBuffering = true
-                                playPause.setImageResource(R.drawable.ic_play)
-                                miniPlayerProgressBar.visibility = View.VISIBLE
-                            }
-                            MediaPlayerState.STATE_PLAYING -> {
-                                isBuffering = false
-                                miniPlayerProgressBar.visibility = View.INVISIBLE
-                                playPause.setImageResource(R.drawable.ic_pause)
-                            }
-                            MediaPlayerState.STATE_PAUSED -> {
-                                isBuffering = false
-                                miniPlayerProgressBar.visibility = View.INVISIBLE
-                                playPause.setImageResource(R.drawable.ic_play)
-                                currentEpisode?.let {
-                                    it.state = playerView.player.currentPosition
-                                    vm.saveLatestEpisode(it)
-                                }
-                            }
-                        }
-                    }
+    fun updatePlayingStatus(action: Int) {
+        when (action) {
+            MediaPlayerState.STATE_CONNECTING or MediaPlayerState.STATE_CONNECTING -> {
+                isBuffering = true
+                playPause.setImageResource(drawable.ic_play)
+                miniPlayerProgressBar.visibility = View.VISIBLE
+            }
+            MediaPlayerState.STATE_PLAYING -> {
+                isBuffering = false
+                miniPlayerProgressBar.visibility = View.INVISIBLE
+                playPause.setImageResource(drawable.ic_pause)
+            }
+            MediaPlayerState.STATE_PAUSED -> {
+                isBuffering = false
+                miniPlayerProgressBar.visibility = View.INVISIBLE
+                playPause.setImageResource(drawable.ic_play)
+                currentEpisode?.let {
+                    it.state = playerView.player.currentPosition
+                    vm.saveLatestEpisode(it)
                 }
             }
         }
@@ -173,7 +195,6 @@ class PlayerFragment : BaseFragment() {
 
     fun openMiniPlayer(episode: Episode) {
         this.currentEpisode = episode
-        vm.savePosition(currentEpisode!!.id, playerView.player.currentPosition)
         (activity as BaseActivity).progressbarMargin()
         playerSheetBehavior?.peekHeight =
             resources.getDimension(R.dimen.mini_player_height).toInt()
@@ -208,6 +229,12 @@ class PlayerFragment : BaseFragment() {
             title.text = it.title
             subtitle.text = it.podcast.creator
             logo.load(it.cover)
+            if (it.isLiked)
+                likeStatus.frame = 100
+            else likeStatus.frame = 50
+            if (it.isLiked)
+                bookmarkStatus.frame = 5
+            else bookmarkStatus.frame = 0
         }
     }
 
@@ -224,20 +251,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onBackPressed() {
-
         collapse()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val iff = IntentFilter(ACTION_EPISODE)
-        iff.addAction(ACTION_PLAYER)
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, iff)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
     }
 
     fun ishidden() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_HIDDEN

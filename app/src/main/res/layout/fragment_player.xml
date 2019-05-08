@@ -155,7 +155,7 @@
         android:paddingLeft="@dimen/margin_10"
         android:paddingRight="@dimen/margin_10"
         android:textSize="12sp"
-        android:text="1.0x"
+        android:text="@string/_1_0x"
         android:textColor="@color/ic_controller"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -165,7 +165,7 @@
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_margin="15dp"
-        android:src="@drawable/ic_info"
+        android:src="@drawable/ic_more_horiz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

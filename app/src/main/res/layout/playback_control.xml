@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="top"
-    android:layoutDirection="ltr"
     android:background="@color/colorPrimaryDark"
+    android:layoutDirection="ltr"
     android:orientation="vertical">
 
 
@@ -72,38 +72,66 @@
         android:orientation="horizontal"
         android:paddingTop="4dp">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/likeStatus"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="@dimen/margin_8"
+            android:scaleType="centerCrop"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            app:lottie_rawRes="@raw/like"
+            app:lottie_renderMode="automatic" />
+
         <ImageButton
             android:id="@id/exo_prev"
             style="@style/ExoMediaButton.Previous"
+            android:layout_width="45dp"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_rew"
             style="@style/ExoMediaButton.Rewind"
+            android:layout_width="45dp"
             android:src="@drawable/ic_replay_10"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_play"
             style="@style/ExoMediaButton.Play"
+            android:layout_width="45dp"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_pause"
             style="@style/ExoMediaButton.Pause"
+            android:layout_width="45dp"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_ffwd"
             style="@style/ExoMediaButton.FastForward"
+            android:layout_width="45dp"
             android:src="@drawable/ic_forward_30"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_next"
             style="@style/ExoMediaButton.Next"
+            android:layout_width="45dp"
             android:tint="@color/ic_controller" />
 
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/bookmarkStatus"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="@dimen/margin_8"
+            android:scaleType="centerCrop"
+            android:scaleX="1.7"
+            android:scaleY="1.7"
+            app:lottie_rawRes="@raw/bookmark"
+            app:lottie_renderMode="automatic" />
 
     </LinearLayout>
 

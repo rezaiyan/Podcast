@@ -12,12 +12,12 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
 import com.hezaro.wall.data.model.Status.Companion.BEST
 import com.hezaro.wall.data.model.Status.Companion.BEST_
+import com.hezaro.wall.data.model.Status.Companion.IN_PROGRESS
 import com.hezaro.wall.data.model.Status.Companion.NEWEST
 import com.hezaro.wall.data.model.Status.Companion.NEWEST_
 import com.hezaro.wall.data.model.Status.Companion.OLDEST
 import com.hezaro.wall.data.model.Status.Companion.OLDEST_
 import com.hezaro.wall.feature.core.main.MainActivity
-import com.hezaro.wall.feature.core.main.MainViewModel
 import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
@@ -37,12 +37,14 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     private lateinit var playerSheetBehavior: BottomSheetBehavior<View>
     private lateinit var playerFragment: PlayerFragment
     private val vm: ExploreViewModel by inject()
-    private val mainVm: MainViewModel by inject()
     private lateinit var exploreAdapter: ExploreAdapter
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
+    companion object {
+        fun getInstance() = ExploreFragment()
+    }
     override fun invoke(episode: Episode, index: Int) {
         liftExploreList()
         playerFragment.openMiniPlayer(episode)
@@ -180,6 +182,11 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         exploreList.onError()
         failure.message?.let { showMessage(it) }
         exploreList.setLoading(false)
+    }
+
+    fun updateEpisodeView(episode: Episode) {
+        episode.playStatus = IN_PROGRESS
+        exploreAdapter.updateRow(episode, 1)
     }
 }
 

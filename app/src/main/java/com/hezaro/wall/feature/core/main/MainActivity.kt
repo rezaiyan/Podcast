@@ -1,14 +1,17 @@
 package com.hezaro.wall.feature.core.main
 
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -29,7 +32,12 @@ import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.services.MediaPlayerService
+import com.hezaro.wall.utils.ACTION_EPISODE
+import com.hezaro.wall.utils.ACTION_EPISODE_GET
+import com.hezaro.wall.utils.ACTION_PLAYER
+import com.hezaro.wall.utils.ACTION_PLAYER_STATUS
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.RC_SIGN_IN
 import kotlinx.android.synthetic.main.activity_layout.progressBar
@@ -41,7 +49,9 @@ import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
-    override fun fragment() = ExploreFragment()
+    private val exploreFragment by lazy { ExploreFragment.getInstance() }
+
+    override fun fragment() = exploreFragment
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val vm: MainViewModel by inject()
@@ -127,6 +137,7 @@ class MainActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         unbindService(serviceConnection)
     }
 
@@ -135,6 +146,9 @@ class MainActivity : BaseActivity() {
         bindService()
         val account = googleSignInAccount()
         updateUI(account)
+        val iff = IntentFilter(ACTION_EPISODE)
+        iff.addAction(ACTION_PLAYER)
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, iff)
     }
 
     private fun googleSignInAccount() = GoogleSignIn.getLastSignedInAccount(this)
@@ -199,6 +213,25 @@ class MainActivity : BaseActivity() {
         else {
             (supportFragmentManager.findFragmentById(fragmentContainer()) as BaseFragment).onBackPressed()
             super.onBackPressed()
+        }
+    }
+
+    private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent?) {
+            if (intent != null) {
+
+                when (intent.action) {
+                    ACTION_EPISODE -> {
+                        val episode = intent.getParcelableExtra<Episode>(ACTION_EPISODE_GET)
+                        playerFragment.updateEpisodeView(episode)
+                        exploreFragment.updateEpisodeView(episode)
+                    }
+                    ACTION_PLAYER -> {
+                        val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
+                        playerFragment.updatePlayingStatus(action)
+                    }
+                }
+            }
         }
     }
 

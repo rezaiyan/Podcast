@@ -3,21 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/colorPrimaryDark"
-    app:cardCornerRadius="1dp"
-    app:cardElevation="0dp">
+    android:layout_margin="1sp"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/logo"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints"
@@ -35,6 +38,7 @@
             android:fontFamily="@font/trafic"
             android:gravity="right"
             android:maxLines="2"
+            android:minLines="2"
             android:textAlignment="gravity"
             android:textColor="@color/colorTextPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,6 +66,18 @@
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="@tools:sample/lorem/random" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/bookmarkStatus"
+            android:layout_width="@dimen/item_list_icon"
+            android:layout_height="@dimen/item_list_icon"
+            android:layout_margin="@dimen/margin_8"
+            android:scaleX="1.7"
+            android:scaleY="1.7"
+            app:layout_constraintStart_toEndOf="@+id/downloadStatus"
+            app:layout_constraintTop_toBottomOf="@+id/podcaster"
+            app:lottie_rawRes="@raw/bookmark"
+            app:lottie_renderMode="automatic" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/downloadStatus"

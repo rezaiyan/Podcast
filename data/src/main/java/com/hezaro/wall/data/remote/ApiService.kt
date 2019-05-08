@@ -7,6 +7,7 @@ import com.hezaro.wall.data.model.Status.Companion.SortBy
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.model.Version
 import retrofit2.Call
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -30,6 +31,17 @@ interface ApiService {
     fun version(@Field("version_code") version_code: Int = BuildConfig.VERSION_CODE): Call<Response<Version>>
 
     @FormUrlEncoded
-    @POST("$BASE/{episode_id}/state")
+    @POST("$BASE/episodes/{episode_id}/state")
     fun sendLastPosition(@Path("episode_id") episode_id: Long, @Field("state") state: Long): Call<Response<Any>>
+
+    @DELETE("$BASE/likes/{episode_id}")
+    fun disLike(@Path("episode_id") episode_id: Long): Call<Response<Any>>
+
+    @FormUrlEncoded
+    @POST("$BASE/likes/{episode_id}")
+    fun like(@Path("episode_id") episode_id: Long, @Field("state") state: Long = 0): Call<Response<Any>>
+
+    @FormUrlEncoded
+    @POST("$BASE/login")
+    fun sendApi(@Field("token") token: String): Call<Response<Any>>
 }

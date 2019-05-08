@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Status.Companion.IN_PROGRESS
+import com.hezaro.wall.data.model.Status.Companion.NEW
 import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.utils.RoundRectTransform
+import kotlinx.android.synthetic.main.item_explore.view.bookmarkStatus
 import kotlinx.android.synthetic.main.item_explore.view.downloadStatus
 import kotlinx.android.synthetic.main.item_explore.view.logo
 import kotlinx.android.synthetic.main.item_explore.view.podcaster
@@ -38,11 +41,15 @@ class ExploreAdapter(
         episodes.clear()
     }
 
-    fun updateRow(e: Episode) =
+    fun updateRow(e: Episode, isPlaying: Int = 0) {
         episodes.find { it.id == e.id }?.let {
             it.update(e)
             notifyItemChanged(episodes.indexOf(it))
+            if (isPlaying == 1)
+                e.playStatus = NEW
+            it.update(e)
         }
+    }
 
     inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -52,10 +59,13 @@ class ExploreAdapter(
                 episode.run {
                     if (playStatus == IN_PROGRESS)
                         itemView.setBackgroundColor(itemView.context.resources.getColor(R.color.colorTextSecondary))
-                    it.logo.load(cover)
+                    it.logo.load(cover, transformation = RoundRectTransform())
                     if (isDownloaded == 1)
                         it.downloadStatus.progress = 0.74f
-                    else it.downloadStatus.progress = 0.12f
+                    else it.downloadStatus.visibility = View.INVISIBLE
+                    if (isLiked)
+                        it.bookmarkStatus.progress = 1.0f
+                    else it.bookmarkStatus.visibility = View.INVISIBLE
                     it.title.text = title
                     it.podcaster.text = podcast.title
                     it.setOnClickListener { onItemClick(this, adapterPosition) }

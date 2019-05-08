@@ -1,6 +1,5 @@
 package com.hezaro.wall.domain
 
-import android.content.ClipData
 import android.content.SharedPreferences
 import com.hezaro.wall.data.local.EpisodeDao
 import com.hezaro.wall.data.model.Episode
@@ -20,6 +19,7 @@ interface PlayerRepository {
     fun getSpeed(): Float
     fun savePlayedEpisode(episode: Episode)
     fun retrieveLatestPlayedEpisode(): Episode?
+    fun sendLikeAction(like: Boolean, id: Long)
 
     class PlayerRepositoryImpl(
         private val storage: SharedPreferences,
@@ -28,6 +28,13 @@ interface PlayerRepository {
     ) :
         BaseRepository(),
         PlayerRepository {
+
+        override fun sendLikeAction(like: Boolean, id: Long) {
+            if (like)
+                api.like(id)
+            else
+                api.disLike(id)
+        }
 
         override fun getSpeed(): Float = storage.get(SPEED, 1.0F)
         override fun setSpeed(speed: Float) = storage.put(SPEED, speed)

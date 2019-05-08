@@ -6,10 +6,11 @@ import com.hezaro.wall.R.string
 import com.hezaro.wall.notification.player.GeneralNotificationHelper
 import com.hezaro.wall.notification.player.NotificationBody
 import org.json.JSONObject
-import timber.log.Timber
+import org.koin.android.ext.android.inject
 
 class MessagingService : FirebaseMessagingService() {
 
+    private val vm: MessagingViewModel by inject()
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
         super.onMessageReceived(remoteMessage)
@@ -39,6 +40,6 @@ class MessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(p0: String?) {
         super.onNewToken(p0)
-        Timber.i("onNewIntent= $p0")
+        p0?.let { vm.sendToken(it) }
     }
 }

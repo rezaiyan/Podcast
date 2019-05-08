@@ -5,6 +5,7 @@ import com.hezaro.wall.data.utils.provideRetrofit
 import com.hezaro.wall.domain.EpisodeRepository
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.domain.MainRepository
+import com.hezaro.wall.domain.MessagingRepository
 import com.hezaro.wall.domain.PlayerRepository
 import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.feature.core.main.MainViewModel
@@ -13,6 +14,7 @@ import com.hezaro.wall.feature.episode.EpisodeViewModel
 import com.hezaro.wall.feature.explore.ExploreViewModel
 import com.hezaro.wall.feature.profile.ProfileViewModel
 import com.hezaro.wall.feature.search.SearchViewModel
+import com.hezaro.wall.notification.MessagingViewModel
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.ext.koin.viewModel
@@ -20,6 +22,9 @@ import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
 
 val module: Module = module {
+
+    viewModel { MessagingViewModel(get()) }
+    single { MessagingRepository.ProfileRepositoryImpl(get()) } bind MessagingRepository::class
 
     viewModel { EpisodeViewModel(get()) }
     single { EpisodeRepository.EpisodeRepositoryImpl(get()) } bind EpisodeRepository::class

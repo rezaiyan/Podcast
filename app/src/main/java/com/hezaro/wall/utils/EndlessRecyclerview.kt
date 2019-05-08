@@ -25,7 +25,6 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
     val loadingStatus: MutableLiveData<Boolean>
         get() = this.aeros.loadingStatus
 
-
     abstract inner class AdvancedEndlessRecyclerOnScrollListener(private val linearLayoutManager: RecyclerView.LayoutManager) :
         RecyclerView.OnScrollListener() {
 
@@ -107,4 +106,6 @@ class EndlessLayoutManager(context: Context?, orientation: Int, reverseLayout: B
             Timber.e("meet a IOOBE in RecyclerView")
         }
     }
+
+    override fun supportsPredictiveItemAnimations() = false
 }

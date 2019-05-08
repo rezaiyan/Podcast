@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Status.Companion.IN_PROGRESS
-import com.hezaro.wall.data.model.Status.Companion.NEW
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.utils.RoundRectTransform
 import kotlinx.android.synthetic.main.item_explore.view.bookmarkStatus
@@ -45,9 +43,6 @@ class ExploreAdapter(
         episodes.find { it.id == e.id }?.let {
             it.update(e)
             notifyItemChanged(episodes.indexOf(it))
-            if (isPlaying == 1)
-                e.playStatus = NEW
-            it.update(e)
         }
     }
 
@@ -57,8 +52,8 @@ class ExploreAdapter(
             itemView.let {
 
                 episode.run {
-                    if (playStatus == IN_PROGRESS)
-                        itemView.setBackgroundColor(itemView.context.resources.getColor(R.color.colorTextSecondary))
+                    //                    if (playStatus == IN_PROGRESS)
+//                        itemView.setBackgroundColor(itemView.context.resources.getColor(R.color.colorTextSecondary))
                     it.logo.load(cover, transformation = RoundRectTransform())
                     if (isDownloaded == 1)
                         it.downloadStatus.progress = 0.74f

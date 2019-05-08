@@ -119,8 +119,8 @@
             android:layout_height="0.5dp"
             android:layout_marginTop="@dimen/margin_10"
             android:alpha="0.5"
-            android:background="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/logo" />
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -128,12 +128,11 @@
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:clipToPadding="false"
         app:auto_show="true"
         app:controller_layout_id="@layout/playback_control"
         app:hide_on_touch="false"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomControllerLayout"
         app:layout_constraintTop_toBottomOf="@+id/miniPlayerLayout"
         app:show_buffering="never"
         app:show_shuffle_button="false"
@@ -144,28 +143,36 @@
         app:use_controller="true" />
 
 
-    <TextView
-        android:id="@+id/speedChooser"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_margin="15dp"
-        android:background="@drawable/bg_speed"
-        android:gravity="center"
-        android:minWidth="26dp"
-        android:paddingLeft="@dimen/margin_10"
-        android:paddingRight="@dimen/margin_10"
-        android:textSize="12sp"
-        android:text="@string/_1_0x"
-        android:textColor="@color/ic_controller"
+    <RelativeLayout
+        android:id="@+id/bottomControllerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageView
-        android:id="@+id/episodeInfo"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-        android:layout_margin="15dp"
-        android:src="@drawable/ic_more_horiz"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/speedChooser"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignParentStart="true"
+            android:layout_margin="15dp"
+            android:background="@drawable/bg_speed"
+            android:gravity="center"
+            android:minWidth="26dp"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10"
+            android:text="@string/_1_0x"
+            android:textColor="@color/ic_controller"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/episodeInfo"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"
+            android:src="@drawable/ic_more_horiz" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

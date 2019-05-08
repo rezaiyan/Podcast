@@ -61,7 +61,7 @@ class RoundRectTransform : Transformation {
             source.recycle()
         }
 
-        val r = size / 6f
+        val r = size / 9f
 
         val roundedBitmap = createRoundedRectBitmap(squaredBitmap, r, r, r, r)
 

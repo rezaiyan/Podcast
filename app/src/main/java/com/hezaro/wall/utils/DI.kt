@@ -51,9 +51,12 @@ val module: Module = module {
 
 
     single { AppDatabase.getInstance(androidContext()) }
-    single { getDAO(get()) }
+    single { getEpisodeDAO(get()) }
+    single { getPodcastDAO(get()) }
 
 }
 
-fun getDAO(appDatabase: AppDatabase) = appDatabase.episodeDao()
+fun getEpisodeDAO(appDatabase: AppDatabase) = appDatabase.episodeDao()
+
+fun getPodcastDAO(appDatabase: AppDatabase) = appDatabase.podcastDao()
 

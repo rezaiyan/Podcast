@@ -2,9 +2,14 @@ package com.hezaro.wall.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "podcast", indices = [Index("id", unique = true)])
 class Podcast(
+    @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var title: String = "",
     var website: String = "",
@@ -30,6 +35,10 @@ class Podcast(
         }
 
         return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
     }
 
     override fun describeContents() = 0

@@ -52,7 +52,6 @@ class SearchFragment : BaseFragment() {
                 activity.prepareAndPlayPlaylist(
                     Playlist(arrayListOf(e)), e
                 )
-                activity.playEpisode(e)
             }
         }
 

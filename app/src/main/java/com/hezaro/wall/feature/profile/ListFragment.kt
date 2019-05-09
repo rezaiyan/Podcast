@@ -37,8 +37,6 @@ class ListFragment : BaseFragment() {
                     Playlist(ArrayList((recyclerList.adapter as EpisodeAdapter).episodes)),
                     e
                 )
-
-                activity.playEpisode(e)
                 liftList()
             }
         }

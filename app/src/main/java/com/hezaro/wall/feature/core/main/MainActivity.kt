@@ -262,6 +262,7 @@ class MainActivity : BaseActivity() {
         playlist: Playlist, e: Episode
     ) {
         MediaPlayerServiceHelper.prepareAndPlayPlaylist(this, playlist, e)
+        playEpisode(e)
     }
 
     fun finishFragment(tag: String, playlistCreated: Boolean) {

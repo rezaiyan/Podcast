@@ -45,7 +45,7 @@ class EpisodeAdapter(
         episodes.clear()
     }
 
-    fun updateRow(e: Episode, isPlaying: Int = 0) {
+    fun updateRow(e: Episode) {
         if (episodes.contains(e)) {
             e.update(e)
             notifyItemChanged(episodes.indexOf(e))

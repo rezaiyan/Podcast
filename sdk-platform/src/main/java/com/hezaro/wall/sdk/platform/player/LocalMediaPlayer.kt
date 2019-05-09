@@ -236,7 +236,6 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         isStreaming = true
 
         if (uri != null) {
-            Timber.tag(TAG).d("Playing from URI %s", uri)
             return ExtractorMediaSource.Factory(dataSourceFactory).setTag(mEpisode.description)
                 .createMediaSource(uri)
         }

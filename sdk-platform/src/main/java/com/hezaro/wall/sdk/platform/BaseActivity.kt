@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
 import androidx.transition.Slide
@@ -25,7 +24,6 @@ import com.hezaro.wall.sdk.platform.ext.show
 abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun layoutId(): Int
-    abstract fun toolbar(): Toolbar
     abstract fun progressBar(): ProgressBar
     abstract fun fragmentContainer(): Int
     override fun onCreate(savedInstanceState: Bundle?) {

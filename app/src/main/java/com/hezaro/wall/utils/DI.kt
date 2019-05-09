@@ -8,6 +8,7 @@ import com.hezaro.wall.domain.MainRepository
 import com.hezaro.wall.domain.MessagingRepository
 import com.hezaro.wall.domain.PlayerRepository
 import com.hezaro.wall.domain.ProfileRepository
+import com.hezaro.wall.domain.SearchRepository
 import com.hezaro.wall.feature.core.main.MainViewModel
 import com.hezaro.wall.feature.core.player.PlayerViewModel
 import com.hezaro.wall.feature.episode.EpisodeViewModel
@@ -40,7 +41,8 @@ val module: Module = module {
 
     single { PlayerRepository.PlayerRepositoryImpl(get(), get(), get()) } bind PlayerRepository::class
     viewModel { PlayerViewModel(get()) }
-    viewModel { SearchViewModel() }
+    single { SearchRepository.SearchRepositoryImpl(get(), get()) } bind SearchRepository::class
+    viewModel { SearchViewModel(get()) }
 
     single { PlayerDownloadHelper(androidContext()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }

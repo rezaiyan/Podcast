@@ -44,4 +44,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("$BASE/login")
     fun sendApi(@Field("token") token: String): Call<Response<Any>>
+
+    @GET("$BASE/search")
+    fun search(@Query("q") query: String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<MutableList<Episode>>>
 }

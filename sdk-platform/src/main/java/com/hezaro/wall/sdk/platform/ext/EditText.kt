@@ -8,11 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import com.hezaro.wall.sdk.platform.R
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import java.util.concurrent.TimeUnit
 
 fun SearchView.normalize() {
     val editText = findViewById<View>(R.id.search_src_text) as EditText
@@ -50,22 +46,5 @@ fun EditText.setCursorDrawableColor(color: Int) {
 @SuppressLint("CheckResult")
 infix fun SearchView.search(function: (String) -> Unit) {
 
-    Observable.create(ObservableOnSubscribe<String> { subscriber ->
-        setOnQueryTextListener(object : OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                subscriber.onNext(newText!!)
-                return false
-            }
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                subscriber.onNext(query!!)
-                return false
-            }
-        })
-    })
-        .map { text -> text.toLowerCase().trim() }
-        .debounce(250, TimeUnit.MILLISECONDS)
-        .distinct()
-        .filter { text -> text.length > 2 }
-        .subscribe { text -> function(text) }
 }

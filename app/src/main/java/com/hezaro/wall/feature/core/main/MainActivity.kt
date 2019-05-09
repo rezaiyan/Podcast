@@ -9,7 +9,6 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -45,7 +44,6 @@ import com.hezaro.wall.utils.RC_SIGN_IN
 import kotlinx.android.synthetic.main.activity_layout.progressBar
 import kotlinx.android.synthetic.main.fragment_player.playerView
 import kotlinx.android.synthetic.main.toolbar.profile
-import kotlinx.android.synthetic.main.toolbar.toolbar
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -59,7 +57,6 @@ class MainActivity : BaseActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val vm: MainViewModel by inject()
     override fun layoutId() = R.layout.activity_layout
-    override fun toolbar(): Toolbar = toolbar
     override fun progressBar(): ProgressBar = progressBar
     override fun fragmentContainer() = R.id.fragmentContainer
     private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }

@@ -35,6 +35,7 @@ import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
+import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.ACTION_EPISODE
@@ -54,6 +55,9 @@ class MainActivity : BaseActivity() {
     private val exploreFragment by lazy { ExploreFragment.getInstance() }
     private val profileFragment by lazy { ProfileFragment.getInstance() }
 
+    private val downloadHelper: PlayerDownloadHelper by inject()
+    val downloader by lazy { downloadHelper.getDownloadTracker()!! }
+
     override fun fragment() = exploreFragment
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -65,23 +69,21 @@ class MainActivity : BaseActivity() {
 
     var updateEpisode: MutableLiveData<Episode> = MutableLiveData()
 
-    var playerService: MediaPlayerService? = null
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            playerView.player = null
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            playerService = (service as MediaPlayerService.ServiceBinder).service
+            val playerService = (service as MediaPlayerService.ServiceBinder).service
 
-            val currentEpisode = playerService?.currentEpisode
+            val currentEpisode = playerService.currentEpisode
             if (currentEpisode != null) {
                 playerFragment.updateMiniPlayer(currentEpisode)
             } else {
-                playerService?.serviceConnected()
+                playerService.serviceConnected()
             }
-            playerView.player = playerService?.player
-            playerService?.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
+            playerView.player = playerService.player
+            playerService.mediaPlayer?.setPlaybackSpeed(vm.defaultSpeed())
         }
     }
 
@@ -155,6 +157,11 @@ class MainActivity : BaseActivity() {
         showProgress()
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onDestroy() {
+        downloadHelper.release()
+        super.onDestroy()
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

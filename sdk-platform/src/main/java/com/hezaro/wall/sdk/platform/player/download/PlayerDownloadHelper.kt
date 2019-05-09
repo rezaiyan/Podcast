@@ -73,6 +73,15 @@ class PlayerDownloadHelper(context: Context) {
         }
     }
 
+    fun release() {
+        dlManager?.let {
+            if (it.isIdle) {
+                it.removeListener(dlTracker)
+                it.release()
+            }
+        }
+    }
+
     @Synchronized
     private fun getDownloadCache(): Cache {
         if (downloadCache == null) {

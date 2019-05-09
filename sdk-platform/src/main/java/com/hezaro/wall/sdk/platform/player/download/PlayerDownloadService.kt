@@ -17,7 +17,8 @@ class PlayerDownloadService : DownloadService(
     CHANNEL_ID,
     R.string.exo_download_notification_channel_name
 ) {
-    val downloadHelper: PlayerDownloadHelper by inject()
+
+    private val downloadHelper: PlayerDownloadHelper by inject()
 
     override fun getDownloadManager() = downloadHelper.getDownloadManager()!!
     override fun getScheduler() = PlatformScheduler(this, JOB_ID)

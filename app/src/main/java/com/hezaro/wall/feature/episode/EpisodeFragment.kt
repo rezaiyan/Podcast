@@ -20,7 +20,6 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.loadBlur
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
-import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.PullDismissLayout
 import com.hezaro.wall.utils.ACTION_EPISODE
 import com.hezaro.wall.utils.ACTION_EPISODE_GET
@@ -49,9 +48,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
-    private val downloadHelper: PlayerDownloadHelper by inject()
     private val vm: EpisodeViewModel by inject()
-    private var downloader: DownloadTracker? = null
     private var currentEpisode: Episode? = null
 
     companion object {
@@ -64,8 +61,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        downloader = downloadHelper.getDownloadTracker()!!
-        downloader!!.addListener(this)
+        activity.downloader.addListener(this)
         currentEpisode = arguments?.getParcelable(PARAM_EPISODE)
         pullLayout.setListener(this)
 
@@ -73,10 +69,10 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
         downloadStatus.setOnClickListener {
             val uri = Uri.parse(currentEpisode!!.source)
             val title = currentEpisode!!.title
-            if (downloader!!.isDownloaded(uri))
+            if (activity.downloader.isDownloaded(uri))
                 removeDownloadDialog(title, uri)
             else
-                downloader!!.startDownload(activity, title, uri)
+                activity.downloader.startDownload(activity, title, uri)
         }
     }
 
@@ -86,13 +82,13 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
         alertDialog.setNegativeButton("خیر") { _a, _ -> _a.dismiss() }
         alertDialog.setPositiveButton("بله") { _, _ ->
             vm.delete(currentEpisode!!)
-            downloader!!.removeDownload(uri, title)
+            activity.downloader.removeDownload(uri, title)
         }
         alertDialog.create().show()
     }
 
     override fun onDownloadsChanged(isDownload: Boolean) {
-        val downloaded = downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source))
+        val downloaded = activity.downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
         if (downloaded) {
             vm.save(currentEpisode!!)
             downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
@@ -114,7 +110,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     }
 
     override fun onStop() {
-        downloader!!.removeListener(this)
+        activity.downloader.removeListener(this)
         LocalBroadcastManager.getInstance(context!!).unregisterReceiver(receiver)
         super.onStop()
     }
@@ -145,7 +141,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     }
 
     private fun updateView() {
-        val downloaded = downloader!!.isDownloaded(Uri.parse(currentEpisode!!.source))
+        val downloaded = activity.downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
         if (downloaded)
             downloadStatus.progress = 0.74f
         else downloadStatus.progress = 0.12f

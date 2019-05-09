@@ -39,6 +39,8 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
+    private var isRestored = false
+    private var isLoadMoreAction = false
 
     private val sortDialog by lazy {
         val sortDialog = Dialog(context!!)
@@ -73,7 +75,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         sortDialog
     }
 
-
     companion object {
         fun getInstance() = ExploreFragment()
     }
@@ -104,7 +105,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         }
     }
 
-    var isLoadMoreAction = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerFragment = (fragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!!
@@ -193,9 +193,14 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         val playlist = Playlist(ArrayList(nonFilterEpisodes))
         episodeAdapter.updateList(playlist.getItems())
 
-        activity.preparePlaylist(playlist, isLoadMoreAction)
+
         if (isLoadMoreAction) {
             isLoadMoreAction = false
+        }
+
+        if (!activity.isPlayerOpen()) {
+            isRestored = true
+            activity.preparePlaylist(playlist, isLoadMoreAction)
         }
     }
 
@@ -207,10 +212,9 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 
     fun updateEpisodeView(episode: Episode) {
-        episodeAdapter.updateRow(episode, 1)
+        episodeAdapter.updateRow(episode)
     }
 
-    var isRestored = false
     fun onRestore(playlistCreated: Boolean) {
         isRestored = playlistCreated
     }

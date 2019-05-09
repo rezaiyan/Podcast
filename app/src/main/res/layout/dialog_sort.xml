@@ -9,6 +9,7 @@
         android:id="@+id/bestLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:background="?selectableItemBackground">
 
         <TextView
@@ -25,6 +26,7 @@
             android:id="@+id/radioBest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
@@ -34,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:gravity="right|center_vertical">
+        android:gravity="center_vertical">
 
 
         <TextView
@@ -51,6 +53,7 @@
             android:id="@+id/radioNewest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
@@ -60,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:gravity="right|center_vertical">
+        android:gravity="center_vertical">
 
 
         <TextView
@@ -78,6 +81,7 @@
             android:id="@+id/radioOldest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>

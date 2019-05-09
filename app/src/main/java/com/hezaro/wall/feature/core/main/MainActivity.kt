@@ -21,11 +21,13 @@ import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
+import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.model.Version
 import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.feature.episode.EpisodeFragment
 import com.hezaro.wall.feature.explore.ExploreFragment
+import com.hezaro.wall.feature.podcast.PodcastFragment
 import com.hezaro.wall.feature.profile.ProfileFragment
 import com.hezaro.wall.feature.search.SearchFragment
 import com.hezaro.wall.sdk.base.exception.Failure
@@ -111,12 +113,15 @@ class MainActivity : BaseActivity() {
     }
 
     fun openEpisodeInfo(episode: Episode) {
-        val fragment = EpisodeFragment.newInstance(episode)
-        addFragment(fragment)
+        addFragment(EpisodeFragment.newInstance(episode))
+    }
+
+    fun openPodcastInfo(p: Podcast) {
+        addFragment(PodcastFragment.newInstance(p))
     }
 
     fun profile() {
-        if (googleSignInAccount() == null) {
+        if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             signIn()
         } else {
             playerFragment.collapse();addFragment(profileFragment)
@@ -140,14 +145,11 @@ class MainActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         bindService()
-        val account = googleSignInAccount()
-        updateUI(account)
+        updateUI(GoogleSignIn.getLastSignedInAccount(this))
         val iff = IntentFilter(ACTION_EPISODE)
         iff.addAction(ACTION_PLAYER)
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, iff)
     }
-
-    private fun googleSignInAccount() = GoogleSignIn.getLastSignedInAccount(this)
 
     private fun signIn() {
         showProgress()
@@ -200,7 +202,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun onFailure(failure: Failure) {
-        mGoogleSignInClient.signOut()
+        when (failure) {
+            is Failure.UserNotFound -> mGoogleSignInClient.signOut()
+        }
     }
 
     override fun onBackPressed() {

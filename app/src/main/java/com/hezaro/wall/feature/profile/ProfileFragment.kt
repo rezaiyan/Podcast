@@ -1,9 +1,7 @@
 package com.hezaro.wall.feature.profile
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.core.main.MainActivity
@@ -16,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_profile.tabLayout
 import kotlinx.android.synthetic.main.fragment_profile.username
 import kotlinx.android.synthetic.main.fragment_profile.viewpager
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class ProfileFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_profile
@@ -28,31 +25,11 @@ class ProfileFragment : BaseFragment() {
         fun getInstance() = ProfileFragment()
     }
 
-    override fun onAttach(context: Context?) {
-        Timber.tag(tag()).i("onAttach")
-        super.onAttach(context)
-    }
-
-    override fun onAttachFragment(childFragment: Fragment?) {
-        Timber.tag(tag()).i("onAttachFragment")
-        super.onAttachFragment(childFragment)
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        Timber.tag(tag()).i("onHiddenChanged")
-        super.onHiddenChanged(hidden)
-    }
-
     override fun onBackPressed() {
         (activity as MainActivity).finishFragment(tag(), downloadFragment.playlistCreated)
-        Timber.tag(tag()).i("onBackPressed")
         super.onBackPressed()
     }
 
-    override fun onResume() {
-        Timber.tag(tag()).i("onResume")
-        super.onResume()
-    }
 
     lateinit var downloadFragment: ListFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

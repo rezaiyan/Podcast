@@ -2,13 +2,12 @@ package com.hezaro.wall.feature.explore
 
 import android.animation.ValueAnimator
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.RadioButton
 import android.widget.RelativeLayout
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
@@ -30,7 +29,6 @@ import kotlinx.android.synthetic.main.toolbar.profile
 import kotlinx.android.synthetic.main.toolbar.search
 import kotlinx.android.synthetic.main.toolbar.sort
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
@@ -75,30 +73,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         sortDialog
     }
 
-    override fun onAttach(context: Context?) {
-        Timber.tag(tag()).i("onAttach")
-        super.onAttach(context)
-    }
-
-    override fun onAttachFragment(childFragment: Fragment?) {
-        Timber.tag(tag()).i("onAttachFragment")
-        super.onAttachFragment(childFragment)
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        Timber.tag(tag()).i("onHiddenChanged")
-        super.onHiddenChanged(hidden)
-    }
-
-    override fun onBackPressed() {
-        Timber.tag(tag()).i("onBackPressed")
-        super.onBackPressed()
-    }
-
-    override fun onResume() {
-        Timber.tag(tag()).i("onResume")
-        super.onResume()
-    }
 
     companion object {
         fun getInstance() = ExploreFragment()
@@ -156,7 +130,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             })
         }
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
-        refreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.ic_controller))
+        refreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.ic_controller))
         refreshLayout.setOnRefreshListener {
             with(vm) {
                 if (!isExecute) {
@@ -217,7 +191,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         exploreList.setLoading(false)
         val nonFilterEpisodes = episodes.filter { !it.source.contains("live.bbc.co.uk") }.toMutableList()
         val playlist = Playlist(ArrayList(nonFilterEpisodes))
-        episodeAdapter.addEpisode(playlist.getItems())
+        episodeAdapter.updateList(playlist.getItems())
 
         activity.preparePlaylist(playlist, isLoadMoreAction)
         if (isLoadMoreAction) {

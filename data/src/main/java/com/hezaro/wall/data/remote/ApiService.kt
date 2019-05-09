@@ -2,6 +2,7 @@ package com.hezaro.wall.data.remote
 
 import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.Response
 import com.hezaro.wall.data.model.Status.Companion.SortBy
 import com.hezaro.wall.data.model.UserInfo
@@ -21,6 +22,9 @@ interface ApiService {
 
     @GET("$BASE/episodes")
     fun explore(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<MutableList<Episode>>>
+
+    @GET("$BASE/podcasts")
+    fun podcast(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<MutableList<Podcast>>>
 
     @FormUrlEncoded
     @POST("$BASE/login")

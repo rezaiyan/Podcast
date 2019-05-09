@@ -48,6 +48,8 @@ const val PARAM_PLAYLIST = "playlist"
 
 const val PARAM_EPISODE = "openEpisodeInfo"
 
+const val PARAM_PODCAST = "openPodcastInfo"
+
 const val PARAM_SEEK_MS = "seekMs"
 
 const val PARAM_PLAYBACK_SPEED = "playbackSpeed"

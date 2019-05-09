@@ -19,6 +19,7 @@ import kotlin.coroutines.CoroutineContext
  */
 abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
+    var progress: MutableLiveData<Boolean> = MutableLiveData()
     var failure: MutableLiveData<Failure> = MutableLiveData()
     var isExecute = false
     var job = Job()
@@ -27,6 +28,7 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     public override fun onCleared() {
         super.onCleared()
+        progress.value = false
         isExecute = false
         job.cancel()
         job = Job()
@@ -36,6 +38,7 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     protected fun onFailure(it: Failure) {
         launch(Dispatchers.Main) {
             isExecute = false
+            progress.value = false
             failure.value = it
         }
     }

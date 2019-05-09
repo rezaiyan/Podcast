@@ -29,7 +29,7 @@ class EpisodeAdapter(
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) = holder.bind(episodes[position])
 
-    fun addEpisode(episodes: MutableList<Episode>) {
+    fun updateList(episodes: MutableList<Episode>) {
         this.episodes.addAll(episodes)
         notifyItemRangeInserted(itemCount, this.episodes.size)
     }
@@ -58,8 +58,6 @@ class EpisodeAdapter(
             itemView.let {
 
                 episode.run {
-                    //                    if (playStatus == IN_PROGRESS)
-//                        itemView.setBackgroundColor(itemView.context.resources.getColor(R.color.colorTextSecondary))
                     it.logo.load(cover, transformation = RoundRectTransform())
                     if (isDownloaded == 1)
                         it.downloadStatus.progress = 0.74f

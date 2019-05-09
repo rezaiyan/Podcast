@@ -76,7 +76,7 @@ abstract class BaseActivity : AppCompatActivity() {
             fragment.exitTransition = Slide(gravity)
         }
 
-        if (fragment.tag() == "EpisodeFragment") {
+        if (fragment.tag() == "EpisodeFragment" || fragment.tag() == "PodcastFragment") {
             fragment.enterTransition = Slide(Gravity.BOTTOM)
             fragment.exitTransition = Slide(Gravity.TOP)
         }

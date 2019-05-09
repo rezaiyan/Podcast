@@ -1,6 +1,5 @@
 package com.hezaro.wall.sdk.platform.ext
 
-import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.view.Gravity
@@ -8,16 +7,19 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.hezaro.wall.sdk.platform.R
 
-fun SearchView.normalize() {
+fun SearchView.normalize(font: Int) {
     val editText = findViewById<View>(R.id.search_src_text) as EditText
-    editText.gravity = Gravity.RIGHT
+    editText.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
     editText.hint = "جستجو"
-    editText.setBackgroundColor(resources.getColor(android.R.color.transparent))
-    editText.setTextColor(resources.getColor(R.color.colorTextPrimary))
-    editText.setHintTextColor(resources.getColor(R.color.colorTextSecondary))
-    editText.setCursorDrawableColor(resources.getColor(R.color.colorTextSecondary))
+    editText.typeface = ResourcesCompat.getFont(context, font)
+    editText.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+    editText.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary))
+    editText.setHintTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
+    editText.setCursorDrawableColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
 }
 
 fun EditText.setCursorDrawableColor(color: Int) {
@@ -33,18 +35,11 @@ fun EditText.setCursorDrawableColor(color: Int) {
         fCursorDrawable.isAccessible = true
 
         val drawables = arrayOfNulls<Drawable>(2)
-        val res = context.resources
-        drawables[0] = res.getDrawable(mCursorDrawableRes)
-        drawables[1] = res.getDrawable(mCursorDrawableRes)
+        drawables[0] = ContextCompat.getDrawable(context, mCursorDrawableRes)
+        drawables[1] = ContextCompat.getDrawable(context, mCursorDrawableRes)
         drawables[0]?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
         drawables[1]?.setColorFilter(color, PorterDuff.Mode.SRC_IN)
         fCursorDrawable.set(editor, drawables)
     } catch (ignored: Throwable) {
     }
-}
-
-@SuppressLint("CheckResult")
-infix fun SearchView.search(function: (String) -> Unit) {
-
-
 }

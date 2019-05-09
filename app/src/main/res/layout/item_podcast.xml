@@ -7,7 +7,7 @@
     android:background="@color/colorPrimaryDark">
 
     <ImageView
-        android:id="@+id/cover"
+        android:id="@+id/podcastCover"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginEnd="8dp"
@@ -19,13 +19,14 @@
         tools:src="@tools:sample/avatars" />
 
     <TextView
+        android:id="@+id/podcastName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:maxLines="1"
         android:textColor="@color/colorTextPrimary"
-        app:layout_constraintEnd_toEndOf="@+id/cover"
-        app:layout_constraintStart_toStartOf="@+id/cover"
-        app:layout_constraintTop_toBottomOf="@+id/cover"
+        app:layout_constraintEnd_toEndOf="@+id/podcastCover"
+        app:layout_constraintStart_toStartOf="@+id/podcastCover"
+        app:layout_constraintTop_toBottomOf="@+id/podcastCover"
         tools:text="@tools:sample/last_names" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,27 +1,26 @@
 package com.hezaro.wall.feature.explore
 
 import android.animation.ValueAnimator
+import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.widget.PopupMenu
+import android.widget.RadioButton
+import android.widget.RelativeLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
 import com.hezaro.wall.data.model.Status.Companion.BEST
-import com.hezaro.wall.data.model.Status.Companion.BEST_
-import com.hezaro.wall.data.model.Status.Companion.IN_PROGRESS
 import com.hezaro.wall.data.model.Status.Companion.NEWEST
-import com.hezaro.wall.data.model.Status.Companion.NEWEST_
 import com.hezaro.wall.data.model.Status.Companion.OLDEST
-import com.hezaro.wall.data.model.Status.Companion.OLDEST_
 import com.hezaro.wall.feature.core.main.MainActivity
 import com.hezaro.wall.feature.core.player.PlayerFragment
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
-import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
 import com.hezaro.wall.utils.SAVE_INSTANCE_EPISODES
@@ -31,23 +30,87 @@ import kotlinx.android.synthetic.main.toolbar.profile
 import kotlinx.android.synthetic.main.toolbar.search
 import kotlinx.android.synthetic.main.toolbar.sort
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
     private lateinit var playerSheetBehavior: BottomSheetBehavior<View>
     private lateinit var playerFragment: PlayerFragment
     private val vm: ExploreViewModel by inject()
-    private lateinit var exploreAdapter: ExploreAdapter
+    private lateinit var episodeAdapter: EpisodeAdapter
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
+    private val sortDialog by lazy {
+        val sortDialog = Dialog(context!!)
+        sortDialog.setContentView(R.layout.dialog_sort)
+        val radioBest = sortDialog.findViewById<RadioButton>(R.id.radioBest)
+        val radioNewest = sortDialog.findViewById<RadioButton>(R.id.radioNewest)
+        val radioOldest = sortDialog.findViewById<RadioButton>(R.id.radioOldest)
+        radioBest.setOnClickListener {
+            radioBest.isChecked = true
+            radioNewest.isChecked = false
+            radioOldest.isChecked = false
+            sortDialog.dismiss()
+            sortPlaylist(BEST)
+        }
+        radioNewest.setOnClickListener {
+            radioBest.isChecked = false
+            radioNewest.isChecked = true
+            radioOldest.isChecked = false
+            sortDialog.dismiss()
+            sortPlaylist(NEWEST)
+        }
+        radioOldest.setOnClickListener {
+            radioBest.isChecked = false
+            radioNewest.isChecked = false
+            radioOldest.isChecked = true
+            sortDialog.dismiss()
+            sortPlaylist(OLDEST)
+        }
+        sortDialog.findViewById<RelativeLayout>(R.id.bestLayout).setOnClickListener { radioBest.performClick() }
+        sortDialog.findViewById<RelativeLayout>(R.id.newLayout).setOnClickListener { radioNewest.performClick() }
+        sortDialog.findViewById<RelativeLayout>(R.id.oldLayout).setOnClickListener { radioOldest.performClick() }
+        sortDialog
+    }
+
+    override fun onAttach(context: Context?) {
+        Timber.tag(tag()).i("onAttach")
+        super.onAttach(context)
+    }
+
+    override fun onAttachFragment(childFragment: Fragment?) {
+        Timber.tag(tag()).i("onAttachFragment")
+        super.onAttachFragment(childFragment)
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        Timber.tag(tag()).i("onHiddenChanged")
+        super.onHiddenChanged(hidden)
+    }
+
+    override fun onBackPressed() {
+        Timber.tag(tag()).i("onBackPressed")
+        super.onBackPressed()
+    }
+
+    override fun onResume() {
+        Timber.tag(tag()).i("onResume")
+        super.onResume()
+    }
+
     companion object {
         fun getInstance() = ExploreFragment()
     }
+
     override fun invoke(episode: Episode, index: Int) {
         liftExploreList()
-        playerFragment.openMiniPlayer(episode)
+        if (isRestored) {
+            isRestored = false
+            activity.prepareAndPlayPlaylist(Playlist(ArrayList(episodeAdapter.episodes)), episode)
+        } else
+            activity.playEpisode(episode)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -67,16 +130,17 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         }
     }
 
+    var isLoadMoreAction = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         playerFragment = (fragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!!
         playerFragment.view?.let { playerSheetBehavior = BottomSheetBehavior.from(it) }
             .also { playerFragment.setBehavior(playerSheetBehavior) }
 
-        exploreAdapter = ExploreAdapter(mutableListOf(), this@ExploreFragment)
+        episodeAdapter = EpisodeAdapter(mutableListOf(), this@ExploreFragment)
         exploreList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            adapter = exploreAdapter
+            adapter = episodeAdapter
             loadingStatus.observeForever { isLoading ->
                 if (isLoading) {
                     showProgress()
@@ -85,6 +149,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             }
             setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
+                    isLoadMoreAction = true
                     vm.explore(page = page)
                     setLoading(true)
                 }
@@ -98,7 +163,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
                     explore(page = 1)
                     exploreList.page = 2
                     exploreList.setLoading(true)
-                    exploreAdapter.episodes.clear()
+                    episodeAdapter.episodes.clear()
                 }
             }
             refreshLayout.isRefreshing = false
@@ -112,44 +177,23 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             exploreList.setLoading(true)
         }
 
-        val menu = PopupMenu(context!!, sort)
-        menu.menu.add(NEWEST_)
-        menu.menu.add(OLDEST_)
-        menu.menu.add(BEST_)
-
-        sort.setOnClickListener { menu.show() }
+        sort.setOnClickListener { sortDialog.show() }
         search.setOnClickListener {
             activity.search()
         }
         profile.setOnClickListener {
             activity.profile()
         }
-        menu.setOnMenuItemClickListener {
-            when (it.title) {
-                NEWEST_ -> {
-                    sortPlaylist(NEWEST)
-                }
-                OLDEST_ -> {
-                    sortPlaylist(OLDEST)
-                }
-                BEST_ -> {
-                    sortPlaylist(BEST)
-                }
-                else -> false
-
-            }
-        }
 
         activity.updateEpisode.observeForever {
-            exploreAdapter.updateRow(it)
+            episodeAdapter.updateRow(it)
         }
     }
 
     private fun sortPlaylist(sortBy: String): Boolean {
-        MediaPlayerServiceHelper.clearPlaylist(context!!)
         exploreList.page = 2
         exploreList.setLoading(true)
-        exploreAdapter.clearAll()
+        episodeAdapter.clearAll()
         vm.explore(page = 1, sortBy = sortBy)
         return true
     }
@@ -167,26 +211,34 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             animator.start()
         }
     }
+//        if (episodeAdapter.itemCount == episodes.size)//Means Its first response: To prepare last played episode we should retrieve that here because playlist must be prepared
 
     private fun onSuccess(episodes: MutableList<Episode>) {
         exploreList.setLoading(false)
         val nonFilterEpisodes = episodes.filter { !it.source.contains("live.bbc.co.uk") }.toMutableList()
         val playlist = Playlist(ArrayList(nonFilterEpisodes))
-        exploreAdapter.addEpisode(playlist.getItems())
-        MediaPlayerServiceHelper.playPlaylist(requireContext(), playlist)
-        if (exploreAdapter.itemCount == episodes.size)//Means Its first response: To prepare last played episode we should retrieve that here because playlist must be prepared
-            activity.loadLastPlayedEpisode()
+        episodeAdapter.addEpisode(playlist.getItems())
+
+        activity.preparePlaylist(playlist, isLoadMoreAction)
+        if (isLoadMoreAction) {
+            isLoadMoreAction = false
+        }
     }
 
     private fun onFailure(failure: Failure) {
+        isLoadMoreAction = false
         exploreList.onError()
         failure.message?.let { showMessage(it) }
         exploreList.setLoading(false)
     }
 
     fun updateEpisodeView(episode: Episode) {
-        episode.playStatus = IN_PROGRESS
-        exploreAdapter.updateRow(episode, 1)
+        episodeAdapter.updateRow(episode, 1)
+    }
+
+    var isRestored = false
+    fun onRestore(playlistCreated: Boolean) {
+        isRestored = playlistCreated
     }
 }
 

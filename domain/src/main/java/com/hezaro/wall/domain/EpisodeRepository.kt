@@ -19,6 +19,6 @@ interface EpisodeRepository {
             database.saveEpisode(episode)
         }
 
-        override fun delete(episode: Episode) = database.deleteIfIsNotLastPlayed(episode)
+        override fun delete(episode: Episode) = database.removeDownloaded(episode)
     }
 }

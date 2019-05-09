@@ -87,6 +87,23 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         return episode
     }
 
+    override fun playPlaylist(p: Playlist, episode: Episode) {
+        clearPlaylist()
+        this.playlist = p
+        for (i in 0 until this.playlist!!.getItems().size)
+            concatenatingMediaSource.addMediaSource(buildMediaSource(playlist!!.getItem(i)))
+
+        Timber.tag("MediaPlayer").i("concatenatingMediaSource.size= ${concatenatingMediaSource.size}")
+        exoPlayer!!.prepare(concatenatingMediaSource)
+
+        this.episode = episode
+        listenerReference.notifyEpisode(episode)
+        val currentIndex = playlist!!.getIndex(episode)
+        exoPlayer!!.seekTo(currentIndex, episode.state)
+        exoPlayer!!.playWhenReady = true
+        Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
+    }
+
     override fun concatPlaylist(playlist: Playlist) {
         if (this.playlist == null) {
             this.playlist = playlist
@@ -97,11 +114,12 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
             for (i in 0 until playlist.getItems().size) {
                 val it = playlist.getItem(i)
                 if (this.playlist!!.getIndex(it) == -1) {
-                    this.playlist!!.getItems().add(it)
+                    this.playlist!!.addItem(it)
                     concatenatingMediaSource.addMediaSource(buildMediaSource(it))
                 }
             }
         }
+        Timber.tag("MediaPlayer").i("concatenatingMediaSource.size= ${concatenatingMediaSource.size}")
         val beReset = exoPlayer!!.currentWindowIndex > 0 || isPlaying
         if (!beReset) {
             exoPlayer!!.prepare(concatenatingMediaSource)
@@ -122,8 +140,9 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
             if (currentIndex > 0 && exoPlayer!!.currentTimeline.windowCount > 0 &&
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
             ) {
-                exoPlayer!!.seekTo(currentIndex, episode.state)
-                exoPlayer!!.playWhenReady = episode.lastPlayed == 0
+                Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
+                exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
+                exoPlayer!!.playWhenReady = true
             }
         }
     }

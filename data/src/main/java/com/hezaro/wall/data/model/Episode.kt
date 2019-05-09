@@ -109,6 +109,14 @@ class Episode(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        other?.let {
+            return (it is Episode) && (it.id == id)
+        }
+
+        return super.equals(other)
+    }
+
     companion object {
         @JvmField
         var CREATOR: Parcelable.Creator<Episode> = object : Parcelable.Creator<Episode> {

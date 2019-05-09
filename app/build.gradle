@@ -59,6 +59,10 @@ dependencies {
     implementation Libraries.exoPlayerCore
     implementation Libraries.exoPlayerUi
     implementation Libraries.lottie
+    implementation Libraries.rxJava
+    implementation Libraries.rxAndroid
+    implementation Libraries.roomCoroutines
+    implementation Libraries.roomRxjava
     androidTestImplementation TestLibraries.rules
     androidTestImplementation TestLibraries.espressoCore
     androidTestImplementation TestLibraries.espressoContrib

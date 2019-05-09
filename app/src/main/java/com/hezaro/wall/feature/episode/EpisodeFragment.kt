@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hezaro.wall.R
@@ -69,7 +70,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
         pullLayout.setListener(this)
 
         updateView()
-        episodeCover.setOnClickListener {
+        downloadStatus.setOnClickListener {
             val uri = Uri.parse(currentEpisode!!.source)
             val title = currentEpisode!!.title
             if (downloader!!.isDownloaded(uri))
@@ -81,9 +82,12 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
     private fun removeDownloadDialog(title: String, uri: Uri) {
         val alertDialog = AlertDialog.Builder(context)
-        alertDialog.setMessage("حذف از دانلودها")
+        alertDialog.setMessage("$title جذف شود؟ ")
         alertDialog.setNegativeButton("خیر") { _a, _ -> _a.dismiss() }
-        alertDialog.setNegativeButton("بله") { _, _ -> downloader!!.removeDownload(uri, title) }
+        alertDialog.setPositiveButton("بله") { _, _ ->
+            vm.delete(currentEpisode!!)
+            downloader!!.removeDownload(uri, title)
+        }
         alertDialog.create().show()
     }
 
@@ -156,10 +160,11 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
             playedCount.text = it.views.toString()
             voteCount.text = it.votes.toString()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                description.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_COMPACT)
+                description.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_LEGACY)
             } else {
                 description.text = Html.fromHtml(it.description)
             }
+            description.movementMethod = LinkMovementMethod.getInstance()
 
         }
     }

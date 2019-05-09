@@ -20,7 +20,9 @@ const val ACTION_PLAY_QUEUE = "com.hezaro.wall.playQueue"
 
 const val ACTION_PLAY_EPISODE = "com.hezaro.wall.playNew"
 
-const val ACTION_PLAY_PLAYLIST = "com.hezaro.wall.concatPlaylist"
+const val ACTION_PREPARE_PLAYLIST = "com.hezaro.wall.prepare_playlist"
+
+const val ACTION_PLAY_PLAYLIST = "com.hezaro.wall.play_playlist"
 
 const val ACTION_CLEAR_PLAYLIST = "com.hezaro.wall.clearPlaylist"
 
@@ -51,6 +53,9 @@ const val PARAM_SEEK_MS = "seekMs"
 const val PARAM_PLAYBACK_SPEED = "playbackSpeed"
 
 const val ACTION_PLAYER = "com.hezaro.wall.player.action"
+
 const val ACTION_PLAYER_STATUS = "com.hezaro.wall.player.action.playStatus"
+
 const val ACTION_EPISODE = "com.hezaro.wall.openEpisodeInfo.action"
-const val ACTION_EPISODE_GET = "com.hezaro.wall.openEpisodeInfo.action.get"
+
+const val ACTION_EPISODE_GET = "com.hezaro.wall.openEpisodeInfo.action.update"

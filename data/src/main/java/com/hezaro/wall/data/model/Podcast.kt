@@ -24,6 +24,14 @@ class Podcast(
         cover = source.readString()!!
     }
 
+    override fun equals(other: Any?): Boolean {
+        other?.let {
+            return (it is Podcast) && (it.id == id)
+        }
+
+        return super.equals(other)
+    }
+
     override fun describeContents() = 0
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

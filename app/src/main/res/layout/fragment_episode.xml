@@ -116,29 +116,31 @@
             android:layout_width="@dimen/navigator_icon"
             android:layout_height="@dimen/navigator_icon"
             android:layout_margin="@dimen/margin_20"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/episodeCover"
+            app:layout_constraintTop_toBottomOf="@+id/podcastCover"
             app:lottie_autoPlay="false"
             app:lottie_enableMergePathsForKitKatAndAbove="true"
             app:lottie_rawRes="@raw/download"
-            app:lottie_renderMode="automatic"
-            tools:lottie_progress="74" />
+            app:lottie_renderMode="automatic" />
 
         <TextView
             android:id="@+id/episodeTitle"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_20"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/margin_20"
             android:ellipsize="start"
             android:fontFamily="@font/trafic"
-            android:singleLine="true"
+            android:maxLines="2"
             android:textColor="@color/colorTextPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/downloadStatus"
             app:layout_constraintTop_toBottomOf="@id/episodeCover"
-            tools:text="@tools:sample/last_names" />
+            tools:text="شسپیشس سیب سیبسی بسیبس بسیب سیب سیبسیب " />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"

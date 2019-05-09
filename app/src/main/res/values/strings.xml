@@ -16,4 +16,7 @@
     <string name="search">جستجو</string>
     <string name="podcast">پادکست</string>
     <string name="_1_0x">1.0x</string>
+    <string name="the_bests">بهترین‌ها</string>
+    <string name="the_newest">جدیدترین‌ها</string>
+    <string name="the_oldest">قدیمی‌ترین‌ها</string>
 </resources>

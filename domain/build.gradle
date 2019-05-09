@@ -5,6 +5,9 @@ dependencies {
     implementation project(Modules.sdkBase)
     implementation Libraries.coroutinesAndroid
     implementation Libraries.retrofit
+    implementation Libraries.rxJava
+    implementation Libraries.roomCoroutines
+    implementation Libraries.roomRxjava
     testImplementation project(Modules.sdkTest)
     testImplementation TestLibraries.kluent
     testImplementation TestLibraries.mockitoKotlin

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_8"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/bestLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_8"
+            android:layout_toStartOf="@+id/radioBest"
+            android:fontFamily="@font/trafic"
+            android:text="@string/the_bests"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radioBest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/newLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:gravity="right|center_vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_8"
+            android:layout_toStartOf="@+id/radioNewest"
+            android:fontFamily="@font/trafic"
+            android:text="@string/the_newest"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radioNewest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/oldLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:gravity="right|center_vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_8"
+            android:layout_toStartOf="@+id/radioOldest"
+            android:fontFamily="@font/trafic"
+            android:text="@string/the_oldest"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+
+        <RadioButton
+            android:id="@+id/radioOldest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

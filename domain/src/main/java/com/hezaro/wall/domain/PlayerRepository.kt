@@ -8,6 +8,7 @@ import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.data.utils.BaseRepository
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
+import com.hezaro.wall.sdk.base.extention.EMAIL
 import com.hezaro.wall.sdk.base.extention.SPEED
 import com.hezaro.wall.sdk.base.extention.get
 import com.hezaro.wall.sdk.base.extention.put
@@ -39,7 +40,9 @@ interface PlayerRepository {
         override fun getSpeed(): Float = storage.get(SPEED, 1.0F)
         override fun setSpeed(speed: Float) = storage.put(SPEED, speed)
         override fun sendLastPosition(episodeId: Long, lastPosition: Long) =
-            request(api.sendLastPosition(episodeId, lastPosition)) { it.meta }
+            if (storage.get(EMAIL, "").isNotEmpty())
+                request(api.sendLastPosition(episodeId, lastPosition)) { it.meta }
+            else Either.Left(Failure.UserNotFound())
 
         override fun retrieveLatestPlayedEpisode(): Episode? = database.getLastPlayedEpisode()
         override fun savePlayedEpisode(episode: Episode) {

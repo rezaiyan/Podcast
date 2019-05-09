@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import timber.log.Timber
 
 /**
  * Base Fragment class with helper methods for handling views and back button events.
@@ -20,7 +21,9 @@ abstract class BaseFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(layoutId(), container, false)
 
-    open fun onBackPressed() {}
+    open fun onBackPressed() {
+        Timber.tag("BaseFragment").i("BaseTag : ${tag()}")
+    }
 
     fun showMessage(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 

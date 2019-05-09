@@ -1,10 +1,13 @@
 package com.hezaro.wall.feature.profile
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.sdk.platform.BaseViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,12 +26,13 @@ class ProfileViewModel(private val repository: ProfileRepository) : BaseViewMode
         userInfo.value = it
     }
 
+    @SuppressLint("CheckResult")
     fun getEpisodes() {
-        launch {
-            val e = repository.getDownloadEpisodes()
-            launch(Dispatchers.Main) {
-                episodes.value = e
+        repository.getDownloadEpisodes()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                episodes.value = it
             }
-        }
     }
 }

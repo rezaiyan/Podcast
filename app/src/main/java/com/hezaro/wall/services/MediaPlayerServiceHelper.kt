@@ -7,6 +7,7 @@ import com.hezaro.wall.data.model.Playlist
 import com.hezaro.wall.utils.ACTION_CLEAR_PLAYLIST
 import com.hezaro.wall.utils.ACTION_PLAY_EPISODE
 import com.hezaro.wall.utils.ACTION_PLAY_PLAYLIST
+import com.hezaro.wall.utils.ACTION_PREPARE_PLAYLIST
 import com.hezaro.wall.utils.ACTION_SEEK_BACKWARD
 import com.hezaro.wall.utils.ACTION_SEEK_FORWARD
 import com.hezaro.wall.utils.ACTION_SET_SPEED
@@ -18,10 +19,18 @@ class MediaPlayerServiceHelper{
 
     companion object {
 
-        fun playPlaylist(context: Context, playlist: Playlist) {
+        fun preparePlaylist(context: Context, playlist: Playlist) {
+            val intent = Intent(context, MediaPlayerService::class.java)
+            intent.action = ACTION_PREPARE_PLAYLIST
+            intent.putExtra(PARAM_PLAYLIST, playlist)
+            context.startService(intent)
+        }
+
+        fun prepareAndPlayPlaylist(context: Context, playlist: Playlist, episode: Episode) {
             val intent = Intent(context, MediaPlayerService::class.java)
             intent.action = ACTION_PLAY_PLAYLIST
             intent.putExtra(PARAM_PLAYLIST, playlist)
+            intent.putExtra(PARAM_EPISODE, episode)
             context.startService(intent)
         }
 

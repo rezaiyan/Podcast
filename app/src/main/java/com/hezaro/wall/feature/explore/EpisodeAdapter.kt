@@ -14,11 +14,11 @@ import kotlinx.android.synthetic.main.item_explore.view.logo
 import kotlinx.android.synthetic.main.item_explore.view.podcaster
 import kotlinx.android.synthetic.main.item_explore.view.title
 
-class ExploreAdapter(
+class EpisodeAdapter(
     val episodes: MutableList<Episode> = mutableListOf(),
     private val onItemClick: (Episode, Int) -> Unit
 ) :
-    RecyclerView.Adapter<ExploreAdapter.ItemHolder>() {
+    RecyclerView.Adapter<EpisodeAdapter.ItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ItemHolder(
         LayoutInflater.from(parent.context)
@@ -34,15 +34,21 @@ class ExploreAdapter(
         notifyItemRangeInserted(itemCount, this.episodes.size)
     }
 
+    fun clearAndAddEpisode(episodes: MutableList<Episode>) {
+        this.episodes.clear()
+        this.episodes.addAll(episodes)
+        notifyItemRangeInserted(0, this.episodes.size)
+    }
+
     fun clearAll() {
         notifyItemRangeRemoved(0, episodes.size)
         episodes.clear()
     }
 
     fun updateRow(e: Episode, isPlaying: Int = 0) {
-        episodes.find { it.id == e.id }?.let {
-            it.update(e)
-            notifyItemChanged(episodes.indexOf(it))
+        if (episodes.contains(e)) {
+            e.update(e)
+            notifyItemChanged(episodes.indexOf(e))
         }
     }
 

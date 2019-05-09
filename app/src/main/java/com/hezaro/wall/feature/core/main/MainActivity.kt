@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task
 import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.Playlist
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.model.Version
 import com.hezaro.wall.feature.core.player.PlayerFragment
@@ -34,6 +35,7 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.services.MediaPlayerService
+import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.ACTION_EPISODE
 import com.hezaro.wall.utils.ACTION_EPISODE_GET
 import com.hezaro.wall.utils.ACTION_PLAYER
@@ -50,6 +52,7 @@ import timber.log.Timber
 class MainActivity : BaseActivity() {
 
     private val exploreFragment by lazy { ExploreFragment.getInstance() }
+    private val profileFragment by lazy { ProfileFragment.getInstance() }
 
     override fun fragment() = exploreFragment
 
@@ -98,10 +101,6 @@ class MainActivity : BaseActivity() {
         prepareGoogleSignIn()
     }
 
-    fun loadLastPlayedEpisode() {
-        vm.retrieveLatestEpisode()
-    }
-
     private fun onLoadLastPlayedEpisode(episode: Episode) {
         playerFragment.onLoadLastPlayedEpisode(episode)
     }
@@ -120,11 +119,11 @@ class MainActivity : BaseActivity() {
     }
 
     fun profile() {
-//        if (googleSignInAccount() == null) {
-//            signIn()
-//        } else {
-        playerFragment.collapse();addFragment(ProfileFragment.getInstance())
-//        }
+        if (googleSignInAccount() == null) {
+            signIn()
+        } else {
+            playerFragment.collapse();addFragment(profileFragment)
+        }
     }
 
     private fun prepareGoogleSignIn() {
@@ -236,5 +235,29 @@ class MainActivity : BaseActivity() {
     }
 
     fun isPlayerExpand() = playerFragment.isExpand()
+
     fun isPlayerOpen() = playerFragment.isOpen()
+
+    fun playEpisode(episode: Episode) = playerFragment.openMiniPlayer(episode)
+
+    fun preparePlaylist(
+        playlist: Playlist,
+        isLoadMore: Boolean = false
+    ) {
+        if (!isLoadMore)
+            MediaPlayerServiceHelper.clearPlaylist(this)
+
+        MediaPlayerServiceHelper.preparePlaylist(this, playlist)
+    }
+
+    fun prepareAndPlayPlaylist(
+        playlist: Playlist, e: Episode
+    ) {
+        MediaPlayerServiceHelper.prepareAndPlayPlaylist(this, playlist, e)
+    }
+
+    fun finishFragment(tag: String, playlistCreated: Boolean) {
+        if (tag == "ProfileFragment")
+            exploreFragment.onRestore(playlistCreated)
+    }
 }

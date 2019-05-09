@@ -104,6 +104,7 @@ object Libraries {
 
     val timber = "com.jakewharton.timber:timber:${Versions.timber}"
 
+    val roomRxjava = "androidx.room:room-rxjava2:${Versions.room}"
     val roomCoroutines = "androidx.room:room-ktx:${Versions.room}"
     val roomRuntime = "androidx.room:room-runtime:${Versions.room}"
     val roomCompiler = "androidx.room:room-compiler:${Versions.room}"

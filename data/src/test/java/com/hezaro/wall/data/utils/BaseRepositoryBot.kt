@@ -33,7 +33,7 @@ class BaseRepositoryBot {
             ),
         okhttp3.Response.Builder().request(Request.Builder().url("http://wall.hezaro.com").build()).code(401).protocol(
             Protocol.HTTP_1_1
-        ).message("Error message test").build()
+        ).message("Error message removeDownloaded").build()
     )
 
     fun withThisResponse(response: Response<com.hezaro.wall.data.model.Response<UserInfo>>?): BaseRepositoryBot {

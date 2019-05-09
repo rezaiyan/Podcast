@@ -10,11 +10,12 @@ import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.base.extention.EMAIL
 import com.hezaro.wall.sdk.base.extention.USER_NAME
 import com.hezaro.wall.sdk.base.extention.get
+import io.reactivex.Flowable
 
 interface ProfileRepository {
 
     fun userInfo(): Either<Failure, UserInfo>
-    fun getDownloadEpisodes(): MutableList<Episode>
+    fun getDownloadEpisodes(): Flowable<MutableList<Episode>>
 
     class ProfileRepositoryImpl(private val storage: SharedPreferences, private val database: EpisodeDao) :
         BaseRepository(),

@@ -21,9 +21,8 @@ interface ExploreRepository {
             request(api.explore(sort = sortBy, page = page, offset = offset)) { remote ->
                 val localList = database.getAllEpisodes()
                 remote.response.forEach { e ->
-                    localList.find { it.id == e.id }?.let {
-                        e.update(it)
-                    }
+                    if (localList.contains(e))
+                        localList[localList.indexOf(e)].update(e)
                 }
                 remote.response
             }

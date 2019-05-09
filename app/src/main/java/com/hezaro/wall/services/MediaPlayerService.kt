@@ -23,6 +23,7 @@ import com.hezaro.wall.utils.ACTION_PLAY_EPISODE
 import com.hezaro.wall.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.utils.ACTION_PLAY_PLAYLIST
 import com.hezaro.wall.utils.ACTION_PLAY_QUEUE
+import com.hezaro.wall.utils.ACTION_PREPARE_PLAYLIST
 import com.hezaro.wall.utils.ACTION_RESUME_PLAYBACK
 import com.hezaro.wall.utils.ACTION_SEEK_BACKWARD
 import com.hezaro.wall.utils.ACTION_SEEK_FORWARD
@@ -111,7 +112,11 @@ class MediaPlayerService : Service() {
                         mediaPlayer?.selectTrack(it)
                     }
                 }
-                ACTION_PLAY_PLAYLIST -> addPlaylist(intent.extras!!.getParcelable(PARAM_PLAYLIST)!!)
+                ACTION_PREPARE_PLAYLIST -> addPlaylist(intent.extras!!.getParcelable(PARAM_PLAYLIST)!!)
+                ACTION_PLAY_PLAYLIST -> addPlaylist(
+                    intent.extras!!.getParcelable(PARAM_PLAYLIST)!!,
+                    intent.extras!!.getParcelable(PARAM_EPISODE)!!
+                )
                 ACTION_CLEAR_PLAYLIST -> clearPlaylist()
                 ACTION_RESUME_PLAYBACK -> mediaPlayer!!.resumePlayback()
                 ACTION_PLAY_PAUSE -> if (mediaPlayer!!.isPlaying) {
@@ -171,9 +176,10 @@ class MediaPlayerService : Service() {
 
     private fun clearPlaylist() = mediaPlayer?.clearPlaylist()
 
-    private fun addPlaylist(playlist: Playlist) {
-        if (playlist != null) mediaPlayer?.concatPlaylist(playlist)
-        else Timber.w("Player is playing, openEpisodeInfo cannot be null")
+    private fun addPlaylist(playlist: Playlist, episode: Episode? = null) {
+        if (episode == null)
+            mediaPlayer?.concatPlaylist(playlist)
+        else mediaPlayer?.playPlaylist(playlist, episode)
     }
 
     @Suppress("NAME_SHADOWING")

@@ -39,6 +39,22 @@ class Episode(
     var creationDate: Long = 0
 ) : Parcelable {
 
+    private fun formatLongNumber(value: Long): String {
+        return when {
+            value <= 999 -> value.toString()
+            // thousands
+            value in 1000..999999 -> "${(value / 1000)}K"
+            // millions
+            value in 1000000..999999999 -> "${(value / 1000000)}M"
+            // billions
+            value in 1000000000..999999999999 -> "${(value / 1000000000)}B"
+            else -> value.toString()
+        }
+    }
+
+    fun getView() = formatLongNumber(views)
+    fun getLike() = formatLongNumber(votes)
+
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         title = parcel.readString()!!

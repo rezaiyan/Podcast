@@ -111,7 +111,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         playerFragment.view?.let { playerSheetBehavior = BottomSheetBehavior.from(it) }
             .also { playerFragment.setBehavior(playerSheetBehavior) }
 
-        episodeAdapter = EpisodeAdapter(mutableListOf(), this@ExploreFragment)
+        episodeAdapter = EpisodeAdapter(mutableListOf(), true, this@ExploreFragment)
         exploreList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = episodeAdapter
@@ -185,7 +185,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             animator.start()
         }
     }
-//        if (episodeAdapter.itemCount == episodes.size)//Means Its first response: To prepare last played episode we should retrieve that here because playlist must be prepared
+//        if (episodeAdapter.itemCount == episodes.size)//Means Its first response: To preparing the latest episode is played, we have to retrieve that here, because playlist must be prepared too.
 
     private fun onSuccess(episodes: MutableList<Episode>) {
         exploreList.setLoading(false)

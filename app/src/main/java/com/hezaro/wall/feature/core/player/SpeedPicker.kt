@@ -28,7 +28,7 @@ class SpeedPicker(context: Context, closeAction: (Float) -> Unit) {
         numberPicker.wrapSelectorWheel = false
         numberPicker.displayedValues = numbers
         numberPicker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-        numberPicker.setOnValueChangedListener { _, oldValue, newVal ->
+        numberPicker.setOnValueChangedListener { _, _, newVal ->
             val speed = numbers[newVal - 1]!!.substring(0, 3)
             closeAction(speed.toFloat())
         }

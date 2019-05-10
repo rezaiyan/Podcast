@@ -33,17 +33,6 @@ class Playlist(private val list: ArrayList<Episode>) : KParcelable {
         dest.writeList(list)
     }
 
-    fun diff(playlist: Playlist): Playlist {
-        val diff = mutableListOf<Episode>()
-        playlist.getItems().forEach { that ->
-            getItems().forEach {
-                if (that != it)
-                    diff.add(that)
-            }
-        }
-        return Playlist(ArrayList(diff))
-    }
-
     companion object {
         @JvmField
         val CREATOR = parcelableCreator(::Playlist)

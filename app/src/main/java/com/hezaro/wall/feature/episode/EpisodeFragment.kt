@@ -30,12 +30,12 @@ import kotlinx.android.synthetic.main.fragment_episode.description
 import kotlinx.android.synthetic.main.fragment_episode.downloadStatus
 import kotlinx.android.synthetic.main.fragment_episode.episodeCover
 import kotlinx.android.synthetic.main.fragment_episode.episodeTitle
+import kotlinx.android.synthetic.main.fragment_episode.likeCount
 import kotlinx.android.synthetic.main.fragment_episode.playedCount
 import kotlinx.android.synthetic.main.fragment_episode.podcastCover
 import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
 import kotlinx.android.synthetic.main.fragment_episode.podcasterName
 import kotlinx.android.synthetic.main.fragment_episode.pullLayout
-import kotlinx.android.synthetic.main.fragment_episode.voteCount
 import org.koin.android.ext.android.inject
 
 class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTracker.Listener {
@@ -154,7 +154,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
             podcastTitle.text = it.podcast.title
             podcasterName.text = it.creator
             playedCount.text = it.views.toString()
-            voteCount.text = it.votes.toString()
+            likeCount.text = it.votes.toString()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 description.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_LEGACY)
             } else {

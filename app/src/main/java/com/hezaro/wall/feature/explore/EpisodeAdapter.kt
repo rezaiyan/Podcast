@@ -10,7 +10,9 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.utils.RoundRectTransform
 import kotlinx.android.synthetic.main.item_explore.view.bookmarkStatus
 import kotlinx.android.synthetic.main.item_explore.view.downloadStatus
+import kotlinx.android.synthetic.main.item_explore.view.likeCount
 import kotlinx.android.synthetic.main.item_explore.view.logo
+import kotlinx.android.synthetic.main.item_explore.view.playedCount
 import kotlinx.android.synthetic.main.item_explore.view.podcaster
 import kotlinx.android.synthetic.main.item_explore.view.title
 
@@ -52,7 +54,6 @@ class EpisodeAdapter(
             notifyItemChanged(episodes.indexOf(e))
         }
     }
-
     inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(episode: Episode) {
@@ -67,6 +68,8 @@ class EpisodeAdapter(
                         it.bookmarkStatus.progress = 1.0f
                     else it.bookmarkStatus.visibility = View.INVISIBLE
                     it.title.text = title
+                    it.playedCount.text = getView()
+                    it.likeCount.text = getLike()
                     it.podcaster.text = podcast.title
                     it.setOnClickListener { onItemClick(this, adapterPosition) }
 

@@ -33,6 +33,7 @@ class SearchFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_search
     override fun tag(): String = this::class.java.simpleName
     private val vm: SearchViewModel by inject()
+    private var playlistCreated = false
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +49,7 @@ class SearchFragment : BaseFragment() {
         searchList.apply {
             layoutManager = EndlessLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
             adapter = EpisodeAdapter(mutableListOf()) { e, i ->
+                playlistCreated = true
                 liftList()
                 activity.prepareAndPlayPlaylist(
                     Playlist(arrayListOf(e)), e
@@ -100,6 +102,11 @@ class SearchFragment : BaseFragment() {
             animator.duration = 100
             animator.start()
         }
+    }
+
+    override fun onBackPressed() {
+        activity.resetPlaylist.value = playlistCreated
+        super.onBackPressed()
     }
 
     private fun onProgress(isProgress: Boolean) {

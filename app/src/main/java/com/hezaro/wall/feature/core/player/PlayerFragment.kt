@@ -133,7 +133,6 @@ class PlayerFragment : BaseFragment() {
                 bookmarkStatus.playAnimation()
             }
         }
-
     }
 
     override fun onStop() {
@@ -142,6 +141,7 @@ class PlayerFragment : BaseFragment() {
         }
         super.onStop()
     }
+
     @SuppressLint("SetTextI18n")
     fun setSpeedListener(it: Float) {
         vm.speed(it)
@@ -184,7 +184,7 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    fun isOpen() = currentEpisode != null
+    fun isOpen() = (playerSheetBehavior?.peekHeight!! > 0)
 
     fun isExpand() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED
     fun isCollapsed() = playerSheetBehavior?.state == BottomSheetBehavior.STATE_COLLAPSED
@@ -220,7 +220,11 @@ class PlayerFragment : BaseFragment() {
     fun onLoadLastPlayedEpisode(episode: Episode) {
         if (!playerView.player.playWhenReady) {
             currentEpisode = episode
-            openMiniPlayer(episode)
+            (activity as BaseActivity).progressbarMargin()
+            playerSheetBehavior?.peekHeight =
+                resources.getDimension(R.dimen.mini_player_height).toInt()
+            updatePlayerView()
+            collapse()
         }
     }
 

@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.item_explore.view.title
 
 class EpisodeAdapter(
     val episodes: MutableList<Episode> = mutableListOf(),
+    private val isDownloadList: Boolean = false,
     private val onItemClick: (Episode, Int) -> Unit
 ) :
     RecyclerView.Adapter<EpisodeAdapter.ItemHolder>() {
@@ -59,7 +60,7 @@ class EpisodeAdapter(
 
                 episode.run {
                     it.logo.load(cover, transformation = RoundRectTransform())
-                    if (isDownloaded == 1)
+                    if (isDownloaded == 1 && !isDownloadList)
                         it.downloadStatus.progress = 0.74f
                     else it.downloadStatus.visibility = View.INVISIBLE
                     if (isLiked)

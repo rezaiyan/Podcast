@@ -26,11 +26,11 @@ class ProfileFragment : BaseFragment() {
     }
 
     override fun onBackPressed() {
-        (activity as MainActivity).finishFragment(tag(), downloadFragment!!.playlistCreated)
+        (activity as MainActivity).resetPlaylist.value = downloadFragment!!.playlistCreated
         super.onBackPressed()
     }
 
-    private var downloadFragment: ListFragment? = null
+    private var downloadFragment: DownloadFragment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +39,7 @@ class ProfileFragment : BaseFragment() {
             observe(userInfo, ::onSuccess)
             failure(failure, ::onFailure)
         }
-        downloadFragment = ListFragment.getInstance()
+        downloadFragment = DownloadFragment.getInstance()
         viewpager.adapter = PagerAdapter(childFragmentManager, arrayOf(downloadFragment!!))
         tabLayout.setupWithViewPager(viewpager)
     }

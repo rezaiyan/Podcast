@@ -68,6 +68,8 @@ class MainActivity : BaseActivity() {
     private val playerFragment: PlayerFragment by lazy { (supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!! }
 
     var updateEpisode: MutableLiveData<Episode> = MutableLiveData()
+    val resetPlaylist = MutableLiveData<Boolean>()
+    var lastEpisodeIsAlive = false
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -78,6 +80,7 @@ class MainActivity : BaseActivity() {
 
             val currentEpisode = playerService.currentEpisode
             if (currentEpisode != null) {
+                lastEpisodeIsAlive = true
                 playerFragment.updateMiniPlayer(currentEpisode)
             } else {
                 playerService.serviceConnected()
@@ -99,7 +102,15 @@ class MainActivity : BaseActivity() {
             failure(failure, ::onFailure)
         }
 
+        resetPlaylist.observeForever {
+            exploreFragment.resetPlaylist(it)
+        }
+
         prepareGoogleSignIn()
+    }
+
+    fun retrieveLatestEpisode() {
+        vm.retrieveLatestEpisode()
     }
 
     private fun onLoadLastPlayedEpisode(episode: Episode) {
@@ -246,7 +257,9 @@ class MainActivity : BaseActivity() {
 
     fun isPlayerOpen() = playerFragment.isOpen()
 
-    fun playEpisode(episode: Episode) = playerFragment.openMiniPlayer(episode)
+    fun playEpisode(episode: Episode) {
+        playerFragment.openMiniPlayer(episode)
+    }
 
     fun preparePlaylist(
         playlist: Playlist,
@@ -262,11 +275,5 @@ class MainActivity : BaseActivity() {
         playlist: Playlist, e: Episode
     ) {
         MediaPlayerServiceHelper.prepareAndPlayPlaylist(this, playlist, e)
-        playEpisode(e)
-    }
-
-    fun finishFragment(tag: String, playlistCreated: Boolean) {
-        if (tag == "ProfileFragment")
-            exploreFragment.onRestore(playlistCreated)
     }
 }

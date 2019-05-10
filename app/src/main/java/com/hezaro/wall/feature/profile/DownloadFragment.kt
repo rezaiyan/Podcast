@@ -15,23 +15,23 @@ import kotlinx.android.synthetic.main.fragment_list.parentLayout
 import kotlinx.android.synthetic.main.fragment_list.recyclerList
 import org.koin.android.ext.android.inject
 
-class ListFragment : BaseFragment() {
+class DownloadFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     private val vm: ProfileViewModel by inject()
-    public var playlistCreated = false
+    var playlistCreated = false
 
     companion object {
-        fun getInstance() = ListFragment()
+        fun getInstance() = DownloadFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            adapter = EpisodeAdapter(mutableListOf()) { e, _ ->
+            adapter = EpisodeAdapter(mutableListOf(), true) { e, _ ->
                 playlistCreated = true
                 activity.prepareAndPlayPlaylist(
                     Playlist(ArrayList((recyclerList.adapter as EpisodeAdapter).episodes)),

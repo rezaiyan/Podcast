@@ -39,7 +39,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
-    private var isRestored = false
+    private var isReset = false
     private var isLoadMoreAction = false
 
     private val sortDialog by lazy {
@@ -79,13 +79,13 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         fun getInstance() = ExploreFragment()
     }
 
-    override fun invoke(episode: Episode, index: Int) {
+    override fun invoke(e: Episode, index: Int) {
         liftExploreList()
-        if (isRestored) {
-            isRestored = false
-            activity.prepareAndPlayPlaylist(Playlist(ArrayList(episodeAdapter.episodes)), episode)
+        if (isReset) {
+            isReset = false
+            activity.prepareAndPlayPlaylist(Playlist(ArrayList(episodeAdapter.episodes)), e)
         } else
-            activity.playEpisode(episode)
+            activity.playEpisode(e)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -189,18 +189,22 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
     private fun onSuccess(episodes: MutableList<Episode>) {
         exploreList.setLoading(false)
-        val nonFilterEpisodes = episodes.filter { !it.source.contains("live.bbc.co.uk") }.toMutableList()
-        val playlist = Playlist(ArrayList(nonFilterEpisodes))
-        episodeAdapter.updateList(playlist.getItems())
+        val filterEpisodes = episodes.filter { !it.source.contains("live.bbc.co.uk") }.toMutableList()
+        episodeAdapter.updateList(filterEpisodes)
 
+
+        if (!activity.isPlayerOpen() && !activity.lastEpisodeIsAlive)
+            activity.retrieveLatestEpisode()
+
+        if (!activity.lastEpisodeIsAlive) {
+            activity.preparePlaylist(Playlist(ArrayList(filterEpisodes)), isLoadMoreAction)
+        } else {
+            activity.lastEpisodeIsAlive = false
+            isReset = true
+        }
 
         if (isLoadMoreAction) {
             isLoadMoreAction = false
-        }
-
-        if (!activity.isPlayerOpen()) {
-            isRestored = true
-            activity.preparePlaylist(playlist, isLoadMoreAction)
         }
     }
 
@@ -215,8 +219,8 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         episodeAdapter.updateRow(episode)
     }
 
-    fun onRestore(playlistCreated: Boolean) {
-        isRestored = playlistCreated
+    fun resetPlaylist(reset: Boolean) {
+        isReset = reset
     }
 }
 

@@ -9,9 +9,11 @@ import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.data.utils.BaseRepository
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
+import com.hezaro.wall.sdk.base.extention.AVATAR
 import com.hezaro.wall.sdk.base.extention.EMAIL
 import com.hezaro.wall.sdk.base.extention.JWT
 import com.hezaro.wall.sdk.base.extention.USER_NAME
+import com.hezaro.wall.sdk.base.extention.get
 import com.hezaro.wall.sdk.base.extention.put
 
 interface MainRepository {
@@ -19,6 +21,7 @@ interface MainRepository {
     fun login(idToken: String): Either<Failure, UserInfo>
     fun version(): Either<Failure, Version>
     fun retrieveLatestPlayedEpisode(): Episode?
+    fun getUserInfo(): UserInfo
 
     class MainRepositoryImpl(
         private val api: ApiService,
@@ -27,6 +30,12 @@ interface MainRepository {
     ) :
         BaseRepository(),
         MainRepository {
+
+        override fun getUserInfo() = UserInfo(
+            username = storage.get(USER_NAME, ""),
+            avatar = storage.get(AVATAR, ""),
+            email = storage.get(EMAIL, "")
+        )
 
         override fun retrieveLatestPlayedEpisode(): Episode? = database.getLastPlayedEpisode()
 
@@ -39,6 +48,7 @@ interface MainRepository {
                     storage.apply {
                         put(USER_NAME, i.username)
                         put(EMAIL, i.email)
+                        put(AVATAR, i.avatar)
                         put(JWT, i.jwt)
                     }
 

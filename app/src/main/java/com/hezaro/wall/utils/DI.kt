@@ -7,22 +7,36 @@ import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.domain.MainRepository
 import com.hezaro.wall.domain.MessagingRepository
 import com.hezaro.wall.domain.PlayerRepository
+import com.hezaro.wall.domain.PodcastRepository
 import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.domain.SearchRepository
-import com.hezaro.wall.feature.core.main.MainViewModel
-import com.hezaro.wall.feature.core.player.PlayerViewModel
+import com.hezaro.wall.domain.SplashRepository
 import com.hezaro.wall.feature.episode.EpisodeViewModel
 import com.hezaro.wall.feature.explore.ExploreViewModel
+import com.hezaro.wall.feature.main.MainViewModel
+import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.player.PlayerViewModel
+import com.hezaro.wall.feature.podcast.PodcastViewModel
 import com.hezaro.wall.feature.profile.ProfileViewModel
 import com.hezaro.wall.feature.search.SearchViewModel
+import com.hezaro.wall.feature.splash.SplashViewModel
 import com.hezaro.wall.notification.MessagingViewModel
+import com.hezaro.wall.notification.player.MediaSessionHelper
+import com.hezaro.wall.notification.player.PlayerNotificationHelper
+import com.hezaro.wall.sdk.platform.player.LocalMediaPlayer
+import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
-import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
 
 val module: Module = module {
+
+    viewModel { SharedViewModel() }
+
+    viewModel { SplashViewModel(get()) }
+    single { SplashRepository.SplashRepositoryImpl(get()) } bind SplashRepository::class
 
     viewModel { MessagingViewModel(get()) }
     single { MessagingRepository.ProfileRepositoryImpl(get()) } bind MessagingRepository::class
@@ -32,6 +46,9 @@ val module: Module = module {
 
     viewModel { ExploreViewModel(get()) }
     single { ExploreRepository.ExploreRepositoryImpl(get(), get()) } bind ExploreRepository::class
+
+    viewModel { PodcastViewModel(get()) }
+    single { PodcastRepository.PodcastRepositoryImpl(get()) } bind PodcastRepository::class
 
     viewModel { MainViewModel(get(), get()) }
     single { MainRepository.MainRepositoryImpl(get(), get(), get()) } bind MainRepository::class
@@ -44,15 +61,19 @@ val module: Module = module {
     single { SearchRepository.SearchRepositoryImpl(get(), get()) } bind SearchRepository::class
     viewModel { SearchViewModel(get()) }
 
-    single { PlayerDownloadHelper(androidContext()) }
-    single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
+    single { PlayerDownloadHelper(androidApplication()) }
+    single { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
 
     single { provideRetrofit() }
 
 
-    single { AppDatabase.getInstance(androidContext()) }
+    single { AppDatabase.getInstance(androidApplication()) }
     single { getEpisodeDAO(get()) }
     single { getPodcastDAO(get()) }
+
+    single { MediaSessionHelper(androidApplication(), get()) }
+    single { PlayerNotificationHelper(androidApplication(), it[0], get()) }
+    single { LocalMediaPlayer(androidApplication()) } bind MediaPlayer::class
 
 }
 

@@ -4,11 +4,13 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.marginBottom
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
-import com.hezaro.wall.data.model.Playlist
-import com.hezaro.wall.feature.core.main.MainActivity
-import com.hezaro.wall.feature.explore.EpisodeAdapter
+import com.hezaro.wall.feature.adapter.EpisodeAdapter
+import com.hezaro.wall.feature.main.MainActivity
+import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.utils.EndlessLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.parentLayout
@@ -19,9 +21,8 @@ class DownloadFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
-
+    private lateinit var sharedVm: SharedViewModel
     private val vm: ProfileViewModel by inject()
-    var playlistCreated = false
 
     companion object {
         fun getInstance() = DownloadFragment()
@@ -29,14 +30,13 @@ class DownloadFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
+
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            adapter = EpisodeAdapter(mutableListOf(), true) { e, _ ->
-                playlistCreated = true
-                activity.prepareAndPlayPlaylist(
-                    Playlist(ArrayList((recyclerList.adapter as EpisodeAdapter).episodes)),
-                    e
-                )
+            adapter = EpisodeAdapter(isDownloadList = true) { e, _ ->
+                sharedVm.resetPlaylist(true)
+                activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
                 liftList()
             }
         }
@@ -50,15 +50,17 @@ class DownloadFragment : BaseFragment() {
             getEpisodes()
         }
 
-        if (activity.isPlayerOpen())
-            liftList()
+        sharedVm.listMargin.observe(this, Observer { liftList(it) })
     }
 
-    private fun liftList() {
+    private fun liftList(i: Int = -1) {
         var margin = parentLayout.marginBottom
         if (margin == 0) {
             val animator =
-                ValueAnimator.ofInt(margin, resources.getDimension(R.dimen.mini_player_height).toInt())
+                ValueAnimator.ofInt(
+                    margin,
+                    if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
+                )
             animator.addUpdateListener { valueAnimator ->
                 margin = valueAnimator.animatedValue as Int
                 parentLayout.requestLayout()

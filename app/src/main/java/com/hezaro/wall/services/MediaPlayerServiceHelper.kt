@@ -3,30 +3,30 @@ package com.hezaro.wall.services
 import android.content.Context
 import android.content.Intent
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Playlist
-import com.hezaro.wall.utils.ACTION_CLEAR_PLAYLIST
-import com.hezaro.wall.utils.ACTION_PLAY_EPISODE
-import com.hezaro.wall.utils.ACTION_PLAY_PLAYLIST
-import com.hezaro.wall.utils.ACTION_PREPARE_PLAYLIST
-import com.hezaro.wall.utils.ACTION_SEEK_BACKWARD
-import com.hezaro.wall.utils.ACTION_SEEK_FORWARD
-import com.hezaro.wall.utils.ACTION_SET_SPEED
-import com.hezaro.wall.utils.PARAM_EPISODE
-import com.hezaro.wall.utils.PARAM_PLAYBACK_SPEED
-import com.hezaro.wall.utils.PARAM_PLAYLIST
+import com.hezaro.wall.sdk.platform.utils.ACTION_CLEAR_PLAYLIST
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_EPISODE
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PLAYLIST
+import com.hezaro.wall.sdk.platform.utils.ACTION_PREPARE_PLAYLIST
+import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_BACKWARD
+import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_FORWARD
+import com.hezaro.wall.sdk.platform.utils.ACTION_SET_SPEED
+import com.hezaro.wall.sdk.platform.utils.ACTION_STOP_SERVICE
+import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
+import com.hezaro.wall.sdk.platform.utils.PARAM_PLAYBACK_SPEED
+import com.hezaro.wall.sdk.platform.utils.PARAM_PLAYLIST
 
 class MediaPlayerServiceHelper{
 
     companion object {
 
-        fun preparePlaylist(context: Context, playlist: Playlist) {
+        fun preparePlaylist(context: Context, playlist: ArrayList<Episode>) {
             val intent = Intent(context, MediaPlayerService::class.java)
             intent.action = ACTION_PREPARE_PLAYLIST
-            intent.putExtra(PARAM_PLAYLIST, playlist)
+            intent.putParcelableArrayListExtra(PARAM_PLAYLIST, playlist)
             context.startService(intent)
         }
 
-        fun prepareAndPlayPlaylist(context: Context, playlist: Playlist, episode: Episode) {
+        fun prepareAndPlayPlaylist(context: Context, playlist: ArrayList<Episode>, episode: Episode) {
             val intent = Intent(context, MediaPlayerService::class.java)
             intent.action = ACTION_PLAY_PLAYLIST
             intent.putExtra(PARAM_PLAYLIST, playlist)
@@ -70,6 +70,12 @@ class MediaPlayerServiceHelper{
         fun seekBackward(context: Context) {
             val intent = Intent(context, MediaPlayerService::class.java)
             intent.action = ACTION_SEEK_BACKWARD
+            context.startService(intent)
+        }
+
+        fun stopService(context: Context) {
+            val intent = Intent(context, MediaPlayerService::class.java)
+            intent.action = ACTION_STOP_SERVICE
             context.startService(intent)
         }
     }

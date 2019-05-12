@@ -15,28 +15,34 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
-            android:name=".feature.core.main.MainActivity"
+            android:name=".feature.splash.SplashActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.hezaro.wall.feature.main.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".services.MediaPlayerService"
             android:exported="false" />
         <service
-            android:name=".notification.MessagingService"
+            android:name=".services.MessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".player.RemoteControlReceiver">
+        <receiver android:name=".receivers.RemoteControlReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

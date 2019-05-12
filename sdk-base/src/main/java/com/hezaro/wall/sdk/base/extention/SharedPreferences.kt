@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 
 const val SPEED = "com.hezaro.wall.speed"
 const val USER_NAME = "com.hezaro.wall.username"
+const val AVATAR = "com.hezaro.wall.avatar"
 const val EMAIL = "com.hezaro.wall.email"
 const val JWT = "com.hezaro.wall.jtw"
 

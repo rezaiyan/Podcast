@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="right"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_8"
+        android:layout_weight="7"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:ellipsize="end"
+            android:fontFamily="@font/traffic"
+            android:gravity="right"
+            android:lineSpacingExtra="1.4dp"
+            android:maxLines="2"
+            android:minLines="2"
+            android:textAlignment="gravity"
+            android:textColor="@color/colorTextPrimary"
+            tools:ignore="RtlHardcoded"
+            tools:text="@tools:sample/lorem/random" />
+
+        <TextView
+            android:id="@+id/podcaster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:ellipsize="start"
+            android:fontFamily="@font/traffic"
+            android:gravity="right"
+            android:maxLines="3"
+            android:singleLine="true"
+            android:textColor="@color/colorTextSecondary"
+            tools:text="@tools:sample/lorem/random" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/downloadStatus"
+                android:layout_width="@dimen/item_list_icon"
+                android:layout_height="@dimen/item_list_icon"
+                android:layout_margin="@dimen/margin_8"
+                android:layout_marginBottom="8dp"
+                app:lottie_autoPlay="false"
+                app:lottie_enableMergePathsForKitKatAndAbove="true"
+                app:lottie_rawRes="@raw/download"
+                app:lottie_renderMode="automatic" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/bookmarkStatus"
+                android:layout_width="@dimen/item_list_icon"
+                android:layout_height="@dimen/item_list_icon"
+                android:layout_margin="@dimen/margin_8"
+                android:layout_marginBottom="8dp"
+                android:scaleX="1.7"
+                android:scaleY="1.7"
+                app:lottie_rawRes="@raw/bookmark"
+                app:lottie_renderMode="automatic" />
+
+
+            <ImageView
+                android:id="@+id/playedCountIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="@dimen/margin_8"
+                android:background="@drawable/bg_speed"
+                android:padding="2dp"
+                android:src="@drawable/ic_play" />
+
+            <TextView
+                android:id="@+id/playedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_4"
+                android:maxLength="4"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                tools:text="432" />
+
+            <ImageView
+                android:id="@+id/voteCountIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="@dimen/margin_16"
+                android:src="@drawable/ic_favorite" />
+
+            <TextView
+                android:id="@+id/likeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_4"
+                android:maxLength="4"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                tools:text="432" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="3"
+        tools:ignore="MissingConstraints"
+        tools:src="@tools:sample/avatars" />
+
+
+</LinearLayout>

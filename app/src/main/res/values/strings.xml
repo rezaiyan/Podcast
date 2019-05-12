@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">دیوار پادکست</string>
     <string name="server_client_id">16201877371-0gt1lhne8ksce8fo7lfgkkj18q89coo7.apps.googleusercontent.com</string>
 
     <!-- Notificaiton Channel -->
@@ -14,9 +13,12 @@
     <string name="pref_key_skip_backward">pref_key_skip_backward</string>
     <string name="pref_key_skip_forward">pref_key_skip_forward</string>
     <string name="search">جستجو</string>
-    <string name="podcast">پادکست</string>
+    <string name="podcast">‌پادکست‌ها</string>
     <string name="_1_0x">1.0x</string>
     <string name="the_bests">بهترین‌ها</string>
     <string name="the_newest">جدیدترین‌ها</string>
     <string name="the_oldest">قدیمی‌ترین‌ها</string>
+    <string name="update">بروزرسانی</string>
+    <string name="exit">خروج</string>
+    <string name="new_version_alert">برای ادامه کار با اپلیکیشن, نسخه جدید را دریافت کنید</string>
 </resources>

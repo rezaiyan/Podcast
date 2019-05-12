@@ -21,18 +21,20 @@ private const val BASE = "api/v1"
 interface ApiService {
 
     @GET("$BASE/episodes")
-    fun explore(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<MutableList<Episode>>>
+    fun explore(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
+
+    @GET("$BASE/episodes")
+    fun episode(@Query("podcast_id") podcast_id: Int, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
     @GET("$BASE/podcasts")
-    fun podcast(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<MutableList<Podcast>>>
+    fun podcast(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
 
     @FormUrlEncoded
     @POST("$BASE/login")
     fun login(@Field("id_token") id_token: String): Call<Response<UserInfo>>
 
-    @FormUrlEncoded
-    @POST("$BASE/version")
-    fun version(@Field("version_code") version_code: Int = BuildConfig.VERSION_CODE): Call<Response<Version>>
+    @GET("$BASE/version")
+    fun version(@Query("version_code") version_code: Int = BuildConfig.VERSION_CODE): Call<Response<Version>>
 
     @FormUrlEncoded
     @POST("$BASE/episodes/{episode_id}/state")
@@ -45,10 +47,17 @@ interface ApiService {
     @POST("$BASE/likes/{episode_id}")
     fun like(@Path("episode_id") episode_id: Long, @Field("state") state: Long = 0): Call<Response<Any>>
 
+    @DELETE("$BASE/bookmarks/{episode_id}")
+    fun unBookmark(@Path("episode_id") episode_id: Long): Call<Response<Any>>
+
+    @FormUrlEncoded
+    @POST("$BASE/bookmarks/{episode_id}")
+    fun bookmark(@Path("episode_id") episode_id: Long, @Field("state") state: Long = 0): Call<Response<Any>>
+
     @FormUrlEncoded
     @POST("$BASE/login")
     fun sendApi(@Field("token") token: String): Call<Response<Any>>
 
     @GET("$BASE/search")
-    fun search(@Query("q") query: String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<MutableList<Episode>>>
+    fun search(@Query("q") query: String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 }

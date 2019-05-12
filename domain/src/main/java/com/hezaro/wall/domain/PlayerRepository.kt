@@ -19,8 +19,9 @@ interface PlayerRepository {
     fun setSpeed(speed: Float)
     fun getSpeed(): Float
     fun savePlayedEpisode(episode: Episode)
-    fun retrieveLatestPlayedEpisode(): Episode?
-    fun sendLikeAction(like: Boolean, id: Long)
+    fun likeAction(like: Boolean, id: Long)
+    fun bookmarkAction(bookmark: Boolean, id: Long)
+    fun userIsLogin(): Boolean
 
     class PlayerRepositoryImpl(
         private val storage: SharedPreferences,
@@ -30,11 +31,20 @@ interface PlayerRepository {
         BaseRepository(),
         PlayerRepository {
 
-        override fun sendLikeAction(like: Boolean, id: Long) {
-            if (like)
-                api.like(id)
+        override fun userIsLogin() = storage.get(EMAIL, "").isNotEmpty()
+
+        override fun bookmarkAction(bookmark: Boolean, id: Long) {
+            if (bookmark)
+                request(api.bookmark(id)) {}
             else
-                api.disLike(id)
+                request(api.unBookmark(id)) {}
+        }
+
+        override fun likeAction(like: Boolean, id: Long) {
+            if (like)
+                request(api.like(id)) {}
+            else
+                request(api.disLike(id)) {}
         }
 
         override fun getSpeed(): Float = storage.get(SPEED, 1.0F)
@@ -44,7 +54,6 @@ interface PlayerRepository {
                 request(api.sendLastPosition(episodeId, lastPosition)) { it.meta }
             else Either.Left(Failure.UserNotFound())
 
-        override fun retrieveLatestPlayedEpisode(): Episode? = database.getLastPlayedEpisode()
         override fun savePlayedEpisode(episode: Episode) {
             database.updateLastEpisode(episode)
         }

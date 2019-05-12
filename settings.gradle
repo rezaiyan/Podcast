@@ -1,2 +1,2 @@
 include Modules.app, Modules.sdkTest, Modules.sdkPlatform, Modules.sdkBase, Modules.domain, Modules.data
-rootProject.name='دیوار پادکست'
+rootProject.name='هزارو (دیوار پادکست)'

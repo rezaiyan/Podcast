@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.View
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.UserInfo
-import com.hezaro.wall.feature.core.main.MainActivity
+import com.hezaro.wall.feature.adapter.PagerAdapter
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.utils.CircleTransform
 import kotlinx.android.synthetic.main.fragment_profile.avatar
 import kotlinx.android.synthetic.main.fragment_profile.email
 import kotlinx.android.synthetic.main.fragment_profile.tabLayout
@@ -21,16 +22,10 @@ class ProfileFragment : BaseFragment() {
 
     private val vm: ProfileViewModel by inject()
 
+
     companion object {
         fun getInstance() = ProfileFragment()
     }
-
-    override fun onBackPressed() {
-        (activity as MainActivity).resetPlaylist.value = downloadFragment!!.playlistCreated
-        super.onBackPressed()
-    }
-
-    private var downloadFragment: DownloadFragment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,20 +33,17 @@ class ProfileFragment : BaseFragment() {
         with(vm) {
             observe(userInfo, ::onSuccess)
             failure(failure, ::onFailure)
+            userInfo()
         }
-        downloadFragment = DownloadFragment.getInstance()
-        viewpager.adapter = PagerAdapter(childFragmentManager, arrayOf(downloadFragment!!))
+        viewpager.adapter =
+            PagerAdapter(childFragmentManager, arrayOf(), arrayOf("دانلود شده ها"))
         tabLayout.setupWithViewPager(viewpager)
     }
 
-    override fun onDestroyView() {
-        downloadFragment = null
-        super.onDestroyView()
-    }
 
     private fun onSuccess(userInfo: UserInfo) {
         userInfo.let {
-            avatar.load(it.avatar)
+            avatar.load(it.avatar, CircleTransform())
             username.text = it.username
             email.text = it.email
         }

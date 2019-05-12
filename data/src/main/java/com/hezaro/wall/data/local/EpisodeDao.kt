@@ -46,10 +46,10 @@ interface EpisodeDao {
     }
 
     @Query("SELECT * FROM episode")
-    fun getAllEpisodes(): MutableList<Episode>
+    fun getAllEpisodes(): List<Episode>
 
     @Query("SELECT * FROM episode WHERE isDownloaded = 1")
-    fun getDownloadEpisodes(): Flowable<MutableList<Episode>>
+    fun getDownloadEpisodes(): Flowable<List<Episode>>
 
     @Query("SELECT * FROM episode WHERE lastPlayed = 1 ORDER BY creationDate DESC LIMIT 1")
     fun getLastPlayedEpisode(): Episode?
@@ -70,7 +70,7 @@ interface EpisodeDao {
     }
 
     @Query("SELECT * FROM episode WHERE lastPlayed = 1")
-    fun getLastPlayed(): MutableList<Episode>?
+    fun getLastPlayed(): List<Episode>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveLastPlayed(episode: Episode)

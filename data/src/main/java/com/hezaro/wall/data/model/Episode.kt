@@ -16,10 +16,14 @@ class Episode(
     var title: String = "",
     var description: String = "",
     var creator: String = "",
-    var votes: Long = 0,
+    @SerializedName("likes_count")
+    var likes: Long = 0,
+    @SerializedName("views_count")
     var views: Long = 0,
     @SerializedName("is_liked")
     var isLiked: Boolean = false,
+    @SerializedName("is_bookmarked")
+    var isBookmarked: Boolean = false,
     var cover: String = "",
     var source: String = "",
     var duration: String = "0",
@@ -53,14 +57,14 @@ class Episode(
     }
 
     fun getView() = formatLongNumber(views)
-    fun getLike() = formatLongNumber(votes)
+    fun getLike() = formatLongNumber(likes)
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
         title = parcel.readString()!!
         description = parcel.readString()!!
         creator = parcel.readString()!!
-        votes = parcel.readLong()
+        likes = parcel.readLong()
         views = parcel.readLong()
         isLiked = parcel.readBoolean()
         cover = parcel.readString()!!
@@ -83,7 +87,7 @@ class Episode(
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeString(creator)
-        parcel.writeLong(votes)
+        parcel.writeLong(likes)
         parcel.writeLong(views)
         parcel.writeBoolean(isLiked)
         parcel.writeString(cover)
@@ -106,7 +110,7 @@ class Episode(
         e.let {
             description = it.description
             creator = it.creator
-            votes = it.votes
+            likes = it.likes
             views = it.views
             isLiked = it.isLiked
             cover = it.cover
@@ -125,6 +129,9 @@ class Episode(
         }
     }
 
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
     override fun equals(other: Any?): Boolean {
         other?.let {
             return (it is Episode) && (it.id == id)

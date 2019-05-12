@@ -38,7 +38,7 @@ fun ModuleDefinition.provideHttpClient(): OkHttpClient {
         .readTimeout(5, SECONDS)
         .connectTimeout(10, SECONDS)
         .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
-        .addInterceptor(setHeader("Authorization", "Barear$jwt"))
+        .addInterceptor(setHeader("Authorization", "Barear $jwt"))
 
     val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
         if (message.isJson())

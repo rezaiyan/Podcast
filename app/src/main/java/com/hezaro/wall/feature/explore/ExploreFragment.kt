@@ -5,40 +5,45 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Playlist
 import com.hezaro.wall.data.model.Status.Companion.BEST
 import com.hezaro.wall.data.model.Status.Companion.NEWEST
 import com.hezaro.wall.data.model.Status.Companion.OLDEST
-import com.hezaro.wall.feature.core.main.MainActivity
-import com.hezaro.wall.feature.core.player.PlayerFragment
+import com.hezaro.wall.data.model.UserInfo
+import com.hezaro.wall.feature.adapter.EpisodeAdapter
+import com.hezaro.wall.feature.main.MainActivity
+import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
+import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
+import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
-import com.hezaro.wall.utils.SAVE_INSTANCE_EPISODES
 import kotlinx.android.synthetic.main.fragment_explore.exploreList
 import kotlinx.android.synthetic.main.fragment_explore.refreshLayout
-import kotlinx.android.synthetic.main.toolbar.profile
-import kotlinx.android.synthetic.main.toolbar.search
-import kotlinx.android.synthetic.main.toolbar.sort
+import kotlinx.android.synthetic.main.fragment_explore.search
+import kotlinx.android.synthetic.main.fragment_explore.sort
 import org.koin.android.ext.android.inject
 
 class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
 
-    private lateinit var playerSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var playerFragment: PlayerFragment
     private val vm: ExploreViewModel by inject()
+    private lateinit var sharedVm: SharedViewModel
     private lateinit var episodeAdapter: EpisodeAdapter
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
+    private lateinit var avatar: ImageView
     private var isReset = false
     private var isLoadMoreAction = false
 
@@ -49,6 +54,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         val radioNewest = sortDialog.findViewById<RadioButton>(R.id.radioNewest)
         val radioOldest = sortDialog.findViewById<RadioButton>(R.id.radioOldest)
         radioBest.setOnClickListener {
+            isReset = true
             radioBest.isChecked = true
             radioNewest.isChecked = false
             radioOldest.isChecked = false
@@ -56,6 +62,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             sortPlaylist(BEST)
         }
         radioNewest.setOnClickListener {
+            isReset = true
             radioBest.isChecked = false
             radioNewest.isChecked = true
             radioOldest.isChecked = false
@@ -63,6 +70,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             sortPlaylist(NEWEST)
         }
         radioOldest.setOnClickListener {
+            isReset = true
             radioBest.isChecked = false
             radioNewest.isChecked = false
             radioOldest.isChecked = true
@@ -80,47 +88,48 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 
     override fun invoke(e: Episode, index: Int) {
-        liftExploreList()
-        if (isReset) {
+        if (isReset or sharedVm.lastEpisodeIsAlive.value!!) {
+            sharedVm.lastEpisodeIsAlive(false)
             isReset = false
-            activity.prepareAndPlayPlaylist(Playlist(ArrayList(episodeAdapter.episodes)), e)
-        } else
-            activity.playEpisode(e)
+            activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
+        } else {
+            sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
+        }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        vm.explore.value?.let {
-            outState.putParcelable(SAVE_INSTANCE_EPISODES, Playlist(ArrayList(it)))
-
-        }
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.let {
-            it.getParcelable<Playlist>(SAVE_INSTANCE_EPISODES)?.let { playlist ->
-                vm.explore.value = playlist.getItems()
-            }
-        }
+    override fun onDestroyView() {
+        vm.explore.postValue(episodeAdapter.episodes)
+        vm.page = exploreList.page
+        super.onDestroyView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        playerFragment = (fragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!!
-        playerFragment.view?.let { playerSheetBehavior = BottomSheetBehavior.from(it) }
-            .also { playerFragment.setBehavior(playerSheetBehavior) }
+        exploreList.page = vm.page
+        sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
+        sharedVm.listMargin.observe(this@ExploreFragment, Observer { updateMarginList(it) })
+        sharedVm.resetPlaylist.observe(this@ExploreFragment, Observer { isReset = it })
+        sharedVm.userInfo.observe(this@ExploreFragment, Observer { updateUserInf(it) })
+        sharedVm.episode.observe(this@ExploreFragment, Observer {
+            if (it.first == UPDATE_VIEW)
+                episodeAdapter.updateRow(it.second)
+        })
 
-        episodeAdapter = EpisodeAdapter(mutableListOf(), true, this@ExploreFragment)
+        avatar = view.findViewById(R.id.avatar)
+        episodeAdapter = EpisodeAdapter(onItemClick = this@ExploreFragment)
         exploreList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = episodeAdapter
-            loadingStatus.observeForever { isLoading ->
-                if (isLoading) {
-                    showProgress()
-                } else
-                    hideProgress()
-            }
+
+            loadingStatus.observe(
+                this@ExploreFragment,
+                Observer<Boolean> { isLoading ->
+                    if (isLoading) {
+                        showProgress()
+                    } else
+                        hideProgress()
+                })
+
             setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
                     isLoadMoreAction = true
@@ -129,6 +138,18 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
                 }
             })
         }
+
+        with(vm) {
+            observe(explore, ::onSuccess)
+            failure(failure, ::onFailure)
+            if (explore.value == null)
+                explore(exploreList.page)
+            exploreList.page++
+            vm.page = exploreList.page
+            exploreList.setLoading(true)
+        }
+
+
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
         refreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.ic_controller))
         refreshLayout.setOnRefreshListener {
@@ -143,24 +164,13 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             refreshLayout.isRefreshing = false
         }
 
-        with(vm) {
-            observe(explore, ::onSuccess)
-            failure(failure, ::onFailure)
-            explore(exploreList.page)
-            exploreList.page++
-            exploreList.setLoading(true)
-        }
 
         sort.setOnClickListener { sortDialog.show() }
         search.setOnClickListener {
             activity.search()
         }
-        profile.setOnClickListener {
+        avatar.setOnClickListener {
             activity.profile()
-        }
-
-        activity.updateEpisode.observeForever {
-            episodeAdapter.updateRow(it)
         }
     }
 
@@ -172,11 +182,14 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         return true
     }
 
-    private fun liftExploreList() {
+    private fun updateMarginList(i: Int = -1) {
         val params = exploreList.layoutParams as FrameLayout.LayoutParams
-        if (params.bottomMargin == 0) {
+        if (params.bottomMargin == 0 || i >= 0) {
             val animator =
-                ValueAnimator.ofInt(params.bottomMargin, resources.getDimension(R.dimen.mini_player_height).toInt())
+                ValueAnimator.ofInt(
+                    params.bottomMargin,
+                    if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
+                )
             animator.addUpdateListener { valueAnimator ->
                 params.bottomMargin = valueAnimator.animatedValue as Int
                 exploreList.requestLayout()
@@ -187,21 +200,22 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 //        if (episodeAdapter.itemCount == episodes.size)//Means Its first response: To preparing the latest episode is played, we have to retrieve that here, because playlist must be prepared too.
 
-    private fun onSuccess(episodes: MutableList<Episode>) {
+    private fun onSuccess(episodes: ArrayList<Episode>) {
         exploreList.setLoading(false)
-        val filterEpisodes = episodes.filter { !it.source.contains("live.bbc.co.uk") }.toMutableList()
-        episodeAdapter.updateList(filterEpisodes)
+        val playerIsOpen = sharedVm.playerIsOpen.value?.let { sharedVm.playerIsOpen.value } ?: false
 
-
-        if (!activity.isPlayerOpen() && !activity.lastEpisodeIsAlive)
+        if (!playerIsOpen && sharedVm.lastEpisodeIsAlive.value == null || !sharedVm.lastEpisodeIsAlive.value!!)
             activity.retrieveLatestEpisode()
 
-        if (!activity.lastEpisodeIsAlive) {
-            activity.preparePlaylist(Playlist(ArrayList(filterEpisodes)), isLoadMoreAction)
-        } else {
-            activity.lastEpisodeIsAlive = false
-            isReset = true
+        if (!episodeAdapter.episodes.containsAll(episodes)) {
+            episodeAdapter.updateList(episodes)
+
+
+            if (sharedVm.lastEpisodeIsAlive.value != null && !sharedVm.lastEpisodeIsAlive.value!! && !isReset) {
+                activity.preparePlaylist(episodes, isLoadMoreAction)
+            }
         }
+
 
         if (isLoadMoreAction) {
             isLoadMoreAction = false
@@ -215,12 +229,9 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         exploreList.setLoading(false)
     }
 
-    fun updateEpisodeView(episode: Episode) {
-        episodeAdapter.updateRow(episode)
-    }
-
-    fun resetPlaylist(reset: Boolean) {
-        isReset = reset
+    private fun updateUserInf(it: UserInfo) {
+        if (::avatar.isInitialized)
+            avatar.load(it.avatar, transformation = CircleTransform())
     }
 }
 

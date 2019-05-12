@@ -12,15 +12,17 @@ import kotlinx.coroutines.launch
 class ExploreViewModel(private val repository: ExploreRepository) :
     BaseViewModel() {
 
-    val explore: MutableLiveData<MutableList<Episode>> = MutableLiveData()
+    var page = 1
+    val explore: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
     private var sort = BEST
-    fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String = sort) = launch(job) {
-        sort = sortBy
-        isExecute = true
-        repository.explore(page, offset, sort).either(::onFailure, ::onSuccess)
-    }
+    fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String = sort) =
+        launch(job) {
+            sort = sortBy
+            isExecute = true
+            repository.explore(page, offset, sort).either(::onFailure, ::onSuccess)
+        }
 
-    private fun onSuccess(it: MutableList<Episode>) =
+    private fun onSuccess(it: ArrayList<Episode>) =
         launch(Dispatchers.Main) {
             isExecute = false
             explore.value = it

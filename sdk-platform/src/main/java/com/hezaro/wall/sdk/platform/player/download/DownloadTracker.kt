@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
 import com.google.android.exoplayer2.offline.ActionFile
 import com.google.android.exoplayer2.offline.DownloadAction
 import com.google.android.exoplayer2.offline.DownloadAction.Deserializer
@@ -27,6 +26,7 @@ import com.google.android.exoplayer2.ui.TrackNameProvider
 import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
 import com.hezaro.wall.sdk.platform.R
+import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import java.util.ArrayList
@@ -43,7 +43,7 @@ class DownloadTracker(
 
     private val trackNameProvider: TrackNameProvider
 
-    private val listeners: CopyOnWriteArraySet<Listener>
+    private val listeners = CopyOnWriteArraySet<Listener>()
 
     private val trackedDownloadStates: HashMap<Uri, DownloadAction>
 
@@ -64,7 +64,6 @@ class DownloadTracker(
 
     init {
         trackNameProvider = DefaultTrackNameProvider(context.resources)
-        listeners = CopyOnWriteArraySet()
         trackedDownloadStates = HashMap()
         val actionFileWriteThread = HandlerThread("DownloadTracker")
         actionFileWriteThread.start()
@@ -76,10 +75,12 @@ class DownloadTracker(
 
     fun addListener(listener: Listener) {
         listeners.add(listener)
+        Timber.tag("CopyOnWriteArraySet").i("addListener")
     }
 
     fun removeListener(listener: Listener) {
         listeners.remove(listener)
+        Timber.tag("CopyOnWriteArraySet").i("removeListener")
     }
 
     fun isDownloaded(uri: Uri): Boolean {
@@ -226,10 +227,6 @@ class DownloadTracker(
         }
 
         override fun onPrepareError(helper: DownloadHelper, e: IOException) {
-            Toast.makeText(
-                context.applicationContext, R.string.download_start_error, Toast.LENGTH_LONG
-            )
-                .show()
             Log.e(TAG, "Failed to start download", e)
         }
 

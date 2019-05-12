@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:layout_toStartOf="@+id/radioBest"
-            android:fontFamily="@font/trafic"
+            android:fontFamily="@font/traffic"
             android:text="@string/the_bests"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:layout_toStartOf="@+id/radioNewest"
-            android:fontFamily="@font/trafic"
+            android:fontFamily="@font/traffic"
             android:text="@string/the_newest"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:layout_toStartOf="@+id/radioOldest"
-            android:fontFamily="@font/trafic"
+            android:fontFamily="@font/traffic"
             android:text="@string/the_oldest"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />

@@ -2,9 +2,10 @@ package com.hezaro.wall.sdk.platform.player
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
@@ -23,11 +24,13 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Playlist
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
+import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE
+import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE_GET
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER_STATUS
 import timber.log.Timber
-import java.lang.ref.WeakReference
 
-class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, private val context: Context) :
-    MediaPlayer(mediaPlayerListener), Player.EventListener {
+class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.EventListener {
 
     private var exoPlayer: SimpleExoPlayer? = null
 
@@ -60,13 +63,12 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
     }
 
     init {
-        mediaPlayerListener.get()!!.setPlayer(this)
         if (exoPlayer == null) {
             val trackSelector = DefaultTrackSelector()
             val loadControl = DefaultLoadControl()
-            val renderersFactory = DefaultRenderersFactory(this.context)
+            val factory = DefaultRenderersFactory(this.context)
             exoPlayer = ExoPlayerFactory
-                .newSimpleInstance(this.context, renderersFactory, trackSelector, loadControl)
+                .newSimpleInstance(this.context, factory, trackSelector, loadControl)
             exoPlayer!!.addListener(this)
             val audioAttributes = AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
@@ -87,9 +89,10 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         return episode
     }
 
-    override fun playPlaylist(p: Playlist, episode: Episode) {
-        clearPlaylist()
-        this.playlist = p
+    override fun playPlaylist(p: ArrayList<Episode>, episode: Episode, readyToPlay: Boolean) {
+        this.playlist?.getItems()?.clear()
+        concatenatingMediaSource.clear()
+        this.playlist = Playlist(p)
         for (i in 0 until this.playlist!!.getItems().size)
             concatenatingMediaSource.addMediaSource(buildMediaSource(playlist!!.getItem(i)))
 
@@ -97,22 +100,22 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         exoPlayer!!.prepare(concatenatingMediaSource)
 
         this.episode = episode
-        listenerReference.notifyEpisode(episode)
+        broadcastEpisode(episode)
         val currentIndex = playlist!!.getIndex(episode)
         exoPlayer!!.seekTo(currentIndex, episode.state)
-        exoPlayer!!.playWhenReady = true
+        exoPlayer!!.playWhenReady = readyToPlay
         Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
     }
 
-    override fun concatPlaylist(playlist: Playlist) {
+    override fun concatPlaylist(p: ArrayList<Episode>) {
         if (this.playlist == null) {
-            this.playlist = playlist
+            this.playlist = Playlist(p)
             for (i in 0 until this.playlist!!.getItems().size) {
-                concatenatingMediaSource.addMediaSource(buildMediaSource(playlist.getItem(i)))
+                concatenatingMediaSource.addMediaSource(buildMediaSource(playlist!!.getItem(i)))
             }
         } else {
-            for (i in 0 until playlist.getItems().size) {
-                val it = playlist.getItem(i)
+            for (i in 0 until playlist!!.getItems().size) {
+                val it = playlist!!.getItem(i)
                 if (this.playlist!!.getIndex(it) == -1) {
                     this.playlist!!.addItem(it)
                     concatenatingMediaSource.addMediaSource(buildMediaSource(it))
@@ -129,22 +132,23 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
     override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
         if (trackGroups!!.isEmpty) {
             episode = playlist!!.getItem(exoPlayer!!.currentWindowIndex)
-            listenerReference.notifyEpisode(episode!!)
+            broadcastEpisode(episode!!)
         }
     }
 
+    private var errorOccurred = false
     override fun selectTrack(episode: Episode) {
         this.episode = episode
-        if (playlist != null) {
-            val currentIndex = playlist!!.getIndex(episode)
-            if (currentIndex > 0 && exoPlayer!!.currentTimeline.windowCount > 0 &&
+        val currentIndex = playlist?.getIndex(episode) ?: -1
+        if (playlist != null && currentIndex > 0) {
+            if (exoPlayer!!.currentTimeline.windowCount > 0 &&
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
             ) {
                 Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
                 exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
                 exoPlayer!!.playWhenReady = true
             }
-        }
+        } else playPlaylist(arrayListOf(episode), episode, false)
     }
 
     override fun next() {
@@ -209,7 +213,7 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
                 playbackStateStr = "Unknown"
             }
         }
-        listenerReference.onStateChanged(mediaPlayerState)
+        broadcastStatus(mediaPlayerState)
         Timber.tag(TAG).d(
             String.format(
                 "ExoPlayer state changed: %s, Play When Ready: %s",
@@ -219,10 +223,21 @@ class LocalMediaPlayer(mediaPlayerListener: WeakReference<MediaPlayerListener>, 
         )
     }
 
+    private fun broadcastEpisode(episode: Episode) {
+        val intent = Intent(ACTION_EPISODE)
+        intent.putExtra(ACTION_EPISODE_GET, episode)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    }
+
+    private fun broadcastStatus(status: Int) {
+        val intent = Intent(ACTION_PLAYER)
+        intent.putExtra(ACTION_PLAYER_STATUS, status)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    }
+
     override fun onPlayerError(error: ExoPlaybackException?) {
-        exoPlayer!!.retry()
-        Toast.makeText(context, error!!.cause!!.message, Toast.LENGTH_SHORT).show()
-        Timber.w(error, "Player error encountered")
+        errorOccurred = true
+        Timber.w(error, "Player error encountered -> $error")
     }
 
     @TargetApi(Build.VERSION_CODES.M)

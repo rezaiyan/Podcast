@@ -10,7 +10,7 @@ import com.hezaro.wall.sdk.base.exception.Failure
 
 interface ExploreRepository {
 
-    fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String): Either<Failure, MutableList<Episode>>
+    fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String): Either<Failure, ArrayList<Episode>>
 
     class ExploreRepositoryImpl(private val api: ApiService, private val database: EpisodeDao) :
         BaseRepository(),

@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     android:clickable="true"
     android:focusable="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,102 +24,120 @@
             app:contentInsetLeft="0dp"
             app:contentInsetRight="0dp"
             app:contentInsetStart="0dp"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical">
 
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/inputSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_8"
-                    android:layout_toEndOf="@+id/clear"
                     android:layout_toStartOf="@id/back"
-                    android:background="@android:color/transparent"
-                    android:gravity="right|center_vertical"
                     android:hint="@string/search"
                     android:textColor="@color/colorTextPrimary"
                     android:textColorHint="@color/colorTextSecondary"
                     app:closeIcon="@null"
                     app:iconifiedByDefault="false"
+                    app:layout_constraintEnd_toStartOf="@+id/back"
+                    app:layout_constraintStart_toEndOf="@+id/clear"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:searchIcon="@null" />
 
                 <ImageView
                     android:id="@+id/clear"
                     android:layout_width="@dimen/navigator_icon"
                     android:layout_height="@dimen/navigator_icon"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/margin_10"
-                    android:src="@drawable/ic_clear" />
+                    android:src="@drawable/ic_clear"
+                    app:layout_constraintBottom_toBottomOf="@+id/inputSearch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/inputSearch" />
 
                 <ImageView
                     android:id="@+id/back"
                     android:layout_width="@dimen/navigator_icon"
                     android:layout_height="@dimen/navigator_icon"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margin_10"
                     android:rotation="180"
-                    android:src="@drawable/ic_back" />
-            </RelativeLayout>
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintBottom_toBottomOf="@+id/inputSearch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/inputSearch" />
+
+
+                <TextView
+                    android:id="@+id/podcastTitle"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/inputSearch"
+                    android:layout_margin="@dimen/margin_8"
+                    android:fontFamily="@font/traffic"
+                    android:gravity="center"
+                    android:minHeight="30dp"
+                    android:text="@string/podcast"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/inputSearch" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/podcastList"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_below="@+id/podcastTitle"
+                    android:minHeight="120dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
+                    tools:itemCount="20"
+                    tools:listitem="@layout/item_podcast" />
+
+                <ProgressBar
+                    android:id="@+id/podcastProgressbar"
+                    android:layout_width="@dimen/navigator_icon"
+                    android:layout_height="@dimen/navigator_icon"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@+id/podcastList"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/podcastLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_10"
-        app:layout_constraintTop_toBottomOf="@+id/appbar">
-
-        <TextView
-            android:id="@+id/podcastTitle"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/margin_8"
-            android:fontFamily="@font/trafic"
-            android:text="@string/podcast"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="20sp" />
-
-        <com.hezaro.wall.utils.EndlessLinearLayoutRecyclerview
-            android:id="@+id/podcastList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/podcastTitle"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="20"
-            tools:listitem="@layout/item_podcast" />
-
-    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/searchListLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/margin_10"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/podcastLayout">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.hezaro.wall.utils.EndlessLinearLayoutRecyclerview
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:itemCount="20"
-            tools:listitem="@layout/item_explore" />
+            tools:listitem="@layout/item_episode" />
 
     </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

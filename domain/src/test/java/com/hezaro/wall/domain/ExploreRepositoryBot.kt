@@ -1,5 +1,6 @@
 package com.hezaro.wall.domain
 
+import com.hezaro.wall.data.local.EpisodeDao
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Meta
 import com.hezaro.wall.data.remote.ApiService
@@ -18,11 +19,12 @@ import retrofit2.mock.Calls
 class ExploreRepositoryBot {
 
     private var api = mock(ApiService::class)
-    private var repository = ExploreRepository.ExploreRepositoryImpl(api)
+    private var database = mock(EpisodeDao::class)
+    private var repository = ExploreRepository.ExploreRepositoryImpl(api, database)
 
     fun withInvalidResponse(page: Int, offset: Int, sort: String): ExploreRepositoryBot {
         val call = Calls.response(
-            Response.error<com.hezaro.wall.data.model.Response<MutableList<Episode>>>(
+            Response.error<com.hezaro.wall.data.model.Response<ArrayList<Episode>>>(
                 402,
                 ResponseBody.create(MediaType.parse("json"), "")
             )
@@ -43,8 +45,8 @@ class ExploreRepositoryBot {
     }
 
     fun withValidResponse(page: Int, offset: Int, sort: String): ExploreRepositoryBot {
-        val list = mutableListOf<Episode>()
-        val call = Calls.response(Response.success(com.hezaro.wall.data.model.Response(Meta(200), list)))
+        val list = arrayListOf<Episode>()
+        val call = Calls.response(Response.success(com.hezaro.wall.data.model.Response(Meta(200, "OK"), list)))
         Mockito.`when`(api.explore(sort, page, offset)).thenReturn(call)
         return this
     }

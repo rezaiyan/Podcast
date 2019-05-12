@@ -17,5 +17,5 @@ interface PodcastDao {
     fun delete(podcast: Podcast)
 
     @Query("SELECT * FROM podcast")
-    fun getAll(): MutableList<Podcast>
+    fun getAll(): List<Podcast>
 }

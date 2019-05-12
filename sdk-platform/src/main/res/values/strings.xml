@@ -1,5 +1,5 @@
 <resources>
-<string name="app_name">دیوار پادکست</string>
+    <string name="app_name">هزارو (دیوار پادکست)</string>
     <string name="retry">تلاش مجدد</string>
     <string name="download_start_error">دانلود با خطا مواجه شده است</string>
     <string name="downloading">درحال دانلود</string>

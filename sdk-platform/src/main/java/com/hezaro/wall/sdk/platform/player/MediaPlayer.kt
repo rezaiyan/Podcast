@@ -2,12 +2,8 @@ package com.hezaro.wall.sdk.platform.player
 
 import com.google.android.exoplayer2.Player
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Playlist
-import java.lang.ref.WeakReference
 
-abstract class MediaPlayer(wakeListener: WeakReference<MediaPlayerListener>) {
-
-    var listenerReference: MediaPlayerListener = wakeListener.get()!!
+abstract class MediaPlayer {
 
     abstract val player: Player
 
@@ -23,9 +19,9 @@ abstract class MediaPlayer(wakeListener: WeakReference<MediaPlayerListener>) {
 
     abstract fun clearPlaylist()
 
-    abstract fun concatPlaylist(playlist: Playlist)
+    abstract fun concatPlaylist(p: ArrayList<Episode>)
 
-    abstract fun playPlaylist(playlist: Playlist, episode: Episode)
+    abstract fun playPlaylist(p: ArrayList<Episode>, episode: Episode, readyToPlay: Boolean = true)
 
     abstract fun resumePlayback()
 

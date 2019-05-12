@@ -14,17 +14,19 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(private val repository: ProfileRepository) : BaseViewModel() {
 
     val userInfo: MutableLiveData<UserInfo> = MutableLiveData()
-    val episodes: MutableLiveData<MutableList<Episode>> = MutableLiveData()
+    val episodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
 
-    fun userInfo() = launch(job) {
-        isExecute = true
-        repository.userInfo().either(::onFailure, ::onSuccess)
-    }
+    fun userInfo() =
+        launch(job) {
+            isExecute = true
+            repository.userInfo().either(::onFailure, ::onSuccess)
+        }
 
-    private fun onSuccess(it: UserInfo) = launch(Dispatchers.Main) {
-        isExecute = false
-        userInfo.value = it
-    }
+    private fun onSuccess(it: UserInfo) =
+        launch(Dispatchers.Main) {
+            isExecute = false
+            userInfo.value = it
+        }
 
     @SuppressLint("CheckResult")
     fun getEpisodes() {

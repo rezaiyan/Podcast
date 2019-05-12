@@ -15,13 +15,13 @@ import io.reactivex.Flowable
 interface ProfileRepository {
 
     fun userInfo(): Either<Failure, UserInfo>
-    fun getDownloadEpisodes(): Flowable<MutableList<Episode>>
+    fun getDownloadEpisodes(): Flowable<ArrayList<Episode>>
 
     class ProfileRepositoryImpl(private val storage: SharedPreferences, private val database: EpisodeDao) :
         BaseRepository(),
         ProfileRepository {
 
-        override fun getDownloadEpisodes() = database.getDownloadEpisodes()
+        override fun getDownloadEpisodes() = database.getDownloadEpisodes().map { ArrayList(it) }!!
         override fun userInfo(): Either<Failure, UserInfo> {
             with(storage) {
                 val username = get(USER_NAME, "")

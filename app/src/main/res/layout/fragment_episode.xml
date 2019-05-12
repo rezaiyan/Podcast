@@ -10,8 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/podcastCover"
@@ -44,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_10"
             android:ellipsize="start"
-            android:fontFamily="@font/trafic"
+            android:fontFamily="@font/traffic"
             android:singleLine="true"
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="@id/podcastCover"
@@ -57,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_16"
             android:ellipsize="start"
-            android:fontFamily="@font/trafic"
+            android:fontFamily="@font/traffic"
             android:singleLine="true"
             android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="@id/podcastCover"
@@ -135,7 +134,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="@dimen/margin_20"
             android:ellipsize="start"
-            android:fontFamily="@font/trafic"
+            android:fontFamily="@font/traffic"
             android:maxLines="2"
             android:textColor="@color/colorTextPrimary"
             app:layout_constraintEnd_toEndOf="parent"
@@ -162,6 +161,7 @@
 
                 <TextView
                     android:id="@+id/description"
+                    android:fontFamily="@font/traffic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"

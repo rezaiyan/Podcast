@@ -118,6 +118,10 @@ class PullDismissLayout : FrameLayout {
         listener = l
     }
 
+    fun removeListener() {
+        listener = null
+    }
+
     private class ViewDragCallback(private val pullDismissLayout: PullDismissLayout) :
         Callback() {
 

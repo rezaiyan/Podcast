@@ -10,38 +10,34 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(private val repository: SearchRepository) : BaseViewModel() {
 
-    var search: MutableLiveData<MutableList<Episode>> = MutableLiveData()
-    var podcast: MutableLiveData<MutableList<Podcast>> = MutableLiveData()
+    var search: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
+    var podcast: MutableLiveData<ArrayList<Podcast>> = MutableLiveData()
 
-    fun getPodcasts() {
+    fun getPodcasts() =
         launch(job) {
             isExecute = true
             repository.podcast().either(::onFailure, ::onPodcast)
         }
-    }
 
-    fun doSearch(query: String) {
-
-        launch(job)
-        {
+    fun doSearch(query: String) =
+        launch(job) {
+            progress.postValue(true)
             isExecute = true
             if (query.isNotEmpty()) {
                 repository.search(query).either(::onFailure, ::onSearch)
             }
         }
-    }
 
-    private fun onPodcast(list: MutableList<Podcast>) {
-        isExecute = false
+    private fun onPodcast(list: ArrayList<Podcast>) =
         launch(Dispatchers.Main) {
+            isExecute = false
             podcast.value = list
         }
-    }
 
-    private fun onSearch(list: MutableList<Episode>) {
-        isExecute = false
+    private fun onSearch(list: ArrayList<Episode>) =
         launch(Dispatchers.Main) {
+            isExecute = false
+            progress.value = false
             search.value = list
         }
-    }
 }

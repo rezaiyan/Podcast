@@ -44,7 +44,7 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            totalItemCount = linearLayoutManager.itemCount
+            totalItemCount = recyclerView.adapter!!.itemCount
             lastVisibleItem = (linearLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
             if (!(loadingStatus.value)!! && totalItemCount <= lastVisibleItem + visibleThreshold) {
                 onLoadMore()

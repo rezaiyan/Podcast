@@ -1,9 +1,6 @@
 package com.hezaro.wall.sdk.platform
 
 import android.animation.ValueAnimator
-import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.ProgressBar
@@ -11,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
 import androidx.transition.Slide
-import com.google.android.material.button.MaterialButton
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.inTransaction
 import com.hezaro.wall.sdk.platform.ext.show
@@ -26,16 +22,20 @@ abstract class BaseActivity : AppCompatActivity() {
     abstract fun layoutId(): Int
     abstract fun progressBar(): ProgressBar
     abstract fun fragmentContainer(): Int
+    abstract fun fragment(): BaseFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addFragment(fragment())
     }
 
-    fun progressbarMargin() {
+    fun progressbarMargin(i: Int = -1) {
         val params = progressBar().layoutParams as CoordinatorLayout.LayoutParams
-        if (params.bottomMargin == 0) {
+        if (params.bottomMargin == resources.getDimension(R.dimen.progress_margin).toInt()) {
             val animator =
-                ValueAnimator.ofInt(params.bottomMargin, resources.getDimension(R.dimen.progress_margin).toInt())
+                ValueAnimator.ofInt(
+                    params.bottomMargin,
+                    resources.getDimension(if (i == 0) R.dimen.progress_margin_8 else R.dimen.progress_margin).toInt()
+                )
             animator.addUpdateListener { valueAnimator ->
                 params.bottomMargin = valueAnimator.animatedValue as Int
                 progressBar().requestLayout()
@@ -53,22 +53,9 @@ abstract class BaseActivity : AppCompatActivity() {
         progressBar().hide()
     }
 
-    fun forceUpdateDialog() {
-        val dialog = Dialog(this)
-        dialog.setTitle("ورژن جدید اپلیکیشن در دسترس می باشد")
-        dialog.setContentView(R.layout.dialog_force_update)
-        dialog.findViewById<MaterialButton>(R.id.exit).setOnClickListener { System.exit(0) }
-        dialog.findViewById<MaterialButton>(R.id.update).setOnClickListener {
-            Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("http://wall.hezaro.com")
-                startActivity(this)
-            }
-        }
-    }
-
     fun addFragment(fragment: BaseFragment) {
-        var gravity = Gravity.END
-        if (fragment.tag() == "SearchFragment") {
+        val gravity = Gravity.END
+        if (fragment.tag() == "SearchFragment" || fragment.tag() == "ExploreFragment") {
             fragment.enterTransition = Fade()
             fragment.exitTransition = Fade()
         } else {
@@ -83,10 +70,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
         with(supportFragmentManager) {
             if (fragments.indexOf(findFragmentByTag(fragment.tag())) == -1) {
-                inTransaction { add(fragmentContainer(), fragment, fragment.tag()) }
+                inTransaction { replace(fragmentContainer(), fragment, fragment.tag()) }
             }
         }
     }
-
-    abstract fun fragment(): BaseFragment
 }

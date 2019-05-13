@@ -8,6 +8,7 @@ import com.hezaro.wall.notification.MessagingViewModel
 import com.hezaro.wall.notification.NotificationBody
 import org.json.JSONObject
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class MessagingService : FirebaseMessagingService() {
 
@@ -39,8 +40,10 @@ class MessagingService : FirebaseMessagingService() {
         return bigMessage
     }
 
+
     override fun onNewToken(p0: String?) {
         super.onNewToken(p0)
+        Timber.tag("MessagingService").i("Token: $p0")
         p0?.let { vm.sendToken(it) }
     }
 }

@@ -45,17 +45,17 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("$BASE/likes/{episode_id}")
-    fun like(@Path("episode_id") episode_id: Long, @Field("state") state: Long = 0): Call<Response<Any>>
+    fun like(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 
     @DELETE("$BASE/bookmarks/{episode_id}")
     fun unBookmark(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 
     @FormUrlEncoded
     @POST("$BASE/bookmarks/{episode_id}")
-    fun bookmark(@Path("episode_id") episode_id: Long, @Field("state") state: Long = 0): Call<Response<Any>>
+    fun bookmark(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 
     @FormUrlEncoded
-    @POST("$BASE/login")
+    @POST("$BASE/user/notification_token")
     fun sendApi(@Field("token") token: String): Call<Response<Any>>
 
     @GET("$BASE/search")

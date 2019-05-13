@@ -7,6 +7,7 @@ const val USER_NAME = "com.hezaro.wall.username"
 const val AVATAR = "com.hezaro.wall.avatar"
 const val EMAIL = "com.hezaro.wall.email"
 const val JWT = "com.hezaro.wall.jtw"
+const val NOTIFICATION_TOKEN = "com.hezaro.wall.notification"
 
 inline fun <reified T> SharedPreferences.get(key: String, defaultValue: T): T {
     when (T::class) {

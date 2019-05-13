@@ -29,7 +29,7 @@ import com.hezaro.wall.feature.player.PlayerFragment
 import com.hezaro.wall.feature.podcast.PodcastFragment
 import com.hezaro.wall.feature.profile.ProfileFragment
 import com.hezaro.wall.feature.search.RESUME_VIEW
-import com.hezaro.wall.feature.search.SINGLE_TRACK
+import com.hezaro.wall.feature.search.SELECT_SINGLE_TRACK
 import com.hezaro.wall.feature.search.SearchFragment
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.base.exception.Failure
@@ -212,7 +212,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun onLatestEpisode(episode: Episode) {
-        sharedVm.notifyEpisode(Pair(SINGLE_TRACK, episode))
+        sharedVm.notifyEpisode(Pair(SELECT_SINGLE_TRACK, episode))
     }
 
     fun openEpisodeInfo(episode: Episode) = addFragment(EpisodeFragment.newInstance(episode))

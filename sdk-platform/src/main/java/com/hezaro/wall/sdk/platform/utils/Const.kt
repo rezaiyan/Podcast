@@ -18,7 +18,9 @@ const val MEDIA_SESSION_ACTIONS = PlaybackStateCompat.ACTION_FAST_FORWARD or
 
 const val ACTION_PLAY_QUEUE = "com.hezaro.wall.playQueue"
 
-const val ACTION_PLAY_EPISODE = "com.hezaro.wall.playNew"
+const val ACTION_PLAY_EPISODE_OF_PLAYLIST = "com.hezaro.wall.playNew"
+
+const val ACTION_PLAY_SINGLE_EPISODE = "com.hezaro.wall.play.episode"
 
 const val ACTION_PREPARE_PLAYLIST = "com.hezaro.wall.prepare_playlist"
 

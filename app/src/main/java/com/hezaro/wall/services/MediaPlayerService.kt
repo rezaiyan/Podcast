@@ -13,10 +13,11 @@ import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState.STATE_PLAYING
 import com.hezaro.wall.sdk.platform.utils.ACTION_CLEAR_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_PAUSE
-import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_EPISODE
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_EPISODE_OF_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_QUEUE
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_SINGLE_EPISODE
 import com.hezaro.wall.sdk.platform.utils.ACTION_PREPARE_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_RESUME_PLAYBACK
 import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_BACKWARD
@@ -49,7 +50,6 @@ class MediaPlayerService : Service() {
     private val notificationHelper: PlayerNotificationHelper by inject { parametersOf(this@MediaPlayerService) }
     val mediaPlayer: MediaPlayer by inject()
 
-
     val player: Player
         get() = mediaPlayer.player
 
@@ -80,9 +80,14 @@ class MediaPlayerService : Service() {
 
             when (action) {
                 ACTION_PLAY_QUEUE -> player.next()
-                ACTION_PLAY_EPISODE -> {
+                ACTION_PLAY_EPISODE_OF_PLAYLIST -> {
                     intent.getParcelableExtra<Episode>(PARAM_EPISODE)?.let {
                         mediaPlayer.selectTrack(it)
+                    }
+                }
+                ACTION_PLAY_SINGLE_EPISODE -> {
+                    intent.getParcelableExtra<Episode>(PARAM_EPISODE)?.let {
+                        mediaPlayer.playTrack(it)
                     }
                 }
                 ACTION_PREPARE_PLAYLIST -> addPlaylist(

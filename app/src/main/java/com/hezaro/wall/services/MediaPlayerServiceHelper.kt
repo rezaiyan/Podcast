@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.Intent
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.sdk.platform.utils.ACTION_CLEAR_PLAYLIST
-import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_EPISODE
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_EPISODE_OF_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PLAYLIST
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_SINGLE_EPISODE
 import com.hezaro.wall.sdk.platform.utils.ACTION_PREPARE_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_BACKWARD
 import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_FORWARD
@@ -40,10 +41,18 @@ class MediaPlayerServiceHelper{
             context.startService(intent)
         }
 
+        fun selectEpisode(context: Context, episode: Episode) {
+
+            val intent = Intent(context, MediaPlayerService::class.java)
+            intent.action = ACTION_PLAY_EPISODE_OF_PLAYLIST
+            intent.putExtra(PARAM_EPISODE, episode)
+            context.startService(intent)
+        }
+
         fun playEpisode(context: Context, episode: Episode) {
 
             val intent = Intent(context, MediaPlayerService::class.java)
-            intent.action = ACTION_PLAY_EPISODE
+            intent.action = ACTION_PLAY_SINGLE_EPISODE
             intent.putExtra(PARAM_EPISODE, episode)
             context.startService(intent)
         }

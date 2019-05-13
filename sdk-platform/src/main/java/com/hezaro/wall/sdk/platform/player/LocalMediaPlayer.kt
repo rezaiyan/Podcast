@@ -36,6 +36,8 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
 
     private var episode: Episode? = null
 
+    private var errorOccurred = false
+
     override var isStreaming: Boolean = false
         private set
 
@@ -79,32 +81,12 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         }
     }
 
+    override fun getCurrentEpisode(): Episode? = episode
+
     override fun clearPlaylist() {
         playlist?.getItems()?.clear()
         concatenatingMediaSource.clear()
         playlist = null
-    }
-
-    override fun getCurrentEpisode(): Episode? {
-        return episode
-    }
-
-    override fun playPlaylist(p: ArrayList<Episode>, episode: Episode, readyToPlay: Boolean) {
-        this.playlist?.getItems()?.clear()
-        concatenatingMediaSource.clear()
-        this.playlist = Playlist(p)
-        for (i in 0 until this.playlist!!.getItems().size)
-            concatenatingMediaSource.addMediaSource(buildMediaSource(playlist!!.getItem(i)))
-
-        Timber.tag("MediaPlayer").i("concatenatingMediaSource.size= ${concatenatingMediaSource.size}")
-        exoPlayer!!.prepare(concatenatingMediaSource)
-
-        this.episode = episode
-        broadcastEpisode(episode)
-        val currentIndex = playlist!!.getIndex(episode)
-        exoPlayer!!.seekTo(currentIndex, episode.state)
-        exoPlayer!!.playWhenReady = readyToPlay
-        Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
     }
 
     override fun concatPlaylist(p: ArrayList<Episode>) {
@@ -129,6 +111,36 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         }
     }
 
+    override fun playPlaylist(p: ArrayList<Episode>, episode: Episode, readyToPlay: Boolean) {
+        this.playlist?.getItems()?.clear()
+        concatenatingMediaSource.clear()
+        this.playlist = Playlist(p)
+        for (i in 0 until this.playlist!!.getItems().size)
+            concatenatingMediaSource.addMediaSource(buildMediaSource(playlist!!.getItem(i)))
+
+        Timber.tag("MediaPlayer").i("concatenatingMediaSource.size= ${concatenatingMediaSource.size}")
+        exoPlayer!!.prepare(concatenatingMediaSource)
+
+        this.episode = episode
+        broadcastEpisode(episode)
+        val currentIndex = playlist!!.getIndex(episode)
+        exoPlayer!!.seekTo(currentIndex, episode.state)
+        exoPlayer!!.playWhenReady = readyToPlay
+        Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
+    }
+
+    override fun playTrack(e: Episode) {
+        playlist = Playlist(arrayListOf(e))
+        concatenatingMediaSource.clear()
+        concatenatingMediaSource.addMediaSource(buildMediaSource(e))
+        exoPlayer!!.prepare(concatenatingMediaSource)
+        this.episode = e
+        broadcastEpisode(e)
+        exoPlayer!!.seekTo(0, e.state)
+        exoPlayer!!.playWhenReady = true
+    }
+
+
     override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
         if (trackGroups!!.isEmpty) {
             episode = playlist!!.getItem(exoPlayer!!.currentWindowIndex)
@@ -136,7 +148,6 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         }
     }
 
-    private var errorOccurred = false
     override fun selectTrack(episode: Episode) {
         this.episode = episode
         val currentIndex = playlist?.getIndex(episode) ?: -1
@@ -172,15 +183,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         isStreaming = false
     }
 
-    override fun seekTo(position: Long) {
-        exoPlayer!!.seekTo(position)
-    }
-
-    override fun onDestroy() {
-        Timber.tag(TAG).d("Tearing down")
-        exoPlayer!!.release()
-        exoPlayer!!.removeListener(this)
-    }
+    override fun seekTo(position: Long) = exoPlayer!!.seekTo(position)
 
     override fun onLoadingChanged(isLoading: Boolean) {
     }
@@ -213,7 +216,9 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
                 playbackStateStr = "Unknown"
             }
         }
+
         broadcastStatus(mediaPlayerState)
+
         Timber.tag(TAG).d(
             String.format(
                 "ExoPlayer state changed: %s, Play When Ready: %s",
@@ -255,6 +260,11 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
                 .createMediaSource(uri)
         }
         throw IllegalStateException("Unable to build media source")
+    }
+
+    override fun onDestroy() {
+        exoPlayer!!.release()
+        exoPlayer!!.removeListener(this)
     }
 
     companion object {

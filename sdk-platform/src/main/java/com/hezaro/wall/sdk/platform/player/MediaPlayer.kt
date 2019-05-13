@@ -19,6 +19,8 @@ abstract class MediaPlayer {
 
     abstract fun clearPlaylist()
 
+    abstract fun playTrack(e: Episode)
+
     abstract fun concatPlaylist(p: ArrayList<Episode>)
 
     abstract fun playPlaylist(p: ArrayList<Episode>, episode: Episode, readyToPlay: Boolean = true)

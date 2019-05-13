@@ -30,10 +30,11 @@ import kotlinx.android.synthetic.main.fragment_search.searchList
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
-const val SINGLE_TRACK = 1
+const val SELECT_SINGLE_TRACK = 1
 const val SELECT_FROM_PLAYLIST = 2
 const val UPDATE_VIEW = 3
 const val RESUME_VIEW = 4
+const val PLAY_SINGLE_TRACK = 5
 class SearchFragment : BaseFragment() {
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
@@ -61,7 +62,7 @@ class SearchFragment : BaseFragment() {
             adapter = EpisodeAdapter { e, _ ->
                 playlistCreated = true
                 liftList()
-                sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
+                sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
             }
         }
 

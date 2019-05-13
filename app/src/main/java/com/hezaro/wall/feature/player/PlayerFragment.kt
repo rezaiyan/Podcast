@@ -15,9 +15,10 @@ import com.hezaro.wall.R.drawable
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.search.PLAY_SINGLE_TRACK
 import com.hezaro.wall.feature.search.RESUME_VIEW
 import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
-import com.hezaro.wall.feature.search.SINGLE_TRACK
+import com.hezaro.wall.feature.search.SELECT_SINGLE_TRACK
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.ext.load
@@ -225,7 +226,14 @@ class PlayerFragment : BottomSheetDialogFragment() {
         currentEpisode = it.second
 
         when (it.first) {
-            SINGLE_TRACK -> {
+            SELECT_SINGLE_TRACK -> {
+                isBuffering = true
+                MediaPlayerServiceHelper.selectEpisode(
+                    requireContext(),
+                    currentEpisode!!
+                )
+            }
+            PLAY_SINGLE_TRACK -> {
                 isBuffering = true
                 MediaPlayerServiceHelper.playEpisode(
                     requireContext(),
@@ -234,7 +242,7 @@ class PlayerFragment : BottomSheetDialogFragment() {
             }
             SELECT_FROM_PLAYLIST -> {
                 isBuffering = true
-                MediaPlayerServiceHelper.playEpisode(requireContext(), currentEpisode!!)
+                MediaPlayerServiceHelper.selectEpisode(requireContext(), currentEpisode!!)
             }
             UPDATE_VIEW -> {
                 isBuffering = true

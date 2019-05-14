@@ -30,7 +30,11 @@ class SplashActivity : AppCompatActivity() {
     private fun onVersion(version: Version) {
         if (version.force_update)
             forceUpdateDialog()
-        else startActivity(
+        else startMainActivity()
+    }
+
+    private fun startMainActivity() {
+        startActivity(
             Intent(
                 this,
                 MainActivity::class.java
@@ -53,6 +57,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun onFailure(failure: Failure) {
-        startActivity(Intent(this, MainActivity::class.java))
+        startMainActivity()
     }
 }

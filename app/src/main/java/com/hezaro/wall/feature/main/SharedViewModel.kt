@@ -17,7 +17,7 @@ class SharedViewModel : ViewModel() {
     val collapseSheet = MutableLiveData<Int>()
     val playerIsOpen = MutableLiveData<Boolean>()
     val isServiceConnected = MutableLiveData<Boolean>()
-    val lastEpisodeIsAlive = MutableLiveData<Boolean>()
+    val isLoadedSingleEpisode = MutableLiveData<Boolean>()
 
     fun listMargin(i: Int) {
         listMargin.value = i
@@ -55,7 +55,7 @@ class SharedViewModel : ViewModel() {
         isServiceConnected.value = b
     }
 
-    fun lastEpisodeIsAlive(b: Boolean) {
-        lastEpisodeIsAlive.value = b
+    fun isLoadedSingleEpisode(b: Boolean) {
+        isLoadedSingleEpisode.value = b
     }
 }

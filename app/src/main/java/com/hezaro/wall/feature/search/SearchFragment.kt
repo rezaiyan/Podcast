@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hezaro.wall.R
@@ -42,12 +43,11 @@ class SearchFragment : BaseFragment() {
     override fun tag(): String = this::class.java.simpleName
     private val vm: SearchViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
-    private var playlistCreated = false
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
-
+        sharedVm.listMargin.observe(this@SearchFragment, Observer { updateMarginList(it) })
         with(vm) {
             observe(search, ::onSearch)
             observe(podcast, ::onPodcast)
@@ -60,8 +60,9 @@ class SearchFragment : BaseFragment() {
         searchList.apply {
             layoutManager = EndlessLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
             adapter = EpisodeAdapter { e, _ ->
-                playlistCreated = true
-                liftList()
+                sharedVm.resetPlaylist(true)
+                sharedVm.isLoadedSingleEpisode(true)
+                updateMarginList()
                 sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
             }
         }
@@ -99,24 +100,22 @@ class SearchFragment : BaseFragment() {
             .subscribe { text -> vm.doSearch(text) }
     }
 
-    private fun liftList() {
-        var margin = (searchList.layoutParams as FrameLayout.LayoutParams).bottomMargin
+    private fun updateMarginList(i: Int = -1) {
+        var bottomMargin = (searchList.layoutParams as FrameLayout.LayoutParams).bottomMargin
 
-        if (margin == 0) {
+        if (bottomMargin == 0 || i >= 0) {
             val animator =
-                ValueAnimator.ofInt(margin, resources.getDimension(R.dimen.mini_player_height).toInt())
+                ValueAnimator.ofInt(
+                    bottomMargin,
+                    if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
+                )
             animator.addUpdateListener { valueAnimator ->
-                margin = valueAnimator.animatedValue as Int
+                bottomMargin = valueAnimator.animatedValue as Int
                 searchList.requestLayout()
             }
             animator.duration = 100
             animator.start()
         }
-    }
-
-    override fun onBackPressed() {
-        sharedVm.resetPlaylist.value = playlistCreated
-        super.onBackPressed()
     }
 
     private fun onProgress(isProgress: Boolean) {

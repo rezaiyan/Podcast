@@ -17,7 +17,6 @@ import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
-import com.hezaro.wall.sdk.platform.ext.loadBlur
 import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
@@ -30,7 +29,6 @@ import kotlinx.android.synthetic.main.fragment_episode.likeCount
 import kotlinx.android.synthetic.main.fragment_episode.playedCount
 import kotlinx.android.synthetic.main.fragment_episode.podcastCover
 import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
-import kotlinx.android.synthetic.main.fragment_episode.podcasterName
 import kotlinx.android.synthetic.main.fragment_episode.pullLayout
 import org.koin.android.ext.android.inject
 
@@ -69,6 +67,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
         })
 
         updateView()
+        podcastTitle.setOnClickListener { activity.openPodcastInfo(currentEpisode!!.podcast) }
         downloadStatus.setOnClickListener {
             val uri = Uri.parse(currentEpisode!!.source)
             val title = currentEpisode!!.title
@@ -129,11 +128,10 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
 
         currentEpisode?.let {
 
-            podcastCover.loadBlur(it.podcast.cover)
+            podcastCover.load(it.podcast.cover)
             episodeCover.load(it.cover)
             episodeTitle.text = it.title
             podcastTitle.text = it.podcast.title
-            podcasterName.text = it.creator
             playedCount.text = it.views.toString()
             likeCount.text = it.likes.toString()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

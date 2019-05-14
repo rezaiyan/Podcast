@@ -36,32 +36,6 @@
             app:layout_constraintVertical_bias="2.0"
             tools:src="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/podcastTitle"
-            style="@style/CustomTitleTextAppearance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_10"
-            android:ellipsize="start"
-            android:fontFamily="@font/traffic"
-            android:singleLine="true"
-            android:textColor="@color/colorPrimaryDark"
-            app:layout_constraintEnd_toEndOf="@id/podcastCover"
-            app:layout_constraintTop_toTopOf="@id/podcastCover"
-            tools:text="عنوان تست" />
-
-        <TextView
-            android:id="@+id/podcasterName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_16"
-            android:ellipsize="start"
-            android:fontFamily="@font/traffic"
-            android:singleLine="true"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="@id/podcastCover"
-            app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
-            tools:text="عنوان تست" />
 
         <ImageView
             android:id="@+id/playedCountIcon"
@@ -143,6 +117,20 @@
             app:layout_constraintTop_toBottomOf="@id/episodeCover"
             tools:text="شسپیشس سیب سیبسی بسیبس بسیب سیب سیبسیب " />
 
+        <TextView
+            android:id="@+id/podcastTitle"
+            style="@style/CustomTitleTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:fontFamily="@font/traffic"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/episodeTitle"
+            app:layout_constraintTop_toBottomOf="@+id/episodeTitle"
+            tools:text="عنوان تست" />
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
@@ -151,7 +139,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/episodeTitle">
+            app:layout_constraintTop_toBottomOf="@+id/podcastTitle">
 
             <FrameLayout
                 android:layout_width="match_parent"

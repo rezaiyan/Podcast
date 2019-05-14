@@ -98,6 +98,7 @@ class PlayerFragment : BottomSheetDialogFragment() {
             OnSwipeTouchListener(
                 behavior!!
             ) {
+                (activity as MainActivity).unbindService()
                 MediaPlayerServiceHelper.stopService(requireContext())
                 closeMiniPlayer()
             }
@@ -227,6 +228,11 @@ class PlayerFragment : BottomSheetDialogFragment() {
     private fun preparePlayer(it: Pair<Int, Episode>) {
         currentEpisode = it.second
 
+        if (!(activity as MainActivity).serviceIsBounded) {
+            (activity as MainActivity).bindService()
+        }
+
+
         when (it.first) {
             SELECT_SINGLE_TRACK -> {
                 MediaPlayerServiceHelper.selectEpisode(
@@ -255,6 +261,7 @@ class PlayerFragment : BottomSheetDialogFragment() {
                 (activity as BaseActivity).progressbarMargin()
             }
         }
+
         collapse()
 
         if (playerView.player != null)

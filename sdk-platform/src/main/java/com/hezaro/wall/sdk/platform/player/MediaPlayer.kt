@@ -45,6 +45,8 @@ interface MediaPlayer {
     fun onDestroy()
 
     fun setInstanceListener(instanceListener: InstanceListener)
+
+    fun init()
 }
 
 interface InstanceListener {

@@ -70,6 +70,7 @@ class MediaPlayerService : Service() {
         super.onCreate()
         liveError.value = Pair(false, mediaPlayer.player)
         player.value = mediaPlayer.player
+        mediaPlayer.init()
         mediaPlayer.setInstanceListener(object : InstanceListener {
             override fun onNewInstance(
                 p: SimpleExoPlayer?,

@@ -124,10 +124,6 @@ class MainActivity : BaseActivity() {
             }
     }
 
-    fun bindService() {
-        serviceIsBounded = true
-        bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
-    }
 
     fun search() {
         sharedVm.collapseSheet.value = BottomSheetBehavior.STATE_COLLAPSED
@@ -153,11 +149,19 @@ class MainActivity : BaseActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
+    fun bindService() {
+        serviceIsBounded = true
+        bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    fun unbindService() {
+        serviceIsBounded = false
+        unbindService(serviceConnection)
+    }
     override fun onStop() {
         super.onStop()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
-        unbindService(serviceConnection)
-        serviceIsBounded = false
+        unbindService()
     }
 
     override fun onStart() {

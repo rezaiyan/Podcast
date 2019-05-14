@@ -68,7 +68,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
 
     init {
         if (exoPlayer == null) {
-            initPlayer()
+            init()
         }
     }
 
@@ -77,7 +77,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
         this.instanceListener = instanceListener
     }
 
-    private fun initPlayer() {
+    override fun init() {
         val trackSelector = DefaultTrackSelector()
         val loadControl = DefaultLoadControl()
         val factory = DefaultRenderersFactory(this.context)
@@ -279,7 +279,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
         errorOccurred = true
         stopPlayback()
         onDestroy()
-        initPlayer()
+        init()
         concatPlaylist(playlist!!.getItems())
         var errorString = ""
         when (error.type) {
@@ -287,21 +287,23 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
                 errorString = "TYPE_RENDERER ${error.rendererException.message}"
             }
             ExoPlaybackException.TYPE_SOURCE -> {
-                if (error.sourceException.message!!.contains(Regex("([300-900])\\w+")))
+                if (error.sourceException.message!!.contains(Regex("([300-900])\\w+"))) {
                     errorString = "امکان پخش این اپیزود وجود ندارد"
+                    Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
+                }
             }
             ExoPlaybackException.TYPE_UNEXPECTED -> {
                 errorString = "TYPE_UNEXPECTED ${error.unexpectedException.message}"
             }
 
         }
-        Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
         Timber.w(error, "Player error encountered -> $errorString")
     }
 
     override fun onDestroy() {
         exoPlayer!!.release()
         exoPlayer!!.removeListener(this)
+        episode = null
     }
 
     companion object {

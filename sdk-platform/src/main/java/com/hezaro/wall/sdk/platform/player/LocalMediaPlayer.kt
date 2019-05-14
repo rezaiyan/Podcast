@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
@@ -14,7 +15,7 @@ import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.audio.AudioAttributes.Builder
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
@@ -30,12 +31,13 @@ import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER_STATUS
 import timber.log.Timber
 
-class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.EventListener {
+class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.EventListener {
 
     private var exoPlayer: SimpleExoPlayer? = null
 
     private var episode: Episode? = null
 
+    private var currentIndex = 0
     private var errorOccurred = false
 
     override var isStreaming: Boolean = false
@@ -66,19 +68,28 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
 
     init {
         if (exoPlayer == null) {
-            val trackSelector = DefaultTrackSelector()
-            val loadControl = DefaultLoadControl()
-            val factory = DefaultRenderersFactory(this.context)
-            exoPlayer = ExoPlayerFactory
-                .newSimpleInstance(this.context, factory, trackSelector, loadControl)
-            exoPlayer!!.addListener(this)
-            val audioAttributes = AudioAttributes.Builder()
-                .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.CONTENT_TYPE_MOVIE)
-                .build()
-            exoPlayer!!.setAudioAttributes(audioAttributes, true)
-            mediaPlayerState = MediaPlayerState.STATE_IDLE
+            initPlayer()
         }
+    }
+
+    private lateinit var instanceListener: InstanceListener
+    override fun setInstanceListener(instanceListener: InstanceListener) {
+        this.instanceListener = instanceListener
+    }
+
+    private fun initPlayer() {
+        val trackSelector = DefaultTrackSelector()
+        val loadControl = DefaultLoadControl()
+        val factory = DefaultRenderersFactory(this.context)
+        exoPlayer = ExoPlayerFactory
+            .newSimpleInstance(this.context, factory, trackSelector, loadControl)
+        exoPlayer!!.addListener(this)
+        val audioAttributes = Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.CONTENT_TYPE_MOVIE)
+            .build()
+        exoPlayer!!.setAudioAttributes(audioAttributes, true)
+        mediaPlayerState = MediaPlayerState.STATE_IDLE
     }
 
     override fun getCurrentEpisode(): Episode? = episode
@@ -107,7 +118,15 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         Timber.tag("MediaPlayer").i("concatenatingMediaSource.size= ${concatenatingMediaSource.size}")
         val beReset = exoPlayer!!.currentWindowIndex > 0 || isPlaying
         if (!beReset) {
-            exoPlayer!!.prepare(concatenatingMediaSource)
+            if (!errorOccurred)
+                exoPlayer!!.prepare(concatenatingMediaSource)
+            else {
+                exoPlayer!!.prepare(concatenatingMediaSource, false, false)
+                if (::instanceListener.isInitialized) {
+                    instanceListener.onNewInstance(exoPlayer, errorOccurred)
+                }
+                errorOccurred = false
+            }
         }
     }
 
@@ -140,7 +159,6 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         exoPlayer!!.playWhenReady = true
     }
 
-
     override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
         if (trackGroups!!.isEmpty) {
             episode = playlist!!.getItem(exoPlayer!!.currentWindowIndex)
@@ -150,7 +168,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
 
     override fun selectTrack(episode: Episode) {
         this.episode = episode
-        val currentIndex = playlist?.getIndex(episode) ?: -1
+        currentIndex = playlist?.getIndex(episode) ?: -1
         if (playlist != null && currentIndex > 0) {
             if (exoPlayer!!.currentTimeline.windowCount > 0 &&
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
@@ -240,11 +258,6 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    override fun onPlayerError(error: ExoPlaybackException?) {
-        errorOccurred = true
-        Timber.w(error, "Player error encountered -> $error")
-    }
-
     @TargetApi(Build.VERSION_CODES.M)
     override fun setPlaybackSpeed(speed: Float) {
         val playbackParams = PlaybackParameters(speed)
@@ -260,6 +273,30 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer(), Player.Eve
                 .createMediaSource(uri)
         }
         throw IllegalStateException("Unable to build media source")
+    }
+
+    override fun onPlayerError(error: ExoPlaybackException) {
+        errorOccurred = true
+        stopPlayback()
+        onDestroy()
+        initPlayer()
+        concatPlaylist(playlist!!.getItems())
+        var errorString = ""
+        when (error.type) {
+            ExoPlaybackException.TYPE_RENDERER -> {
+                errorString = "TYPE_RENDERER ${error.rendererException.message}"
+            }
+            ExoPlaybackException.TYPE_SOURCE -> {
+                if (error.sourceException.message!!.contains(Regex("([300-900])\\w+")))
+                    errorString = "امکان پخش این اپیزود وجود ندارد"
+            }
+            ExoPlaybackException.TYPE_UNEXPECTED -> {
+                errorString = "TYPE_UNEXPECTED ${error.unexpectedException.message}"
+            }
+
+        }
+        Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
+        Timber.w(error, "Player error encountered -> $errorString")
     }
 
     override fun onDestroy() {

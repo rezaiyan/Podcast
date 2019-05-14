@@ -105,7 +105,11 @@ class PlayerFragment : BottomSheetDialogFragment() {
     }
 
     fun setPlayer(player: Player) {
+
         playerView.player = player
+
+        if (!(activity as MainActivity).serviceIsBounded)
+            closeMiniPlayer()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -196,24 +200,22 @@ class PlayerFragment : BottomSheetDialogFragment() {
     }
 
     private fun updatePlayingStatus(action: Int) {
+        isBuffering = false
+        playPause.setImageResource(drawable.ic_play)
+        miniPlayerProgressBar.visibility = View.INVISIBLE
+
         when (action) {
             MediaPlayerState.STATE_CONNECTING -> {
                 isBuffering = true
-                playPause.setImageResource(drawable.ic_play)
                 miniPlayerProgressBar.visibility = View.VISIBLE
             }
             MediaPlayerState.STATE_PLAYING -> {
-                isBuffering = false
-                miniPlayerProgressBar.visibility = View.INVISIBLE
                 playPause.setImageResource(drawable.ic_pause)
             }
-            MediaPlayerState.STATE_ENDED -> {
+            MediaPlayerState.STATE_ENDED, MediaPlayerState.STATE_IDLE -> {
                 closeMiniPlayer()
             }
             MediaPlayerState.STATE_PAUSED -> {
-                isBuffering = false
-                miniPlayerProgressBar.visibility = View.INVISIBLE
-                playPause.setImageResource(drawable.ic_play)
                 currentEpisode?.let {
                     it.state = playerView.player.currentPosition
                     vm.saveLatestEpisode(it)
@@ -227,25 +229,21 @@ class PlayerFragment : BottomSheetDialogFragment() {
 
         when (it.first) {
             SELECT_SINGLE_TRACK -> {
-                isBuffering = true
                 MediaPlayerServiceHelper.selectEpisode(
                     requireContext(),
                     currentEpisode!!
                 )
             }
             PLAY_SINGLE_TRACK -> {
-                isBuffering = true
                 MediaPlayerServiceHelper.playEpisode(
                     requireContext(),
                     currentEpisode!!
                 )
             }
             SELECT_FROM_PLAYLIST -> {
-                isBuffering = true
                 MediaPlayerServiceHelper.selectEpisode(requireContext(), currentEpisode!!)
             }
             UPDATE_VIEW -> {
-                isBuffering = true
                 showMinimize(false)
             }
             RESUME_VIEW -> {
@@ -255,9 +253,6 @@ class PlayerFragment : BottomSheetDialogFragment() {
                 behavior?.peekHeight =
                     resources.getDimension(R.dimen.mini_player_height).toInt()
                 (activity as BaseActivity).progressbarMargin()
-                isBuffering = false
-                miniPlayerProgressBar.visibility = View.INVISIBLE
-                playPause.setImageResource(R.drawable.ic_pause)
             }
         }
         collapse()
@@ -273,6 +268,8 @@ class PlayerFragment : BottomSheetDialogFragment() {
     private fun closeMiniPlayer() {
         sharedVm.listMargin(0)
         sharedVm.progressMargin(resources.getDimension(R.dimen.progress_margin_8).toInt())
+        behavior?.isHideable = true
+        behavior?.state = BottomSheetBehavior.STATE_HIDDEN
         behavior?.peekHeight = 0
     }
 

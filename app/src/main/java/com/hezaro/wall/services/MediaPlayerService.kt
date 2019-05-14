@@ -4,10 +4,13 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Status
 import com.hezaro.wall.notification.player.PlayerNotificationHelper
+import com.hezaro.wall.sdk.platform.player.InstanceListener
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState.STATE_PLAYING
@@ -40,7 +43,7 @@ import timber.log.Timber
 class MediaPlayerService : Service() {
 
     private val mediaPlayerState: Int
-        get() = player.playbackState
+        get() = player.value!!.playbackState
 
     var currentEpisode: Episode? = null
         get() = mediaPlayer.getCurrentEpisode()
@@ -50,8 +53,8 @@ class MediaPlayerService : Service() {
     private val notificationHelper: PlayerNotificationHelper by inject { parametersOf(this@MediaPlayerService) }
     val mediaPlayer: MediaPlayer by inject()
 
-    val player: Player
-        get() = mediaPlayer.player
+    val player = MutableLiveData<Player>()
+    val liveError = MutableLiveData<Pair<Boolean, Player>>()
 
     inner class ServiceBinder : Binder() {
 
@@ -63,11 +66,27 @@ class MediaPlayerService : Service() {
         notificationHelper.initNotificationHelper()
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        liveError.value = Pair(false, mediaPlayer.player)
+        player.value = mediaPlayer.player
+        mediaPlayer.setInstanceListener(object : InstanceListener {
+            override fun onNewInstance(
+                p: SimpleExoPlayer?,
+                errorOccurred: Boolean
+            ) {
+
+                player.value = p!!
+                liveError.value = Pair(errorOccurred, p)
+            }
+        })
+    }
+
     override fun onDestroy() {
         currentEpisode = null
         endPlayback()
         mediaPlayer.stopPlayback()
-        player.stop()
+        player.value!!.stop()
         notificationHelper.onDestroy()
         mediaPlayer.onDestroy()
         super.onDestroy()
@@ -79,7 +98,7 @@ class MediaPlayerService : Service() {
             val action = intent.action
 
             when (action) {
-                ACTION_PLAY_QUEUE -> player.next()
+                ACTION_PLAY_QUEUE -> player.value!!.next()
                 ACTION_PLAY_EPISODE_OF_PLAYLIST -> {
                     intent.getParcelableExtra<Episode>(PARAM_EPISODE)?.let {
                         mediaPlayer.selectTrack(it)
@@ -114,7 +133,7 @@ class MediaPlayerService : Service() {
                     notificationHelper.onHide()
                 }
                 ACTION_SLEEP_TIMER -> {
-                    player.stop()
+                    player.value!!.stop()
                     stopSelf()
                 }
                 ACTION_SET_SPEED ->
@@ -160,7 +179,7 @@ class MediaPlayerService : Service() {
 
     @Suppress("NAME_SHADOWING")
     private fun seekTo(msec: Long) {
-        val seekTo = msec + player.currentPosition
+        val seekTo = msec + player.value!!.currentPosition
         when (mediaPlayerState) {
             MediaPlayerState.STATE_PAUSED, STATE_PLAYING -> {
                 var seekTo = seekTo

@@ -13,7 +13,7 @@ interface MessagingRepository {
 
     fun sendToken(token: String): Either<Failure, Meta>
 
-    class ProfileRepositoryImpl(private val api: ApiService, private val storage: SharedPreferences) :
+    class MessagingRepositoryImpl(private val api: ApiService, private val storage: SharedPreferences) :
         BaseRepository(),
         MessagingRepository {
 

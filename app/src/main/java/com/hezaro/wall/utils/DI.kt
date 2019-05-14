@@ -39,7 +39,7 @@ val module: Module = module {
     single { SplashRepository.SplashRepositoryImpl(get()) } bind SplashRepository::class
 
     viewModel { MessagingViewModel(get()) }
-    single { MessagingRepository.ProfileRepositoryImpl(get()) } bind MessagingRepository::class
+    single { MessagingRepository.MessagingRepositoryImpl(get(), get()) } bind MessagingRepository::class
 
     viewModel { EpisodeViewModel(get()) }
     single { EpisodeRepository.EpisodeRepositoryImpl(get()) } bind EpisodeRepository::class

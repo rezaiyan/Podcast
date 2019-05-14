@@ -30,7 +30,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun progressbarMargin(i: Int = -1) {
         val params = progressBar().layoutParams as CoordinatorLayout.LayoutParams
-        if (params.bottomMargin == resources.getDimension(R.dimen.progress_margin).toInt()) {
+        if (params.bottomMargin == 0 || i >= 0) {
             val animator =
                 ValueAnimator.ofInt(
                     params.bottomMargin,
@@ -44,7 +44,6 @@ abstract class BaseActivity : AppCompatActivity() {
             animator.start()
         }
     }
-
     fun showProgress() {
         progressBar().show()
     }

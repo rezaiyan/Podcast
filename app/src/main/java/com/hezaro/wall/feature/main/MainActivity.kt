@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.iid.FirebaseInstanceId
 import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.Episode
@@ -56,28 +57,44 @@ class MainActivity : BaseActivity() {
     override fun layoutId() = R.layout.activity_main
     override fun progressBar(): ProgressBar = progressBar
     override fun fragmentContainer() = R.id.fragmentContainer
-
+    var serviceIsBounded = false
+    var errorOccurred = false
     private val serviceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName?) = sharedVm.serviceConnection(false)
+        override fun onServiceDisconnected(name: ComponentName?) {
+            serviceIsBounded = false
+            sharedVm.serviceConnection(false)
+        }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+
             val playerService = (service as MediaPlayerService.ServiceBinder).service
-            (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setPlayer(playerService.player)
+            playerService.player.observe(this@MainActivity, Observer {
+                (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setPlayer(it)
+
+            })
+            playerService.liveError.observe(this@MainActivity, Observer {
+                errorOccurred = it.first
+
+            })
+
             val currentEpisode = playerService.currentEpisode
             if (currentEpisode != null) {
-                sharedVm.lastEpisodeIsAlive(true)
+                sharedVm.isLoadedSingleEpisode(true)
                 sharedVm.notifyEpisode(Pair(RESUME_VIEW, currentEpisode))
-            } else {
-                playerService.serviceConnected()
             }
+
+            playerService.serviceConnected()
             sharedVm.serviceConnection(true)
             playerService.mediaPlayer.setPlaybackSpeed(vm.defaultSpeed())
+
+            serviceIsBounded = true
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
+
         sharedVm = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setBehavior()
@@ -91,18 +108,24 @@ class MainActivity : BaseActivity() {
             failure(failure, ::onFailure)
         }
 
-        sharedVm.resetPlaylist.observe(this,
-            Observer<Boolean> { sharedVm.resetPlaylist(it) })
-
         prepareGoogleSignIn()
 
         val userInfo = vm.userInfo()
         if (userInfo.email.isNotEmpty()) {
             onLogin(userInfo)
         }
+
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener { task ->
+                val token = task.result?.token
+                Timber.i("onNewIntent firebaseToken = $token")
+
+            }
     }
 
-    private fun bindService() {
+    fun bindService() {
+        serviceIsBounded = true
         bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
@@ -134,6 +157,7 @@ class MainActivity : BaseActivity() {
         super.onStop()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         unbindService(serviceConnection)
+        serviceIsBounded = false
     }
 
     override fun onStart() {
@@ -174,7 +198,7 @@ class MainActivity : BaseActivity() {
     private fun onLogin(it: UserInfo) = sharedVm.userLogin(it)
 
     private fun onFailure(failure: Failure) {
-        sharedVm.lastEpisodeIsAlive(false)
+        sharedVm.isLoadedSingleEpisode(false)
         when (failure) {
             is Failure.UserNotFound -> mGoogleSignInClient.signOut()
         }
@@ -207,7 +231,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun retrieveLatestEpisode() {
-        sharedVm.lastEpisodeIsAlive(true)
+        sharedVm.isLoadedSingleEpisode(true)
         vm.retrieveLatestEpisode()
     }
 

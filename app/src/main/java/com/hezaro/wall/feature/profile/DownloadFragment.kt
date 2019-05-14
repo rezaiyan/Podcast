@@ -63,7 +63,7 @@ class DownloadFragment : BaseFragment() {
                 )
             animator.addUpdateListener { valueAnimator ->
                 margin = valueAnimator.animatedValue as Int
-                parentLayout.requestLayout()
+                parentLayout?.requestLayout()
             }
             animator.duration = 100
             animator.start()

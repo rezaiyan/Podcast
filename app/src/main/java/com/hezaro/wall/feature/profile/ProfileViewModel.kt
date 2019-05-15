@@ -37,4 +37,6 @@ class ProfileViewModel(private val repository: ProfileRepository) : BaseViewMode
                 episodes.value = it
             }
     }
+
+    fun setThemeStatus(night: Boolean) = repository.setThemeStatus(night)
 }

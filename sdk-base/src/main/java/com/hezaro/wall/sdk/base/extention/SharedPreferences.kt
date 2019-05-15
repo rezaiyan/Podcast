@@ -2,6 +2,7 @@ package com.hezaro.wall.sdk.base.extention
 
 import android.content.SharedPreferences
 
+const val THEME = "com.hezaro.wall.theme"
 const val SPEED = "com.hezaro.wall.speed"
 const val USER_NAME = "com.hezaro.wall.username"
 const val AVATAR = "com.hezaro.wall.avatar"

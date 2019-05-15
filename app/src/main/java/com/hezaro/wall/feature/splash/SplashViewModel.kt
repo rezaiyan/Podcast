@@ -22,4 +22,6 @@ class SplashViewModel(private val repository: SplashRepository) : BaseViewModel(
             isExecute = false
             version.value = it
         }
+
+    fun isNight() = repository.isNight()
 }

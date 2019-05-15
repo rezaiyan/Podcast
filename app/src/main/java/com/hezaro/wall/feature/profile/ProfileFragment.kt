@@ -2,15 +2,23 @@ package com.hezaro.wall.feature.profile
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.Observer
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.hezaro.wall.R
+import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.adapter.PagerAdapter
+import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.utils.CircleTransform
 import kotlinx.android.synthetic.main.fragment_profile.avatar
 import kotlinx.android.synthetic.main.fragment_profile.email
+import kotlinx.android.synthetic.main.fragment_profile.moreProfile
 import kotlinx.android.synthetic.main.fragment_profile.tabLayout
 import kotlinx.android.synthetic.main.fragment_profile.username
 import kotlinx.android.synthetic.main.fragment_profile.viewpager
@@ -21,7 +29,7 @@ class ProfileFragment : BaseFragment() {
     override fun tag(): String = this::class.java.simpleName
 
     private val vm: ProfileViewModel by inject()
-
+    private val sharedVm: SharedViewModel by inject()
 
     companion object {
         fun getInstance() = ProfileFragment()
@@ -30,16 +38,39 @@ class ProfileFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestIdToken(getString(string.server_client_id))
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(context!!, gso)
+
+        val menu = PopupMenu(context!!, moreProfile)
+        menu.inflate(R.menu.profile)
+        val switchItem = menu.menu.findItem(R.id.switchTheme)
+        menu.setOnMenuItemClickListener {
+            if (it.itemId == R.id.signout) {
+                activity!!.onBackPressed()
+                googleSignInClient.signOut()
+            } else if (it.itemId == R.id.switchTheme) {
+                val isNight = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+                AppCompatDelegate.setDefaultNightMode(if (isNight) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
+                switchItem.isChecked = !isNight
+                vm.setThemeStatus(isNight)
+            }
+            true
+        }
+
+        moreProfile.setOnClickListener { menu.show() }
         with(vm) {
             observe(userInfo, ::onSuccess)
             failure(failure, ::onFailure)
             userInfo()
         }
         viewpager.adapter =
-            PagerAdapter(childFragmentManager, arrayOf(), arrayOf("دانلود شده ها"))
+            PagerAdapter(childFragmentManager, arrayOf(DownloadFragment.getInstance()), arrayOf("دانلود شده ها"))
         tabLayout.setupWithViewPager(viewpager)
+        sharedVm.downloadCount.observe(this, Observer { if (it > 0) tabLayout.visibility = View.VISIBLE })
     }
-
 
     private fun onSuccess(userInfo: UserInfo) {
         userInfo.let {

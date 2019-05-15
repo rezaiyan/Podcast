@@ -25,17 +25,15 @@ abstract class BaseActivity : AppCompatActivity() {
     abstract fun fragment(): BaseFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         addFragment(fragment())
     }
 
-    fun progressbarMargin(i: Int = -1) {
+    fun progressbarMargin(margin: Int = -1) {
         val params = progressBar().layoutParams as CoordinatorLayout.LayoutParams
-        if (params.bottomMargin == 0 || i >= 0) {
+        if (params.bottomMargin != margin) {
             val animator =
-                ValueAnimator.ofInt(
-                    params.bottomMargin,
-                    resources.getDimension(if (i == 0) R.dimen.progress_margin_8 else R.dimen.progress_margin).toInt()
-                )
+                ValueAnimator.ofInt(params.bottomMargin, margin)
             animator.addUpdateListener { valueAnimator ->
                 params.bottomMargin = valueAnimator.animatedValue as Int
                 progressBar().requestLayout()

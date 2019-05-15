@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import com.hezaro.wall.data.local.EpisodeDao
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.UserInfo
-import com.hezaro.wall.data.model.Version
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.data.utils.BaseRepository
 import com.hezaro.wall.sdk.base.Either
@@ -19,7 +18,6 @@ import com.hezaro.wall.sdk.base.extention.put
 interface MainRepository {
 
     fun login(idToken: String): Either<Failure, UserInfo>
-    fun version(): Either<Failure, Version>
     fun retrieveLatestPlayedEpisode(): Episode?
     fun getUserInfo(): UserInfo
 
@@ -38,8 +36,6 @@ interface MainRepository {
         )
 
         override fun retrieveLatestPlayedEpisode(): Episode? = database.getLastPlayedEpisode()
-
-        override fun version(): Either<Failure, Version> = request(api.version()) { it.response }
 
         override fun login(idToken: String) =
             request(api.login(idToken)) {

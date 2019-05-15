@@ -17,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.iid.FirebaseInstanceId
 import com.hezaro.wall.R
 import com.hezaro.wall.R.string
@@ -68,8 +67,12 @@ class MainActivity : BaseActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
 
             val playerService = (service as MediaPlayerService.ServiceBinder).service
+            (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setPlayer(playerService.mediaPlayer.player)
+
             playerService.player.observe(this@MainActivity, Observer {
-                (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setPlayer(it)
+                (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setPlayer(
+                    playerService.mediaPlayer.player
+                )
 
             })
             playerService.liveError.observe(this@MainActivity, Observer {
@@ -93,6 +96,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        actionBar?.hide()
         setContentView(layoutId())
 
         sharedVm = ViewModelProviders.of(this).get(SharedViewModel::class.java)
@@ -124,9 +128,8 @@ class MainActivity : BaseActivity() {
             }
     }
 
-
     fun search() {
-        sharedVm.collapseSheet.value = BottomSheetBehavior.STATE_COLLAPSED
+        sharedVm.collapsePlayer()
         addFragment(SearchFragment())
     }
 
@@ -136,7 +139,7 @@ class MainActivity : BaseActivity() {
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         } else {
-            sharedVm.collapseSheet.value = BottomSheetBehavior.STATE_COLLAPSED
+            sharedVm.collapsePlayer()
             addFragment(ProfileFragment.getInstance())
         }
     }
@@ -149,6 +152,7 @@ class MainActivity : BaseActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
+    fun signOut() = mGoogleSignInClient.signOut()!!
     fun bindService() {
         serviceIsBounded = true
         bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
@@ -158,6 +162,7 @@ class MainActivity : BaseActivity() {
         serviceIsBounded = false
         unbindService(serviceConnection)
     }
+
     override fun onStop() {
         super.onStop()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
@@ -204,13 +209,13 @@ class MainActivity : BaseActivity() {
     private fun onFailure(failure: Failure) {
         sharedVm.isLoadedSingleEpisode(false)
         when (failure) {
-            is Failure.UserNotFound -> mGoogleSignInClient.signOut()
+            is Failure.UserNotFound -> signOut()
         }
     }
 
     override fun onBackPressed() {
-        if (sharedVm.sheetState.value == BottomSheetBehavior.STATE_EXPANDED)
-            sharedVm.collapseSheet.value = BottomSheetBehavior.STATE_COLLAPSED
+        if (sharedVm.isPlayerExpand())
+            sharedVm.collapsePlayer()
         else {
             super.onBackPressed()
         }

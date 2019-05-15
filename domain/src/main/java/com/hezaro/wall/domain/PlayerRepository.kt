@@ -22,6 +22,7 @@ interface PlayerRepository {
     fun likeAction(like: Boolean, id: Long)
     fun bookmarkAction(bookmark: Boolean, id: Long)
     fun userIsLogin(): Boolean
+    fun updateEpisode(it: Episode)
 
     class PlayerRepositoryImpl(
         private val storage: SharedPreferences,
@@ -30,6 +31,10 @@ interface PlayerRepository {
     ) :
         BaseRepository(),
         PlayerRepository {
+
+        override fun updateEpisode(it: Episode) =
+            database.update(it.id, it.isBookmarked, it.likes, it.isDownloaded, it.lastPlayed, it.state)
+
 
         override fun userIsLogin() = storage.get(EMAIL, "").isNotEmpty()
 

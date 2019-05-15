@@ -22,6 +22,16 @@ interface EpisodeDao {
     @Query("UPDATE episode SET isDownloaded = 0 WHERE lastPlayed = 1 AND id = :id ")
     fun update(id: Long): Int
 
+    @Query("UPDATE episode SET isBookmarked = :bookmarked,likes = :likes,isDownloaded = :isDownloaded,lastPlayed = :lastPlayed,state = :state WHERE id = :id ")
+    fun update(
+        id: Long,
+        bookmarked: Boolean,
+        likes: Long,
+        isDownloaded: Int,
+        lastPlayed: Int,
+        state: Long
+    )
+
     @Transaction
     fun removeDownloaded(episode: Episode) {
 

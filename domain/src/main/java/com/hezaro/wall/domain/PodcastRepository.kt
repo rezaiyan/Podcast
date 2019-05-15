@@ -8,7 +8,7 @@ import com.hezaro.wall.sdk.base.exception.Failure
 
 interface PodcastRepository {
 
-    fun getEpisodes(podcastId: Int): Either<Failure, ArrayList<Episode>>
+    fun getEpisodes(podcastId: Long): Either<Failure, ArrayList<Episode>>
 
     class PodcastRepositoryImpl(
         private val api: ApiService
@@ -16,7 +16,7 @@ interface PodcastRepository {
         BaseRepository(),
         PodcastRepository {
 
-        override fun getEpisodes(podcastId: Int): Either<Failure, ArrayList<Episode>> =
+        override fun getEpisodes(podcastId: Long): Either<Failure, ArrayList<Episode>> =
             request(api.episode(podcastId)) { it.response }
     }
 }

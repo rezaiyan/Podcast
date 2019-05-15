@@ -1,6 +1,7 @@
 package com.hezaro.wall.utils
 
 import android.preference.PreferenceManager
+import com.hezaro.wall.data.utils.provideHttpClient
 import com.hezaro.wall.data.utils.provideRetrofit
 import com.hezaro.wall.domain.EpisodeRepository
 import com.hezaro.wall.domain.ExploreRepository
@@ -36,7 +37,7 @@ val module: Module = module {
     viewModel { SharedViewModel() }
 
     viewModel { SplashViewModel(get()) }
-    single { SplashRepository.SplashRepositoryImpl(get()) } bind SplashRepository::class
+    single { SplashRepository.SplashRepositoryImpl(get(), get()) } bind SplashRepository::class
 
     viewModel { MessagingViewModel(get()) }
     single { MessagingRepository.MessagingRepositoryImpl(get(), get()) } bind MessagingRepository::class
@@ -64,7 +65,8 @@ val module: Module = module {
     single { PlayerDownloadHelper(androidApplication()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
 
-    single { provideRetrofit() }
+    single { provideRetrofit(get()) }
+    single { provideHttpClient(get()) }
 
 
     single { AppDatabase.getInstance(androidApplication()) }

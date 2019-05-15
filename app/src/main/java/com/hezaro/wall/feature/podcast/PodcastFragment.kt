@@ -1,6 +1,8 @@
 package com.hezaro.wall.feature.podcast
 
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -16,6 +18,7 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.utils.PARAM_PODCAST
 import com.hezaro.wall.sdk.platform.utils.PullDismissLayout
 import kotlinx.android.synthetic.main.fragment_podcast.podcastCover
+import kotlinx.android.synthetic.main.fragment_podcast.podcastDescription
 import kotlinx.android.synthetic.main.fragment_podcast.podcastTitle
 import kotlinx.android.synthetic.main.fragment_podcast.podcasterName
 import kotlinx.android.synthetic.main.fragment_podcast.pullLayout
@@ -55,13 +58,25 @@ class PodcastFragment : BaseFragment(), PullDismissLayout.Listener {
             podcastTitle.text = it.title
             podcasterName.text = it.creator
             podcastCover.load(it.cover)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                podcastDescription.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                podcastDescription.text = Html.fromHtml(it.description)
+            }
         }
 
         with(vm) {
             observe(episodes, ::onSuccess)
             failure(failure, ::onFailure)
+            observe(progress, ::onProgress)
             getEpisodes(podcast.id)
         }
+    }
+
+    private fun onProgress(isProgress: Boolean) {
+        if (isProgress)
+            showProgress()
+        else hideProgress()
     }
 
     private fun onSuccess(episodes: ArrayList<Episode>) {
@@ -72,6 +87,8 @@ class PodcastFragment : BaseFragment(), PullDismissLayout.Listener {
                 arrayOf("اپیزودها ($episodeCount)")
             )
         tabLayout.setupWithViewPager(viewpager)
+        if (episodes.size > 0)
+            tabLayout.visibility = View.VISIBLE
     }
 
     private fun onFailure(failure: Failure) {

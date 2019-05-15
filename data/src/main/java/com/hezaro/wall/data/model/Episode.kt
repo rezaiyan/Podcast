@@ -2,6 +2,7 @@ package com.hezaro.wall.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -9,12 +10,17 @@ import com.google.gson.annotations.SerializedName
 import com.hezaro.wall.data.model.Status.Companion.NEW
 import com.hezaro.wall.data.model.Status.Companion.PlayStatus
 
+@Keep
 @Entity(tableName = "episode", indices = [Index("id", unique = true)])
 class Episode(
     @PrimaryKey(autoGenerate = true)
+    @SerializedName("id")
     var id: Long = 0,
+    @SerializedName("title")
     var title: String = "",
+    @SerializedName("description")
     var description: String = "",
+    @SerializedName("creator")
     var creator: String = "",
     @SerializedName("likes_count")
     var likes: Long = 0,
@@ -24,9 +30,15 @@ class Episode(
     var isLiked: Boolean = false,
     @SerializedName("is_bookmarked")
     var isBookmarked: Boolean = false,
+    @SerializedName("cover")
     var cover: String = "",
+    @SerializedName("source")
     var source: String = "",
+    @SerializedName("duration")
     var duration: String = "0",
+    @SerializedName("length")
+    var length: Long = 0,
+    @SerializedName("state")
     var state: Long = 0,
     @SerializedName("mime_type")
     var mimeType: String = "",
@@ -34,8 +46,8 @@ class Episode(
     var publishedTime: Long = 0,
     @SerializedName("comments_count")
     var commentCount: Long = 0,
+    @SerializedName("podcast")
     var podcast: Podcast = Podcast(),
-    var size: Long = 0,
     var lastPlayed: Int = 0,
     var isDownloaded: Int = 0,
     @PlayStatus
@@ -56,8 +68,33 @@ class Episode(
         }
     }
 
+    fun getFormattedDuration() = formatSeconds(if (duration.isNotEmpty()) duration.toInt() else 0)
     fun getView() = formatLongNumber(views)
     fun getLike() = formatLongNumber(likes)
+
+    private fun formatSeconds(timeInSeconds: Int): String {
+        if (timeInSeconds > 0) {
+            val hours = timeInSeconds / 3600
+            val secondsLeft = timeInSeconds - hours * 3600
+            val minutes = secondsLeft / 60
+            val seconds = secondsLeft - minutes * 60
+
+            var formattedTime = ""
+            if (hours < 10)
+                formattedTime += "0"
+            formattedTime += "$hours:"
+
+            if (minutes < 10)
+                formattedTime += "0"
+            formattedTime += "$minutes:"
+
+            if (seconds < 10)
+                formattedTime += "0"
+            formattedTime += seconds
+
+            return formattedTime
+        } else return ""
+    }
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
@@ -70,12 +107,12 @@ class Episode(
         cover = parcel.readString()!!
         source = parcel.readString()!!
         duration = parcel.readString()!!
+        length = parcel.readLong()
         state = parcel.readLong()
         mimeType = parcel.readString()!!
         publishedTime = parcel.readLong()
         commentCount = parcel.readLong()
         podcast = parcel.readParcelable(Podcast::class.java.classLoader)!!
-        size = parcel.readLong()
         lastPlayed = parcel.readInt()
         isDownloaded = parcel.readInt()
         playStatus = parcel.readInt()
@@ -93,12 +130,12 @@ class Episode(
         parcel.writeString(cover)
         parcel.writeString(source)
         parcel.writeString(duration)
+        parcel.writeLong(length)
         parcel.writeLong(state)
         parcel.writeString(mimeType)
         parcel.writeLong(publishedTime)
         parcel.writeLong(commentCount)
         parcel.writeParcelable(podcast, flags)
-        parcel.writeLong(size)
         parcel.writeInt(lastPlayed)
         parcel.writeInt(isDownloaded)
         parcel.writeInt(playStatus)
@@ -121,7 +158,6 @@ class Episode(
             publishedTime = it.publishedTime
             commentCount = it.commentCount
             podcast = it.podcast
-            size = it.size
             lastPlayed = it.lastPlayed
             isDownloaded = it.isDownloaded
             playStatus = it.playStatus
@@ -132,6 +168,7 @@ class Episode(
     override fun hashCode(): Int {
         return super.hashCode()
     }
+
     override fun equals(other: Any?): Boolean {
         other?.let {
             return (it is Episode) && (it.id == id)

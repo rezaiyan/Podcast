@@ -192,7 +192,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
                 )
             animator.addUpdateListener { valueAnimator ->
                 params.bottomMargin = valueAnimator.animatedValue as Int
-                exploreList.requestLayout()
+                exploreList?.requestLayout()
             }
             animator.duration = 100
             animator.start()

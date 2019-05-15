@@ -1,12 +1,12 @@
 package com.hezaro.wall.data.model
 
 import androidx.annotation.IntDef
+import androidx.annotation.Keep
 import androidx.annotation.StringDef
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
-
-
+@Keep
 class Status{
 
 companion object {

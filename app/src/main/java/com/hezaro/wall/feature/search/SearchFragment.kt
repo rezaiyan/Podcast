@@ -48,6 +48,10 @@ class SearchFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         sharedVm.listMargin.observe(this@SearchFragment, Observer { updateMarginList(it) })
+        sharedVm.episode.observe(this@SearchFragment, Observer {
+            if (it.first == UPDATE_VIEW)
+                (searchList.adapter as EpisodeAdapter).updateRow(it.second)
+        })
         with(vm) {
             observe(search, ::onSearch)
             observe(podcast, ::onPodcast)
@@ -100,18 +104,18 @@ class SearchFragment : BaseFragment() {
             .subscribe { text -> vm.doSearch(text) }
     }
 
-    private fun updateMarginList(i: Int = -1) {
-        var bottomMargin = (searchList.layoutParams as FrameLayout.LayoutParams).bottomMargin
 
-        if (bottomMargin == 0 || i >= 0) {
+    private fun updateMarginList(i: Int = -1) {
+        val params = searchList.layoutParams as FrameLayout.LayoutParams
+        if (params.bottomMargin == 0 || i >= 0) {
             val animator =
                 ValueAnimator.ofInt(
-                    bottomMargin,
+                    params.bottomMargin,
                     if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
                 )
             animator.addUpdateListener { valueAnimator ->
-                bottomMargin = valueAnimator.animatedValue as Int
-                searchList.requestLayout()
+                params.bottomMargin = valueAnimator.animatedValue as Int
+                searchList?.requestLayout()
             }
             animator.duration = 100
             animator.start()

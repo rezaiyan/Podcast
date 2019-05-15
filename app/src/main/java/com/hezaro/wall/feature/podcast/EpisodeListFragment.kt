@@ -12,6 +12,7 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE_LIST
 import com.hezaro.wall.utils.EndlessLayoutManager
@@ -35,12 +36,18 @@ class EpisodeListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
+        sharedVm.episode.observe(this@EpisodeListFragment, Observer {
+            if (it.first == UPDATE_VIEW)
+                (recyclerList.adapter as EpisodeAdapter).updateRow(it.second)
+        })
 
         val listMargin = resources.getDimension(R.dimen.mini_player_height).toInt()
         val episodes = arguments?.getParcelableArrayList<Episode>(PARAM_EPISODE_LIST)
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(episodes!!, true) { e, _ ->
+                sharedVm.isLoadedSingleEpisode(true)
+                sharedVm.resetPlaylist(true)
                 activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
                 listMargin(listMargin)
             }
@@ -56,7 +63,7 @@ class EpisodeListFragment : BaseFragment() {
                 ValueAnimator.ofInt(margin, i)
             animator.addUpdateListener { valueAnimator ->
                 margin = valueAnimator.animatedValue as Int
-                parentLayout.requestLayout()
+                parentLayout?.requestLayout()
             }
             animator.duration = 100
             animator.start()

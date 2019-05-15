@@ -5,7 +5,7 @@ object App {
     val minSdkTv = 21
     val targetSdk = 28
     val versionCode = 1
-    val versionName = "1.0"
+    val versionName = "1.0.0-alpha01"
 }
 
 object GradleDir {
@@ -35,11 +35,11 @@ object Modules {
 object Versions {
     val gradle = "3.2.1"
 
-    val appcompat = "1.0.0"
+    val appcompat = "1.1.0-alpha05"
     val archComponents_version = "2.0.0-rc01"
 
     val constraint = "1.1.2"
-    val design = "1.0.0"
+    val design = "1.1.0-alpha05"
     val cardview = "1.0.0"
     val recyclerview = "1.0.0"
     val androidx = "1.0.0-rc01"

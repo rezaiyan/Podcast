@@ -75,12 +75,25 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <TextView
+            android:id="@+id/podcastDescription"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_16"
+            android:fontFamily="@font/traffic"
+            android:gravity="right"
+            android:lineSpacingExtra="1.3dp"
+            android:paddingBottom="@dimen/margin_20"
+            android:paddingTop="@dimen/margin_10"
+            android:textColor="@color/colorTextPrimary"
+            tools:text="عنوان تست" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:tabIndicatorColor="@color/colorPrimary"
+            android:visibility="invisible"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorTextPrimary"
             app:tabTextAppearance="@style/TrafficTextAppearance"

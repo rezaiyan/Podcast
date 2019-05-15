@@ -1,9 +1,12 @@
 package com.hezaro.wall.data.model
 
 import android.os.Parcel
+import androidx.annotation.Keep
 
+@Keep
 class Playlist(private val list: ArrayList<Episode>) : KParcelable {
 
+    fun getItemCount() = list.size
     fun getItems() = list
     fun addItem(episode: Episode) = list.add(episode)
     fun getItem(index: Int) = list[index]

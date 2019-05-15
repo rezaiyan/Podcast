@@ -223,7 +223,8 @@ class DownloadTracker(
             if (!trackKeys.isEmpty()) {
                 builder.setView(dialogView)
             }
-            builder.create().show()
+            start()
+//            builder.create().show()
         }
 
         override fun onPrepareError(helper: DownloadHelper, e: IOException) {
@@ -231,6 +232,9 @@ class DownloadTracker(
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {
+        }
+
+        fun start() {
             val selectedTrackKeys = ArrayList<TrackKey>()
             for (i in 0 until representationList.childCount) {
                 if (representationList.isItemChecked(i)) {

@@ -2,6 +2,7 @@ package com.hezaro.wall.feature.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.UserInfo
 
@@ -18,6 +19,7 @@ class SharedViewModel : ViewModel() {
     val playerIsOpen = MutableLiveData<Boolean>()
     val isServiceConnected = MutableLiveData<Boolean>()
     val isLoadedSingleEpisode = MutableLiveData<Boolean>()
+    val downloadCount = MutableLiveData<Int>()
 
     fun listMargin(i: Int) {
         listMargin.value = i
@@ -29,6 +31,10 @@ class SharedViewModel : ViewModel() {
 
     fun resetPlaylist(it: Boolean?) {
         resetPlaylist.value = it
+    }
+
+    fun setDownloadSize(it: Int) {
+        downloadCount.value = it
     }
 
     fun userLogin(it: UserInfo) {
@@ -45,6 +51,12 @@ class SharedViewModel : ViewModel() {
 
     fun updateSheetState(it: Int) {
         sheetState.value = it
+    }
+
+    fun isPlayerExpand() = sheetState.value == BottomSheetBehavior.STATE_EXPANDED
+
+    fun collapsePlayer() {
+        collapseSheet.value = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun playerIsOpen(b: Boolean) {

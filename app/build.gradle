@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+def keystorePropertiesFile = file("/home/ali/.gradle/gradle.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -18,10 +22,23 @@ android {
         versionName App.versionName
         testInstrumentationRunner TestLibraries.androidJUnitRunner
     }
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['keystore_storeFile'])
+            storePassword "hezaro"
+            keyAlias keystoreProperties['keystore_keyAlias']
+            keyPassword "hezaro"
+
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

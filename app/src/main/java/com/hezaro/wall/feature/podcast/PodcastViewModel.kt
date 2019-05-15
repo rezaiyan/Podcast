@@ -11,7 +11,7 @@ class PodcastViewModel(private val repository: PodcastRepository) : BaseViewMode
 
     val episodes = MutableLiveData<ArrayList<Episode>>()
 
-    fun getEpisodes(podcastId: Int) =
+    fun getEpisodes(podcastId: Long) =
         launch(job) {
             isExecute = true
             repository.getEpisodes(podcastId).either(::onFailure, ::onSuccess)

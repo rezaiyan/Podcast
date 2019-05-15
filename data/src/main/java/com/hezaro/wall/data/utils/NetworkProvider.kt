@@ -2,8 +2,8 @@ package com.hezaro.wall.data.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.preference.PreferenceManager
 import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.extention.JWT
@@ -20,25 +20,26 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit.SECONDS
 
-fun ModuleDefinition.provideRetrofit(): ApiService {
+fun provideRetrofit(okHttpClient: OkHttpClient): ApiService {
     return Retrofit.Builder()
         .baseUrl("http://wall.hezaro.com")
-        .client(provideHttpClient())
+        .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build().create(ApiService::class.java)
 }
 
-fun ModuleDefinition.provideHttpClient(): OkHttpClient {
-    val jwt = PreferenceManager.getDefaultSharedPreferences(androidContext()).get(JWT, "")
+fun ModuleDefinition.provideHttpClient(storage: SharedPreferences): OkHttpClient {
+    val jwt = storage.get(JWT, "")
     val clientBuilder = OkHttpClient.Builder()
         .cache(provideCache())
         .addNetworkInterceptor(networkCacheProvider())
         .addInterceptor(offlineCacheProvider())
         .readTimeout(5, SECONDS)
         .connectTimeout(10, SECONDS)
+        .addInterceptor(setHeader("User-Agent", androidContext().packageName))
         .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
-        .addInterceptor(setHeader("Authorization", "Barear $jwt"))
+        .addInterceptor(setHeader("Authorization", "Bearer $jwt"))
 
     val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
         if (message.isJson())

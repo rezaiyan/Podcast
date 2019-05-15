@@ -11,6 +11,7 @@ import com.hezaro.wall.R
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.utils.EndlessLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.parentLayout
@@ -31,10 +32,15 @@ class DownloadFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
+        sharedVm.episode.observe(this@DownloadFragment, Observer {
+            if (it.first == UPDATE_VIEW)
+                (recyclerList.adapter as EpisodeAdapter).updateRow(it.second)
+        })
 
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(isDownloadList = true) { e, _ ->
+                sharedVm.isLoadedSingleEpisode(true)
                 sharedVm.resetPlaylist(true)
                 activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
                 liftList()
@@ -44,6 +50,7 @@ class DownloadFragment : BaseFragment() {
         with(vm) {
             observe(episodes) {
                 if ((recyclerList.adapter as EpisodeAdapter).itemCount != it.size) {
+                    sharedVm.setDownloadSize(it.size)
                     (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
                 }
             }

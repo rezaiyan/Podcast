@@ -2,11 +2,12 @@ package com.hezaro.wall.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.Keep
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.Date
 
-
+@Keep
 interface KParcelable : Parcelable {
     override fun describeContents() = 0
     override fun writeToParcel( dest: Parcel, flags: Int)

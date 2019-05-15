@@ -160,7 +160,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
     }
 
     override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
-        if (trackGroups!!.isEmpty) {
+        if (trackGroups!!.isEmpty && playlist!!.getItemCount() > 0) {
             episode = playlist!!.getItem(exoPlayer!!.currentWindowIndex)
             broadcastEpisode(episode!!)
         }
@@ -174,6 +174,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
             ) {
                 Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
+                Timber.tag("MediaPlayer").i("episode.state (SEEK) = ${episode.state}")
                 exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
                 exoPlayer!!.playWhenReady = true
             }
@@ -277,26 +278,30 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
 
     override fun onPlayerError(error: ExoPlaybackException) {
         errorOccurred = true
-        stopPlayback()
-        onDestroy()
-        init()
-        concatPlaylist(playlist!!.getItems())
-        var errorString = ""
+
+        var errorString = "خطایی رخ داده است"
         when (error.type) {
             ExoPlaybackException.TYPE_RENDERER -> {
                 errorString = "TYPE_RENDERER ${error.rendererException.message}"
             }
             ExoPlaybackException.TYPE_SOURCE -> {
-                if (error.sourceException.message!!.contains(Regex("([300-900])\\w+"))) {
+                val message = error.sourceException.message!!
+                val errorCode = "[3-5][0-3][0-9]\\b".toRegex().find(message)?.value
+
+                if (!errorCode.isNullOrEmpty()) {
+                    stopPlayback()
+                    onDestroy()
+                    init()
+                    concatPlaylist(playlist!!.getItems())
                     errorString = "امکان پخش این اپیزود وجود ندارد"
-                    Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
-                }
+                } else if (message.contains("Unable to connect"))
+                    errorString = "اینترنت دردسترس نیست"
             }
             ExoPlaybackException.TYPE_UNEXPECTED -> {
                 errorString = "TYPE_UNEXPECTED ${error.unexpectedException.message}"
             }
-
         }
+        Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
         Timber.w(error, "Player error encountered -> $errorString")
     }
 

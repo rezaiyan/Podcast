@@ -77,8 +77,8 @@ class MediaPlayerService : Service() {
                 errorOccurred: Boolean
             ) {
 
-                player.value = p!!
-                liveError.value = Pair(errorOccurred, p)
+                player.value = mediaPlayer.player
+                liveError.value = Pair(errorOccurred, mediaPlayer.player)
             }
         })
     }

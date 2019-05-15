@@ -23,8 +23,8 @@ interface ApiService {
     @GET("$BASE/episodes")
     fun explore(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
-    @GET("$BASE/episodes")
-    fun episode(@Query("podcast_id") podcast_id: Int, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
+    @GET("$BASE/podcast/{episode_id}/episodes")
+    fun episode(@Path("episode_id") episode_id: Long, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
     @GET("$BASE/podcasts")
     fun podcast(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
@@ -43,14 +43,12 @@ interface ApiService {
     @DELETE("$BASE/likes/{episode_id}")
     fun disLike(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 
-    @FormUrlEncoded
     @POST("$BASE/likes/{episode_id}")
     fun like(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 
     @DELETE("$BASE/bookmarks/{episode_id}")
     fun unBookmark(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 
-    @FormUrlEncoded
     @POST("$BASE/bookmarks/{episode_id}")
     fun bookmark(@Path("episode_id") episode_id: Long): Call<Response<Any>>
 

@@ -11,6 +11,7 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.utils.RoundRectTransform
 import kotlinx.android.synthetic.main.item_episode.view.bookmarkStatus
 import kotlinx.android.synthetic.main.item_episode.view.downloadStatus
+import kotlinx.android.synthetic.main.item_episode.view.duration
 import kotlinx.android.synthetic.main.item_episode.view.likeCount
 import kotlinx.android.synthetic.main.item_episode.view.logo
 import kotlinx.android.synthetic.main.item_episode.view.playedCount
@@ -52,8 +53,9 @@ class EpisodeAdapter(
 
     fun updateRow(e: Episode) {
         if (episodes.contains(e)) {
-            e.update(e)
-            notifyItemChanged(episodes.indexOf(e))
+            val index = episodes.indexOf(e)
+            episodes[index] = e
+            notifyItemChanged(index)
         }
     }
 
@@ -69,11 +71,12 @@ class EpisodeAdapter(
                         it.downloadStatus.visibility = View.VISIBLE
                         it.downloadStatus.progress = 0.74f
                     } else it.downloadStatus.visibility = View.INVISIBLE
-                    if (isLiked) {
+                    if (isBookmarked) {
                         it.bookmarkStatus.visibility = View.VISIBLE
                         it.bookmarkStatus.progress = 1.0f
                     } else it.bookmarkStatus.visibility = View.INVISIBLE
                     it.title.text = title
+                    it.duration.text = getFormattedDuration()
                     it.playedCount.text = getView()
                     it.likeCount.text = getLike()
                     it.podcaster.text = podcast.title

@@ -31,4 +31,8 @@ class PlayerViewModel(private val repository: PlayerRepository) : BaseViewModel(
         }
 
     fun userIsLogin() = repository.userIsLogin()
+
+    fun updateEpisode(it: Episode) = launch(job) {
+        repository.updateEpisode(it)
+    }
 }

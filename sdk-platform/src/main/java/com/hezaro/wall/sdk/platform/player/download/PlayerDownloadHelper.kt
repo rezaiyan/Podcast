@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.android.exoplayer2.offline.DownloadManager
 import com.google.android.exoplayer2.offline.DownloaderConstructorHelper
 import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
@@ -33,15 +33,20 @@ class PlayerDownloadHelper(context: Context) {
      * Returns a [DataSource.Factory].
      */
     fun buildDataSourceFactory(): DataSource.Factory {
-        val upstreamFactory = DefaultDataSourceFactory(context, buildHttpDataSourceFactory())
-        return buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache())
+        return buildReadOnlyCacheDataSource(buildHttpDataSourceFactory(), getDownloadCache())
     }
 
     /**
      * Returns a [HttpDataSource.Factory].
      */
-    private fun buildHttpDataSourceFactory(): HttpDataSource.Factory {
-        return DefaultHttpDataSourceFactory(userAgent)
+    private fun buildHttpDataSourceFactory(): DefaultHttpDataSourceFactory {
+        return DefaultHttpDataSourceFactory(
+            userAgent,
+            null,
+            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+            true
+        )
     }
 
     fun getDownloadManager(): DownloadManager? {
@@ -103,7 +108,7 @@ class PlayerDownloadHelper(context: Context) {
     }
 
     private fun buildReadOnlyCacheDataSource(
-        upstreamFactory: DefaultDataSourceFactory, cache: Cache
+        upstreamFactory: DefaultHttpDataSourceFactory, cache: Cache
     ): CacheDataSourceFactory {
         return CacheDataSourceFactory(
             cache,

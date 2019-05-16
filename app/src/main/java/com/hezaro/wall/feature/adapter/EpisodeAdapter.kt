@@ -9,12 +9,11 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.adapter.EpisodeAdapter.ItemHolder
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.utils.RoundRectTransform
+import ir.smartlab.persindatepicker.util.PersianCalendar
 import kotlinx.android.synthetic.main.item_episode.view.bookmarkStatus
+import kotlinx.android.synthetic.main.item_episode.view.date
 import kotlinx.android.synthetic.main.item_episode.view.downloadStatus
-import kotlinx.android.synthetic.main.item_episode.view.duration
-import kotlinx.android.synthetic.main.item_episode.view.likeCount
 import kotlinx.android.synthetic.main.item_episode.view.logo
-import kotlinx.android.synthetic.main.item_episode.view.playedCount
 import kotlinx.android.synthetic.main.item_episode.view.podcaster
 import kotlinx.android.synthetic.main.item_episode.view.title
 import timber.log.Timber
@@ -61,6 +60,8 @@ class EpisodeAdapter(
 
     inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        private val calendar = PersianCalendar()
+
         fun bind(episode: Episode) {
             itemView.let {
 
@@ -76,9 +77,8 @@ class EpisodeAdapter(
                         it.bookmarkStatus.progress = 1.0f
                     } else it.bookmarkStatus.visibility = View.INVISIBLE
                     it.title.text = title
-                    it.duration.text = getFormattedDuration()
-                    it.playedCount.text = getView()
-                    it.likeCount.text = getLike()
+                    calendar.timeInMillis = publishedTime
+                    it.date.text = calendar.persianLongDate
                     it.podcaster.text = podcast.title
                     it.setOnClickListener { onItemClick(this, adapterPosition) }
 

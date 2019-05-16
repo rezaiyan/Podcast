@@ -18,6 +18,7 @@
 
 
         <TextView
+            android:layout_marginTop="@dimen/margin_20"
             android:id="@+id/title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
             android:layout_width="match_parent"
@@ -26,9 +27,8 @@
             android:ellipsize="end"
             android:fontFamily="@font/traffic"
             android:gravity="right"
-            android:lineSpacingExtra="1.4dp"
+            android:lineSpacingExtra="1.2dp"
             android:maxLines="2"
-            android:minLines="2"
             android:textAlignment="gravity"
             android:textColor="@color/colorTextPrimary"
             tools:ignore="RtlHardcoded"
@@ -42,7 +42,6 @@
             android:ellipsize="start"
             android:fontFamily="@font/traffic"
             android:gravity="right"
-            android:maxLines="3"
             android:singleLine="true"
             android:textColor="@color/colorTextSecondary"
             tools:text="@tools:sample/lorem/random" />
@@ -78,55 +77,31 @@
                 app:lottie_renderMode="automatic" />
 
 
-            <ImageView
-                android:id="@+id/playedCountIcon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="@dimen/margin_8"
-                android:background="@drawable/bg_speed"
-                android:padding="2dp"
-                android:src="@drawable/ic_play" />
-
-            <TextView
-                android:id="@+id/playedCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_4"
-                android:maxLength="4"
-                android:minWidth="30dp"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="12sp"
-                tools:text="432" />
-
-            <ImageView
-                android:id="@+id/voteCountIcon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="@dimen/margin_16"
-                android:src="@drawable/ic_favorite" />
-
-            <TextView
-                android:id="@+id/likeCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_4"
-                android:maxLength="4"
-                android:minWidth="30dp"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="12sp"
-                tools:text="432" />
-
-            <TextView
-                android:id="@+id/duration"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_4"
-                android:gravity="center"
-                android:maxLength="20"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="12sp"
-                android:visibility="invisible"
-                tools:text="12:59:59" />
+                android:gravity="end"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/traffic"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    tools:text="۲۶ اردیبهشت ۹۸" />
+
+
+                <ImageView
+                    android:id="@+id/dateIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="@dimen/margin_8"
+                    android:src="@drawable/ic_event" />
+
+            </LinearLayout>
 
 
         </LinearLayout>

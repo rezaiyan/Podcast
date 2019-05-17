@@ -40,7 +40,7 @@ class DownloadFragment : BaseFragment() {
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(isDownloadList = true) { e, _ ->
-                sharedVm.isLoadedSingleEpisode(true)
+                sharedVm.isPlaying(true)
                 sharedVm.resetPlaylist(true)
                 activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
                 liftList()

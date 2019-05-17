@@ -34,10 +34,6 @@ class Episode(
     var cover: String = "",
     @SerializedName("source")
     var source: String = "",
-    @SerializedName("duration")
-    var duration: String = "0",
-    @SerializedName("length")
-    var length: Long = 0,
     @SerializedName("state")
     var state: Long = 0,
     @SerializedName("mime_type")
@@ -68,7 +64,7 @@ class Episode(
         }
     }
 
-    fun getFormattedDuration() = formatSeconds(if (duration.isNotEmpty()) duration.toInt() else 0)
+    fun getFormattedDuration() = formatSeconds(0)
     fun getView() = formatLongNumber(views)
     fun getLike() = formatLongNumber(likes)
 
@@ -106,8 +102,6 @@ class Episode(
         isLiked = parcel.readBoolean()
         cover = parcel.readString()!!
         source = parcel.readString()!!
-        duration = parcel.readString()!!
-        length = parcel.readLong()
         state = parcel.readLong()
         mimeType = parcel.readString()!!
         publishedTime = parcel.readLong()
@@ -129,8 +123,6 @@ class Episode(
         parcel.writeBoolean(isLiked)
         parcel.writeString(cover)
         parcel.writeString(source)
-        parcel.writeString(duration)
-        parcel.writeLong(length)
         parcel.writeLong(state)
         parcel.writeString(mimeType)
         parcel.writeLong(publishedTime)
@@ -152,7 +144,6 @@ class Episode(
             isLiked = it.isLiked
             cover = it.cover
             source = it.source
-            duration = it.duration
             state = it.state
             mimeType = it.mimeType
             publishedTime = it.publishedTime

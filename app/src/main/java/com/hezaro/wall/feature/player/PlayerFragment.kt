@@ -105,7 +105,7 @@ class PlayerFragment : Fragment() {
 
         playerView.player = player
 
-        if (!(activity as MainActivity).serviceIsBounded)
+        if (!(activity as MainActivity).serviceIsBounded && (activity as MainActivity).errorOccurred)
             closeMiniPlayer()
     }
 

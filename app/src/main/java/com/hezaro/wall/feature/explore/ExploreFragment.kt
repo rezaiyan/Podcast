@@ -90,8 +90,8 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     }
 
     override fun invoke(e: Episode, index: Int) {
-        if (isReset or sharedVm.isLoadedSingleEpisode.value!!) {
-            sharedVm.isLoadedSingleEpisode(false)
+        if (isReset or sharedVm.isPlaying.value!!) {
+            sharedVm.isPlaying(true)
             isReset = false
             activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
         } else {
@@ -209,14 +209,14 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         exploreList.setLoading(false)
         val playerIsOpen = sharedVm.playerIsOpen.value?.let { sharedVm.playerIsOpen.value } ?: false
 
-        if (!playerIsOpen && sharedVm.isLoadedSingleEpisode.value == null || !sharedVm.isLoadedSingleEpisode.value!!)
+        if (!playerIsOpen && (sharedVm.isPlaying.value == null || !sharedVm.isPlaying.value!!))
             activity.retrieveLatestEpisode()
 
         if (!episodeAdapter.episodes.containsAll(episodes)) {
             episodeAdapter.updateList(episodes)
 
 
-            if (sharedVm.isLoadedSingleEpisode.value != null && !sharedVm.isLoadedSingleEpisode.value!! && !isReset) {
+            if (sharedVm.isPlaying.value != null && !sharedVm.isPlaying.value!! && !isReset) {
                 activity.preparePlaylist(episodes, isLoadMoreAction)
             }
         }

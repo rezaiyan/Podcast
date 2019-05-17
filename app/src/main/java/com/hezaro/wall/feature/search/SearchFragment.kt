@@ -65,7 +65,7 @@ class SearchFragment : BaseFragment() {
             layoutManager = EndlessLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
             adapter = EpisodeAdapter { e, _ ->
                 sharedVm.resetPlaylist(true)
-                sharedVm.isLoadedSingleEpisode(true)
+                sharedVm.isPlaying(true)
                 updateMarginList()
                 sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
             }

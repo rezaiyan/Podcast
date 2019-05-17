@@ -46,7 +46,7 @@ class EpisodeListFragment : BaseFragment() {
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(episodes!!, true) { e, _ ->
-                sharedVm.isLoadedSingleEpisode(true)
+                sharedVm.isPlaying(true)
                 sharedVm.resetPlaylist(true)
                 activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
                 listMargin(listMargin)

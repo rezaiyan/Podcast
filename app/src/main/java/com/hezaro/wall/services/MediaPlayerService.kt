@@ -43,7 +43,7 @@ import timber.log.Timber
 class MediaPlayerService : Service() {
 
     private val mediaPlayerState: Int
-        get() = player.value!!.playbackState
+        get() = mediaPlayer.player.playbackState
 
     var currentEpisode: Episode? = null
         get() = mediaPlayer.getCurrentEpisode()
@@ -76,7 +76,6 @@ class MediaPlayerService : Service() {
                 p: SimpleExoPlayer?,
                 errorOccurred: Boolean
             ) {
-
                 player.value = mediaPlayer.player
                 liveError.value = Pair(errorOccurred, mediaPlayer.player)
             }

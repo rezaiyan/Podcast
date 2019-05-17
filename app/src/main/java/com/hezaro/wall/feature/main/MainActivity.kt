@@ -82,7 +82,7 @@ class MainActivity : BaseActivity() {
 
             val currentEpisode = playerService.currentEpisode
             if (currentEpisode != null) {
-                sharedVm.isLoadedSingleEpisode(true)
+                sharedVm.isPlaying(true)
                 sharedVm.notifyEpisode(Pair(RESUME_VIEW, currentEpisode))
             }
 
@@ -209,7 +209,7 @@ class MainActivity : BaseActivity() {
     private fun onLogin(it: UserInfo) = sharedVm.userLogin(it)
 
     private fun onFailure(failure: Failure) {
-        sharedVm.isLoadedSingleEpisode(false)
+//        sharedVm.isPlaying(false)
         when (failure) {
             is Failure.UserNotFound -> signOut()
         }
@@ -242,7 +242,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun retrieveLatestEpisode() {
-        sharedVm.isLoadedSingleEpisode(true)
+        sharedVm.isPlaying(true)
         vm.retrieveLatestEpisode()
     }
 

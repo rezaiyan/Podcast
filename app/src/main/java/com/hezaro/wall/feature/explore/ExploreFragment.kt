@@ -29,8 +29,10 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
+import kotlinx.android.synthetic.main.fragment_explore.emptyViewLayout
 import kotlinx.android.synthetic.main.fragment_explore.exploreList
 import kotlinx.android.synthetic.main.fragment_explore.refreshLayout
+import kotlinx.android.synthetic.main.fragment_explore.retry
 import kotlinx.android.synthetic.main.fragment_explore.search
 import kotlinx.android.synthetic.main.fragment_explore.sort
 import org.koin.android.ext.android.inject
@@ -149,19 +151,23 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             exploreList.setLoading(true)
         }
 
+        retry.setOnClickListener {
+            if (!vm.isExecute) {
+                exploreList.page = 1
+                vm.explore(page = exploreList.page)
+                exploreList.page = 2
+                exploreList.setLoading(true)
+                episodeAdapter.episodes.clear()
+                emptyViewLayout.visibility = View.GONE
+            }
+            refreshLayout.isRefreshing = false
+            emptyViewLayout.visibility = View.GONE
+        }
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
         refreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.ic_controller))
         refreshLayout.setOnRefreshListener {
-            with(vm) {
-                if (!isExecute) {
-                    explore(page = 1)
-                    exploreList.page = 2
-                    exploreList.setLoading(true)
-                    episodeAdapter.episodes.clear()
-                }
-            }
-            refreshLayout.isRefreshing = false
+            retry.performClick()
         }
 
 
@@ -198,7 +204,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             animator.start()
         }
     }
-//        if (episodeAdapter.itemCount == episodes.size)//Means Its first response: To preparing the latest episode is played, we have to retrieve that here, because playlist must be prepared too.
 
     private fun onSuccess(episodes: ArrayList<Episode>) {
         exploreList.setLoading(false)
@@ -216,7 +221,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             }
         }
 
-
         if (isLoadMoreAction) {
             isLoadMoreAction = false
         }
@@ -227,6 +231,8 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         exploreList.onError()
         failure.message?.let { showMessage(it) }
         exploreList.setLoading(false)
+        if (exploreList.adapter!!.itemCount == 0)
+            emptyViewLayout.visibility = View.VISIBLE
     }
 
     private fun updateUserInf(it: UserInfo) {

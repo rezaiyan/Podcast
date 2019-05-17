@@ -23,4 +23,5 @@
     <string name="new_version_alert">برای ادامه کار با اپلیکیشن, نسخه جدید را دریافت کنید</string>
     <string name="signout">Sign Out</string>
     <string name="dark_them">Change Theme</string>
+    <string name="retry">تلاش مجدد</string>
 </resources>

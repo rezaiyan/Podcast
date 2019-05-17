@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.item_episode.view.downloadStatus
 import kotlinx.android.synthetic.main.item_episode.view.logo
 import kotlinx.android.synthetic.main.item_episode.view.podcaster
 import kotlinx.android.synthetic.main.item_episode.view.title
-import timber.log.Timber
 
 class EpisodeAdapter(
     val episodes: ArrayList<Episode> = arrayListOf(),
@@ -67,7 +66,6 @@ class EpisodeAdapter(
 
                 episode.run {
                     it.logo.load(cover, transformation = RoundRectTransform())
-                    Timber.i("isDownloaded = $isDownloaded")
                     if (isDownloaded == 1 && isDownloadList.not()) {
                         it.downloadStatus.visibility = View.VISIBLE
                         it.downloadStatus.progress = 0.74f

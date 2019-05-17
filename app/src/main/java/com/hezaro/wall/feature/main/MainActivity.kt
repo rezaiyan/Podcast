@@ -152,15 +152,17 @@ class MainActivity : BaseActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    fun signOut() = mGoogleSignInClient.signOut()!!
+    private fun signOut() = mGoogleSignInClient.signOut()!!
     fun bindService() {
         serviceIsBounded = true
         bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     fun unbindService() {
-        serviceIsBounded = false
-        unbindService(serviceConnection)
+        if (serviceIsBounded) {
+            unbindService(serviceConnection)
+            serviceIsBounded = false
+        }
     }
 
     override fun onStop() {

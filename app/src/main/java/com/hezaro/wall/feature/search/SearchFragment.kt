@@ -37,6 +37,7 @@ const val SELECT_FROM_PLAYLIST = 2
 const val UPDATE_VIEW = 3
 const val RESUME_VIEW = 4
 const val PLAY_SINGLE_TRACK = 5
+
 class SearchFragment : BaseFragment() {
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
@@ -44,6 +45,12 @@ class SearchFragment : BaseFragment() {
     override fun tag(): String = this::class.java.simpleName
     private val vm: SearchViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
+
+    companion object {
+
+        fun newInstance() = SearchFragment()
+    }
+
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -104,7 +111,6 @@ class SearchFragment : BaseFragment() {
             .filter { text -> text.length > 2 }
             .subscribe { text -> vm.doSearch(text) }
     }
-
 
     private fun updateMarginList(i: Int = -1) {
         val params = searchList.layoutParams as FrameLayout.LayoutParams

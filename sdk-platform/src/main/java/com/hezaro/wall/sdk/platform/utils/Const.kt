@@ -50,7 +50,7 @@ const val PARAM_PLAYLIST = "playlist"
 
 const val PARAM_EPISODE = "openEpisodeInfo"
 
-const val PARAM_EPISODE_LIST = "episodeList"
+const val PARAM_PODCAST_ID = "episodeList"
 
 const val PARAM_PODCAST = "openPodcastInfo"
 

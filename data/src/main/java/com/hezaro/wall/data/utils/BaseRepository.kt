@@ -25,7 +25,7 @@ open class BaseRepository {
                             response.code() >= HttpURLConnection.HTTP_INTERNAL_ERROR -> Either.Left(
                                 Failure.ServerError(
                                     response.code(),
-                                    "Your API key is incorrect"
+                                    "خطایی از سمت سرور پیش آمده, بزودی رفع میشود"
                                 )
                             )
                             response.code() != HttpURLConnection.HTTP_OK -> Either.Left(

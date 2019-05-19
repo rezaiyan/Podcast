@@ -7,15 +7,11 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.hezaro.wall.R
-import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.feature.adapter.PagerAdapter
-import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
-import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
-import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.sdk.platform.utils.PARAM_PODCAST
 import kotlinx.android.synthetic.main.fragment_podcast.podcastCover
 import kotlinx.android.synthetic.main.fragment_podcast.podcastDescription
@@ -23,12 +19,9 @@ import kotlinx.android.synthetic.main.fragment_podcast.podcastTitle
 import kotlinx.android.synthetic.main.fragment_podcast.podcasterName
 import kotlinx.android.synthetic.main.fragment_podcast.tabLayout
 import kotlinx.android.synthetic.main.fragment_podcast.viewpager
-import org.koin.android.ext.android.inject
 
 class PodcastFragment : BaseFragment() {
-    private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
-    private val vm: PodcastViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
     private var episodeCount = 0
 
@@ -62,32 +55,15 @@ class PodcastFragment : BaseFragment() {
 
         }
 
-        with(vm) {
-            observe(episodes, ::onSuccess)
-            failure(failure, ::onFailure)
-            observe(progress, ::onProgress)
-            getEpisodes(podcast.id)
-        }
-    }
-
-    private fun onProgress(isProgress: Boolean) {
-        if (isProgress)
-            showProgress()
-        else hideProgress()
-    }
-
-    private fun onSuccess(episodes: ArrayList<Episode>) {
         viewpager.adapter =
             PagerAdapter(
                 childFragmentManager,
-                arrayOf(EpisodeListFragment.getInstance(ArrayList(episodes))),
+                arrayOf(EpisodeListFragment.getInstance(podcast.id)),
                 arrayOf("اپیزودها ($episodeCount)")
             )
         tabLayout.setupWithViewPager(viewpager)
-        if (episodes.size > 0)
-            tabLayout.show()
+
+
     }
 
-    private fun onFailure(failure: Failure) {
-    }
 }

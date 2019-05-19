@@ -75,9 +75,9 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_speed"
+                android:background="@drawable/bg_play"
                 android:padding="2dp"
-                android:src="@drawable/ic_play"
+                android:src="@drawable/ic_play_count"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/playedCount"
                 app:layout_constraintStart_toStartOf="parent"
@@ -129,6 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_8"
                 android:ellipsize="start"
+                android:gravity="right"
                 android:fontFamily="@font/traffic"
                 android:maxLines="2"
                 android:textColor="@color/colorTextPrimary"
@@ -160,7 +161,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingTop="@dimen/margin_20"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

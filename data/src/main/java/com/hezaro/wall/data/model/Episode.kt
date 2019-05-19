@@ -100,6 +100,7 @@ class Episode(
         likes = parcel.readLong()
         views = parcel.readLong()
         isLiked = parcel.readBoolean()
+        isBookmarked = parcel.readBoolean()
         cover = parcel.readString()!!
         source = parcel.readString()!!
         state = parcel.readLong()
@@ -121,6 +122,7 @@ class Episode(
         parcel.writeLong(likes)
         parcel.writeLong(views)
         parcel.writeBoolean(isLiked)
+        parcel.writeBoolean(isBookmarked)
         parcel.writeString(cover)
         parcel.writeString(source)
         parcel.writeLong(state)
@@ -142,6 +144,7 @@ class Episode(
             likes = it.likes
             views = it.views
             isLiked = it.isLiked
+            isBookmarked = it.isBookmarked
             cover = it.cover
             source = it.source
             state = it.state

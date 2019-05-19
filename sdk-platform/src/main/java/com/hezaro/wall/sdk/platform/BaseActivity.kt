@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
 import androidx.transition.Slide
+import com.hezaro.wall.sdk.platform.ext.doAddToBackStack
 import com.hezaro.wall.sdk.platform.ext.hide
-import com.hezaro.wall.sdk.platform.ext.inTransaction
 import com.hezaro.wall.sdk.platform.ext.show
 
 /**
@@ -68,7 +68,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
         with(supportFragmentManager) {
             if (fragments.indexOf(findFragmentByTag(fragment.tag())) == -1) {
-                inTransaction { replace(fragmentContainer(), fragment, fragment.tag()) }
+                beginTransaction()
+                    .replace(fragmentContainer(), fragment, fragment.tag()).doAddToBackStack(fragments.size).commit()
+
             }
         }
     }

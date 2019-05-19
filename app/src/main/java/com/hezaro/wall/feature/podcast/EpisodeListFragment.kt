@@ -13,21 +13,28 @@ import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.search.UPDATE_VIEW
+import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
-import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE_LIST
+import com.hezaro.wall.sdk.platform.ext.show
+import com.hezaro.wall.sdk.platform.utils.PARAM_PODCAST_ID
 import com.hezaro.wall.utils.EndlessLayoutManager
+import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
 import kotlinx.android.synthetic.main.fragment_list.recyclerList
+import org.koin.android.ext.android.inject
 
 class EpisodeListFragment : BaseFragment() {
+
+    private val vm: PodcastViewModel by inject()
+
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private lateinit var sharedVm: SharedViewModel
 
     companion object {
-        fun getInstance(episodes: ArrayList<Episode>) = EpisodeListFragment().also {
+        fun getInstance(podcastId: Long) = EpisodeListFragment().also {
             it.arguments = Bundle().apply {
-                putParcelableArrayList(PARAM_EPISODE_LIST, episodes)
+                putLong(PARAM_PODCAST_ID, podcastId)
             }
         }
     }
@@ -40,19 +47,42 @@ class EpisodeListFragment : BaseFragment() {
                 (recyclerList.adapter as EpisodeAdapter).updateRow(it.second)
         })
 
-        val listMargin = resources.getDimension(R.dimen.mini_player_height).toInt()
-        val episodes = arguments?.getParcelableArrayList<Episode>(PARAM_EPISODE_LIST)
+        val podcastId = arguments?.getLong(PARAM_PODCAST_ID)
+
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            adapter = EpisodeAdapter(episodes!!, true) { e, _ ->
+            adapter = EpisodeAdapter(isDownloadList = true) { e, _ ->
                 sharedVm.isPlaying(true)
                 sharedVm.resetPlaylist(true)
                 activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
-                listMargin(listMargin)
             }
         }
 
+        with(vm) {
+            observe(episodes, ::onSuccess)
+            failure(failure, ::onFailure)
+            observe(progress, ::onProgress)
+            getEpisodes(podcastId!!)
+        }
+
         sharedVm.listMargin.observe(this, Observer { listMargin(it) })
+    }
+
+    private fun onProgress(isProgress: Boolean) {
+        if (isProgress)
+            showProgress()
+        else hideProgress()
+    }
+
+    private fun onSuccess(episodes: ArrayList<Episode>) {
+        (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(episodes)
+    }
+
+    private fun onFailure(failure: Failure) {
+        if (recyclerList.adapter!!.itemCount == 0) {
+            emptyTitleView.show()
+            emptyTitleView.text = "فرایند دریافت اپیزودها با مشکل مواجه شده است"
+        }
     }
 
     private fun listMargin(i: Int = -1) {

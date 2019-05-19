@@ -96,6 +96,7 @@ class PlayerFragment : Fragment() {
                 behavior!!, ::onStateChanged, ::onSlide,
                 {
                     (activity as MainActivity).unbindService()
+                    playerView.player.stop()
                     MediaPlayerServiceHelper.stopService(requireContext())
                     closeMiniPlayer()
                 }

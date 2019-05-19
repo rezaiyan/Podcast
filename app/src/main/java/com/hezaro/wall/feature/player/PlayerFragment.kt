@@ -20,7 +20,9 @@ import com.hezaro.wall.feature.search.RESUME_VIEW
 import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
 import com.hezaro.wall.feature.search.SELECT_SINGLE_TRACK
 import com.hezaro.wall.feature.search.UPDATE_VIEW
+import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.services.MediaPlayerServiceHelper
@@ -201,12 +203,12 @@ class PlayerFragment : Fragment() {
     private fun updatePlayingStatus(action: Int) {
         isBuffering = false
         playPause.setImageResource(drawable.ic_play)
-        miniPlayerProgressBar.visibility = View.INVISIBLE
+        miniPlayerProgressBar.hide()
 
         when (action) {
             MediaPlayerState.STATE_CONNECTING -> {
                 isBuffering = true
-                miniPlayerProgressBar.visibility = View.VISIBLE
+                miniPlayerProgressBar.show()
             }
             MediaPlayerState.STATE_PLAYING -> {
                 playPause.setImageResource(drawable.ic_pause)
@@ -308,11 +310,11 @@ class PlayerFragment : Fragment() {
 
         if (minimize != null && playPause != null)
             if (beMinimize) {
-                minimize.visibility = View.VISIBLE
-                playPause.visibility = View.INVISIBLE
+                minimize.show()
+                playPause.hide()
             } else {
-                minimize.visibility = View.INVISIBLE
-                playPause.visibility = View.VISIBLE
+                minimize.hide()
+                playPause.show()
             }
     }
 

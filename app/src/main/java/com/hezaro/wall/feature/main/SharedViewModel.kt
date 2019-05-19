@@ -37,7 +37,7 @@ class SharedViewModel : ViewModel() {
         downloadCount.value = it
     }
 
-    fun userLogin(it: UserInfo) {
+    fun userLogin(it: UserInfo?) {
         userInfo.value = it
     }
 

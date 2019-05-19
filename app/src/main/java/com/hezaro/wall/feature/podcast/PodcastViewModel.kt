@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.domain.PodcastRepository
 import com.hezaro.wall.sdk.platform.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PodcastViewModel(private val repository: PodcastRepository) : BaseViewModel() {
@@ -12,14 +11,15 @@ class PodcastViewModel(private val repository: PodcastRepository) : BaseViewMode
     val episodes = MutableLiveData<ArrayList<Episode>>()
 
     fun getEpisodes(podcastId: Long) =
-        launch(job) {
+        launch {
+            progress.postValue(true)
             isExecute = true
             repository.getEpisodes(podcastId).either(::onFailure, ::onSuccess)
         }
 
-    private fun onSuccess(it: ArrayList<Episode>) =
-        launch(Dispatchers.Main) {
-            isExecute = false
-            episodes.value = it
-        }
+    private fun onSuccess(it: ArrayList<Episode>) {
+        isExecute = false
+        progress.postValue(false)
+        episodes.postValue(it)
+    }
 }

@@ -4,10 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
-def keystorePropertiesFile = file("/home/ali/.gradle/gradle.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -24,10 +20,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(keystoreProperties['keystore_storeFile'])
-            storePassword "hezaro"
-            keyAlias keystoreProperties['keystore_keyAlias']
-            keyPassword "hezaro"
+            storeFile file(keystore_storeFile)
+            storePassword keystore_storePassword
+            keyAlias keystore_keyAlias
+            keyPassword keystore_keyPassword
 
         }
     }
@@ -44,9 +40,6 @@ android {
 }
 
 dependencies {
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
-    implementation 'com.facebook.stetho:stetho:1.5.1'
-
     implementation project(Modules.domain)
     implementation project(Modules.sdkPlatform)
     implementation project(Modules.sdkBase)
@@ -80,6 +73,9 @@ dependencies {
     implementation Libraries.rxAndroid
     implementation Libraries.roomCoroutines
     implementation Libraries.roomRxjava
+    implementation Libraries.persianDate
+    implementation Libraries.stetho
+    debugImplementation Libraries.canary
     androidTestImplementation TestLibraries.rules
     androidTestImplementation TestLibraries.espressoCore
     androidTestImplementation TestLibraries.espressoContrib

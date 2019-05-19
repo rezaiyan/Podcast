@@ -6,5 +6,5 @@ import kotlinx.coroutines.launch
 
 class MessagingViewModel(private val repository: MessagingRepository) : BaseViewModel() {
 
-    fun sendToken(token: String) = launch(job) { repository.sendToken(token) }
+    fun sendToken(token: String) = launch { repository.sendToken(token) }
 }

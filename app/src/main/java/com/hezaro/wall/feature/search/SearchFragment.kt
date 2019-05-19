@@ -18,6 +18,7 @@ import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
+import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.normalize
 import com.hezaro.wall.utils.EndlessLayoutManager
 import io.reactivex.Observable
@@ -57,7 +58,7 @@ class SearchFragment : BaseFragment() {
             observe(podcast, ::onPodcast)
             observe(progress, ::onProgress)
             failure(failure, ::onFailure)
-            podcastProgressbar.visibility = View.INVISIBLE
+            podcastProgressbar.hide()
             getPodcasts()
         }
 
@@ -129,7 +130,7 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun onPodcast(it: ArrayList<Podcast>) {
-        podcastProgressbar.visibility = View.INVISIBLE
+        podcastProgressbar.hide()
         (podcastList.adapter as PodcastAdapter).addPodcast(it)
     }
 

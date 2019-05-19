@@ -25,7 +25,9 @@ import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
+import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
@@ -158,10 +160,10 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
                 exploreList.page = 2
                 exploreList.setLoading(true)
                 episodeAdapter.episodes.clear()
-                emptyViewLayout.visibility = View.GONE
+                emptyViewLayout.hide()
             }
             refreshLayout.isRefreshing = false
-            emptyViewLayout.visibility = View.GONE
+            emptyViewLayout.hide()
         }
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
@@ -232,7 +234,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         failure.message?.let { showMessage(it) }
         exploreList.setLoading(false)
         if (exploreList.adapter!!.itemCount == 0)
-            emptyViewLayout.visibility = View.VISIBLE
+            emptyViewLayout.show()
     }
 
     private fun updateUserInf(it: UserInfo) {

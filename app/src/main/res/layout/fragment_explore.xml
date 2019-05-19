@@ -99,8 +99,8 @@
                 tools:visibility="visible">
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     app:lottie_autoPlay="true"
                     app:lottie_enableMergePathsForKitKatAndAbove="true"
                     app:lottie_rawRes="@raw/network"

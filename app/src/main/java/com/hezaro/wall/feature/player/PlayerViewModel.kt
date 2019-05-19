@@ -8,31 +8,32 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(private val repository: PlayerRepository) : BaseViewModel() {
 
     fun speed(speed: Float) =
-        launch(job) { repository.setSpeed(speed) }
+        launch { repository.setSpeed(speed) }
 
     fun defaultSpeed() = repository.getSpeed()
 
     fun sendLastPosition(id: Long, lastState: Long) =
-        launch(job) {
+        launch {
             repository.sendLastPosition(id, lastState)
         }
 
     fun saveLatestEpisode(episode: Episode) =
-        launch(job) { repository.savePlayedEpisode(episode) }
+        launch { repository.savePlayedEpisode(episode) }
 
     fun sendLikeAction(like: Boolean, id: Long) =
-        launch(job) {
+        launch {
             repository.likeAction(like, id)
         }
 
     fun sendBookmarkAction(like: Boolean, id: Long) =
-        launch(job) {
+        launch {
             repository.bookmarkAction(like, id)
         }
 
     fun userIsLogin() = repository.userIsLogin()
 
-    fun updateEpisode(it: Episode) = launch(job) {
-        repository.updateEpisode(it)
-    }
+    fun updateEpisode(it: Episode) =
+        launch {
+            repository.updateEpisode(it)
+        }
 }

@@ -1,108 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hezaro.wall.sdk.platform.utils.PullDismissLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pullLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true"
-    android:focusable="true">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/podcastAppbar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:elevation="@dimen/margin_8"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/podcastCover"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/avatars" />
 
+            <TextView
+                android:id="@+id/podcastTitle"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/margin_8"
+                android:ellipsize="start"
+                android:fontFamily="@font/traffic"
+                android:maxLines="2"
+                android:textColor="@color/colorTextPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintTop_toBottomOf="@id/podcastCover"
+                tools:text="شسپیشس سیب سیبسی بسیبس بسیب سیب سیبسیب " />
 
-                <ImageView
-                    android:id="@+id/podcastCover"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@tools:sample/avatars" />
+            <TextView
+                android:id="@+id/podcasterName"
+                style="@style/CustomTitleTextAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:fontFamily="@font/traffic"
+                android:singleLine="true"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/podcastTitle"
+                app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
+                tools:text="عنوان تست" />
 
+            <TextView
+                android:id="@+id/podcastDescription"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:layout_marginStart="@dimen/margin_16"
+                android:fontFamily="@font/traffic"
+                android:gravity="right"
+                android:lineSpacingExtra="1.3dp"
+                android:paddingBottom="@dimen/margin_20"
+                android:paddingTop="@dimen/margin_10"
+                android:textColor="@color/colorTextPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/podcasterName"
+                tools:text="عنوان تست" />
 
-                <TextView
-                    android:id="@+id/podcastTitle"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_20"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:ellipsize="start"
-                    android:fontFamily="@font/traffic"
-                    android:maxLines="2"
-                    android:textColor="@color/colorTextPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="شسپیشس سیب سیبسی بسیبس بسیب سیب سیبسیب " />
-
-
-                <TextView
-                    android:id="@+id/podcasterName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_16"
-                    android:ellipsize="start"
-                    android:fontFamily="@font/traffic"
-                    android:singleLine="true"
-                    android:textColor="@color/colorPrimary"
-                    app:layout_constraintEnd_toEndOf="@id/podcastCover"
-                    app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
-                    tools:text="عنوان تست" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <TextView
-            android:id="@+id/podcastDescription"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_16"
-            android:fontFamily="@font/traffic"
-            android:gravity="right"
-            android:lineSpacingExtra="1.3dp"
-            android:paddingBottom="@dimen/margin_20"
-            android:paddingTop="@dimen/margin_10"
-            android:textColor="@color/colorTextPrimary"
-            tools:text="عنوان تست" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@android:color/transparent"
             android:visibility="invisible"
+            app:layout_scrollFlags="exitUntilCollapsed"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorTextPrimary"
             app:tabTextAppearance="@style/TrafficTextAppearance"
             app:tabTextColor="@color/colorTextSecondary" />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    </LinearLayout>
-</com.hezaro.wall.sdk.platform.utils.PullDismissLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

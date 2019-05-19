@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.adapter.EpisodeAdapter.ItemHolder
+import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
+import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.RoundRectTransform
 import ir.smartlab.persindatepicker.util.PersianCalendar
 import kotlinx.android.synthetic.main.item_episode.view.bookmarkStatus
@@ -67,13 +69,13 @@ class EpisodeAdapter(
                 episode.run {
                     it.logo.load(cover, transformation = RoundRectTransform())
                     if (isDownloaded == 1 && isDownloadList.not()) {
-                        it.downloadStatus.visibility = View.VISIBLE
+                        it.downloadStatus.show()
                         it.downloadStatus.progress = 0.74f
-                    } else it.downloadStatus.visibility = View.INVISIBLE
+                    } else it.downloadStatus.hide()
                     if (isBookmarked) {
-                        it.bookmarkStatus.visibility = View.VISIBLE
+                        it.bookmarkStatus.show()
                         it.bookmarkStatus.progress = 1.0f
-                    } else it.bookmarkStatus.visibility = View.INVISIBLE
+                    } else it.bookmarkStatus.hide()
                     it.title.text = title
                     calendar.timeInMillis = publishedTime
                     it.date.text = calendar.persianLongDate

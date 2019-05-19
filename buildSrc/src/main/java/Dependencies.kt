@@ -88,6 +88,9 @@ object Versions {
 
     val room = "2.1.0-alpha07"
     val lottie = "3.0.1"
+    val persianDate = "0.1"
+    val stetho = "1.5.1"
+    val canary = "2.0-alpha-1"
 
 }
 
@@ -158,6 +161,10 @@ object Libraries {
 
     val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
     val rxAndroid = "io.reactivex.rxjava2:rxandroid:${Versions.rxAndroid}"
+
+    val persianDate = "com.github.samanzamani.persiandate:PersianDate:${Versions.persianDate}"
+    val stetho = "com.facebook.stetho:stetho:${Versions.stetho}"
+    val canary = "com.squareup.leakcanary:leakcanary-android:${Versions.canary}"
 }
 
 object SupportLibraries {

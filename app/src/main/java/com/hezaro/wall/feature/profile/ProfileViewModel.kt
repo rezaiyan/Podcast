@@ -8,7 +8,6 @@ import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.sdk.platform.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repository: ProfileRepository) : BaseViewModel() {
@@ -17,16 +16,15 @@ class ProfileViewModel(private val repository: ProfileRepository) : BaseViewMode
     val episodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
 
     fun userInfo() =
-        launch(job) {
+        launch {
             isExecute = true
             repository.userInfo().either(::onFailure, ::onSuccess)
         }
 
-    private fun onSuccess(it: UserInfo) =
-        launch(Dispatchers.Main) {
-            isExecute = false
-            userInfo.value = it
-        }
+    private fun onSuccess(it: UserInfo) {
+        isExecute = false
+        userInfo.postValue(it)
+    }
 
     @SuppressLint("CheckResult")
     fun getEpisodes() {

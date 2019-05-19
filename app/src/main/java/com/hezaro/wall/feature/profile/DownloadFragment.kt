@@ -13,7 +13,10 @@ import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
+import com.hezaro.wall.sdk.platform.ext.hide
+import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.EndlessLayoutManager
+import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
 import kotlinx.android.synthetic.main.fragment_list.parentLayout
 import kotlinx.android.synthetic.main.fragment_list.recyclerList
 import org.koin.android.ext.android.inject
@@ -46,13 +49,15 @@ class DownloadFragment : BaseFragment() {
                 liftList()
             }
         }
-
         with(vm) {
             observe(episodes) {
-                if ((recyclerList.adapter as EpisodeAdapter).itemCount != it.size) {
+                if (recyclerList.adapter?.itemCount != it.size) {
                     sharedVm.setDownloadSize(it.size)
                     (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
                 }
+                if (recyclerList.adapter!!.itemCount > 0)
+                    emptyTitleView.hide()
+                else emptyTitleView.show()
             }
             getEpisodes()
         }

@@ -84,7 +84,7 @@
         app:layout_constraintTop_toBottomOf="@id/profileAppbar"
         app:tabIndicatorColor="@color/colorPrimary"
         app:tabMode="fixed"
-        android:visibility="invisible"
+        android:background="@android:color/transparent"
         app:tabSelectedTextColor="@color/colorTextPrimary"
         app:tabTextAppearance="@style/TrafficTextAppearance"
         app:tabTextColor="@color/colorTextSecondary" />

@@ -96,7 +96,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        actionBar?.hide()
         setContentView(layoutId())
 
         sharedVm = ViewModelProviders.of(this).get(SharedViewModel::class.java)
@@ -208,8 +207,7 @@ class MainActivity : BaseActivity() {
 
     private fun onLogin(it: UserInfo) = sharedVm.userLogin(it)
 
-    private fun onFailure(failure: Failure) {
-//        sharedVm.isPlaying(false)
+    private fun onFailure(failure: Failure?) {
         when (failure) {
             is Failure.UserNotFound -> signOut()
         }
@@ -246,9 +244,7 @@ class MainActivity : BaseActivity() {
         vm.retrieveLatestEpisode()
     }
 
-    private fun onLatestEpisode(episode: Episode) {
-        sharedVm.notifyEpisode(Pair(SELECT_SINGLE_TRACK, episode))
-    }
+    private fun onLatestEpisode(episode: Episode) = sharedVm.notifyEpisode(Pair(SELECT_SINGLE_TRACK, episode))
 
     fun openEpisodeInfo(episode: Episode) = addFragment(EpisodeFragment.newInstance(episode))
 

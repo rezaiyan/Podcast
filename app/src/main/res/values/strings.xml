@@ -24,4 +24,5 @@
     <string name="signout">Sign Out</string>
     <string name="dark_them">Change Theme</string>
     <string name="retry">تلاش مجدد</string>
+    <string name="is_not_downloaded_episode">هیچ اپیزودی دانلود نشده است</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.hezaro.wall.feature.episode
 
+import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Build
@@ -7,9 +8,9 @@ import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.main.MainActivity
@@ -20,7 +21,6 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
-import com.hezaro.wall.sdk.platform.utils.PullDismissLayout
 import kotlinx.android.synthetic.main.fragment_episode.description
 import kotlinx.android.synthetic.main.fragment_episode.downloadStatus
 import kotlinx.android.synthetic.main.fragment_episode.episodeCover
@@ -29,16 +29,12 @@ import kotlinx.android.synthetic.main.fragment_episode.likeCount
 import kotlinx.android.synthetic.main.fragment_episode.playedCount
 import kotlinx.android.synthetic.main.fragment_episode.podcastCover
 import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
-import kotlinx.android.synthetic.main.fragment_episode.pullLayout
 import org.koin.android.ext.android.inject
 
-class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTracker.Listener {
+class EpisodeFragment : BaseFragment(), DownloadTracker.Listener {
 
     private val downloadHelper: PlayerDownloadHelper by inject()
     private val downloader by lazy { downloadHelper.getDownloadTracker()!! }
-
-    override fun onDismissed() = activity.onBackPressed()
-    override fun onShouldInterceptTouchEvent() = sharedVm.sheetState.value == BottomSheetBehavior.STATE_EXPANDED
 
     override fun layoutId() = R.layout.fragment_episode
     override fun tag(): String = this::class.java.simpleName
@@ -65,6 +61,7 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
             currentEpisode = it.second
             updateView()
         })
+        sharedVm.listMargin.observe(this, Observer { updateMarginScroller(it) })
 
         updateView()
         podcastTitle.setOnClickListener { activity.openPodcastInfo(currentEpisode!!.podcast) }
@@ -109,15 +106,30 @@ class EpisodeFragment : BaseFragment(), PullDismissLayout.Listener, DownloadTrac
     }
 
     override fun onStart() {
-        pullLayout.setListener(this)
         downloader.addListener(this)
         super.onStart()
     }
 
     override fun onStop() {
-        pullLayout.removeListener()
         downloader.removeListener(this)
         super.onStop()
+    }
+
+    private fun updateMarginScroller(i: Int = -1) {
+        val params = description.layoutParams as FrameLayout.LayoutParams
+        if (params.bottomMargin == 0 || i >= 0) {
+            val animator =
+                ValueAnimator.ofInt(
+                    params.bottomMargin,
+                    if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
+                )
+            animator.addUpdateListener { valueAnimator ->
+                params.bottomMargin = valueAnimator.animatedValue as Int
+                description?.requestLayout()
+            }
+            animator.duration = 100
+            animator.start()
+        }
     }
 
     private fun updateView() {

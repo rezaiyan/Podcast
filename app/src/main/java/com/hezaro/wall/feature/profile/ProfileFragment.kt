@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
-import androidx.lifecycle.Observer
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.hezaro.wall.R
@@ -67,9 +66,8 @@ class ProfileFragment : BaseFragment() {
             userInfo()
         }
         viewpager.adapter =
-            PagerAdapter(childFragmentManager, arrayOf(DownloadFragment.getInstance()), arrayOf("دانلود شده ها"))
+            PagerAdapter(childFragmentManager, arrayOf(DownloadFragment.getInstance()), arrayOf("دانلودها"))
         tabLayout.setupWithViewPager(viewpager)
-        sharedVm.downloadCount.observe(this, Observer { if (it > 0) tabLayout.visibility = View.VISIBLE })
     }
 
     private fun onSuccess(userInfo: UserInfo) {

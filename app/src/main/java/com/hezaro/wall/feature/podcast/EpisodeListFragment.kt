@@ -3,7 +3,7 @@ package com.hezaro.wall.feature.podcast
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.marginBottom
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,6 @@ import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE_LIST
 import com.hezaro.wall.utils.EndlessLayoutManager
-import kotlinx.android.synthetic.main.fragment_list.parentLayout
 import kotlinx.android.synthetic.main.fragment_list.recyclerList
 
 class EpisodeListFragment : BaseFragment() {
@@ -56,14 +55,17 @@ class EpisodeListFragment : BaseFragment() {
         sharedVm.listMargin.observe(this, Observer { listMargin(it) })
     }
 
-    private fun listMargin(i: Int = 0) {
-        var margin = parentLayout.marginBottom
-        if (margin == 0) {
+    private fun listMargin(i: Int = -1) {
+        val params = recyclerList.layoutParams as FrameLayout.LayoutParams
+        if (params.bottomMargin == 0 || i >= 0) {
             val animator =
-                ValueAnimator.ofInt(margin, i)
+                ValueAnimator.ofInt(
+                    params.bottomMargin,
+                    if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
+                )
             animator.addUpdateListener { valueAnimator ->
-                margin = valueAnimator.animatedValue as Int
-                parentLayout?.requestLayout()
+                params.bottomMargin = valueAnimator.animatedValue as Int
+                recyclerList?.requestLayout()
             }
             animator.duration = 100
             animator.start()

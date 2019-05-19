@@ -6,7 +6,6 @@ import com.hezaro.wall.data.model.Status.Companion.BEST
 import com.hezaro.wall.data.model.Status.Companion.SortBy
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.sdk.platform.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ExploreViewModel(private val repository: ExploreRepository) :
@@ -16,15 +15,14 @@ class ExploreViewModel(private val repository: ExploreRepository) :
     val explore: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
     private var sort = BEST
     fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String = sort) =
-        launch(job) {
+        launch {
             sort = sortBy
             isExecute = true
             repository.explore(page, offset, sort).either(::onFailure, ::onSuccess)
         }
 
-    private fun onSuccess(it: ArrayList<Episode>) =
-        launch(Dispatchers.Main) {
-            isExecute = false
-            explore.value = it
-        }
+    private fun onSuccess(it: ArrayList<Episode>) {
+        isExecute = false
+        explore.postValue(it)
+    }
 }

@@ -9,7 +9,6 @@ import com.hezaro.wall.sdk.base.exception.Failure
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -24,23 +23,21 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     var isExecute = false
     var job = Job()
 
-    override val coroutineContext: CoroutineContext = job + Dispatchers.IO
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
 
     public override fun onCleared() {
         super.onCleared()
-        progress.value = false
+        progress.postValue(false)
         isExecute = false
         job.cancel()
         job = Job()
     }
 
-
     protected fun onFailure(it: Failure) {
-        launch(Dispatchers.Main) {
-            isExecute = false
-            progress.value = false
-            failure.value = it
-        }
+        isExecute = false
+        progress.postValue(false)
+        failure.postValue(it)
     }
 
     fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T) -> Unit) =

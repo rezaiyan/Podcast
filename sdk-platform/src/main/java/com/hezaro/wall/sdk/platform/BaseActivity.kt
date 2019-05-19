@@ -42,6 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
             animator.start()
         }
     }
+
     fun showProgress() {
         progressBar().show()
     }
@@ -52,7 +53,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun addFragment(fragment: BaseFragment) {
         val gravity = Gravity.END
-        if (fragment.tag() == "SearchFragment" || fragment.tag() == "ExploreFragment") {
+        if (fragment.tag() == "SearchFragment" || fragment.tag() == "ExploreFragment" || fragment.tag() == "ProfileFragment") {
             fragment.enterTransition = Fade()
             fragment.exitTransition = Fade()
         } else {

@@ -23,7 +23,7 @@ interface ApiService {
     @GET("$BASE/episodes")
     fun explore(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
-    @GET("$BASE/podcast/{episode_id}/episodes")
+    @GET("$BASE/podcasts/{episode_id}/episodes")
     fun episode(@Path("episode_id") episode_id: Long, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
     @GET("$BASE/podcasts")

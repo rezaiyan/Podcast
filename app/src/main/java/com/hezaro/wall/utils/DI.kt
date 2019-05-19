@@ -43,7 +43,7 @@ val module: Module = module {
     single { MessagingRepository.MessagingRepositoryImpl(get(), get()) } bind MessagingRepository::class
 
     viewModel { EpisodeViewModel(get()) }
-    single { EpisodeRepository.EpisodeRepositoryImpl(get()) } bind EpisodeRepository::class
+    single { EpisodeRepository.EpisodeRepositoryImpl(get(), get()) } bind EpisodeRepository::class
 
     viewModel { ExploreViewModel(get()) }
     single { ExploreRepository.ExploreRepositoryImpl(get(), get()) } bind ExploreRepository::class

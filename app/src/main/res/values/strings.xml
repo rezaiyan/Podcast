@@ -15,9 +15,8 @@
     <string name="search">جستجو</string>
     <string name="podcast">‌پادکست‌ها</string>
     <string name="_1_0x">1.0x</string>
-    <string name="the_bests">بهترین‌ها</string>
-    <string name="the_newest">جدیدترین‌ها</string>
-    <string name="the_oldest">قدیمی‌ترین‌ها</string>
+    <string name="the_bests">چارت برترین‌ها</string>
+    <string name="the_newest">به‌ترتیب زمان انتشار</string>
     <string name="update">بروزرسانی</string>
     <string name="exit">خروج</string>
     <string name="new_version_alert">برای ادامه کار با اپلیکیشن, نسخه جدید را دریافت کنید</string>

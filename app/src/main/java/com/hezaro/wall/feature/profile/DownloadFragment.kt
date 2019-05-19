@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
+import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
@@ -24,6 +25,7 @@ import org.koin.android.ext.android.inject
 class DownloadFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
+    override fun id() = 201
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private lateinit var sharedVm: SharedViewModel
     private val vm: ProfileViewModel by inject()
@@ -50,19 +52,21 @@ class DownloadFragment : BaseFragment() {
             }
         }
         with(vm) {
-            observe(episodes) {
-                if (recyclerList.adapter?.itemCount != it.size) {
-                    sharedVm.setDownloadSize(it.size)
-                    (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
-                }
-                if (recyclerList.adapter!!.itemCount > 0)
-                    emptyTitleView.hide()
-                else emptyTitleView.show()
-            }
+            observe(episodes, ::onLoadEpisodes)
             getEpisodes()
         }
 
         sharedVm.listMargin.observe(this, Observer { liftList(it) })
+    }
+
+    private fun onLoadEpisodes(it: ArrayList<Episode>) {
+        if (recyclerList.adapter?.itemCount != it.size) {
+            sharedVm.setDownloadSize(it.size)
+            (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
+        }
+        if (recyclerList.adapter!!.itemCount > 0)
+            emptyTitleView.hide()
+        else emptyTitleView.show()
     }
 
     private fun liftList(i: Int = -1) {

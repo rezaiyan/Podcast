@@ -9,10 +9,12 @@ import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.ACTION_STOP
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
@@ -25,9 +27,8 @@ import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE
 import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE_GET
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER_STATUS
-import com.hezaro.wall.sdk.platform.utils.fastForwardIncrementMs
-import com.hezaro.wall.sdk.platform.utils.rewindIncrementMs
 import com.hezaro.wall.services.MediaPlayerService
+import com.hezaro.wall.utils.toBitmap
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
@@ -64,13 +65,13 @@ class PlayerNotificationHelper(
                         val action = intent.getIntExtra(ACTION_PLAYER_STATUS, MediaPlayerState.STATE_IDLE)
                         when (action) {
                             MediaPlayerState.STATE_IDLE, MediaPlayerState.STATE_ENDED -> {
-                                notificationManager.setPlayer(null)
+                                service.stopSelf()
                             }
                             MediaPlayerState.STATE_PLAYING -> {
                                 onGoing(true); onShow(service.mediaPlayer)
                             }
                             MediaPlayerState.STATE_PAUSED -> {
-                                onGoing(true)
+                                onGoing(false)
                             }
                         }
                     }
@@ -80,20 +81,21 @@ class PlayerNotificationHelper(
     }
 
     fun initNotificationHelper() {
+
         notificationManager = PlayerNotificationManager.createWithNotificationChannel(
             context, CHANNEL_ID, CHANNEL_NAME, NOTIFICATION_ID, this
-        ).apply {
-            setNotificationListener(this@PlayerNotificationHelper)
-            setMediaSessionToken(mediaSession.sessionToken)
-            setFastForwardIncrementMs(fastForwardIncrementMs)
-            setRewindIncrementMs(rewindIncrementMs)
-            setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        }
+        )
+            .apply {
+                setNotificationListener(this@PlayerNotificationHelper)
+                setMediaSessionToken(mediaSession.sessionToken)
+                setFastForwardIncrementMs(0)
+                setRewindIncrementMs(0)
+                setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                setStopAction(ACTION_STOP)
+            }
 
-        val iff = IntentFilter(ACTION_EPISODE)
-        iff.addAction(ACTION_PLAYER)
-
-        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, iff)
+        LocalBroadcastManager.getInstance(context)
+            .registerReceiver(receiver, IntentFilter(ACTION_EPISODE).also { it.addAction(ACTION_PLAYER) })
     }
 
     override fun onNotificationStarted(notificationId: Int, notification: Notification) {
@@ -138,7 +140,7 @@ class PlayerNotificationHelper(
                     })
         }
 
-        return null
+        return AppCompatResources.getDrawable(context, R.drawable.placeholder)?.toBitmap()
     }
 
     override fun onShow(mediaPlayer: MediaPlayer) {

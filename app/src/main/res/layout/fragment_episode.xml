@@ -42,7 +42,7 @@
                 tools:src="@tools:sample/avatars" />
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/downloadStatus"
+                android:id="@+id/bookmarkStatus"
                 android:layout_width="@dimen/navigator_icon"
                 android:layout_height="@dimen/navigator_icon"
                 android:layout_margin="@dimen/margin_20"
@@ -52,8 +52,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/podcastCover"
                 app:lottie_autoPlay="false"
+                android:scaleX="1.7"
+                android:scaleY="1.7"
                 app:lottie_enableMergePathsForKitKatAndAbove="true"
-                app:lottie_rawRes="@raw/download"
+                app:lottie_rawRes="@raw/bookmark"
                 app:lottie_renderMode="automatic" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

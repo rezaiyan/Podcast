@@ -43,6 +43,7 @@ class SearchFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_search
     override fun tag(): String = this::class.java.simpleName
+    override fun id() = 102
     private val vm: SearchViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
 
@@ -133,6 +134,11 @@ class SearchFragment : BaseFragment() {
         if (isProgress)
             showProgress()
         else hideProgress()
+    }
+
+    override fun onStop() {
+        hideProgress()
+        super.onStop()
     }
 
     private fun onPodcast(it: ArrayList<Podcast>) {

@@ -77,7 +77,7 @@ class EpisodeAdapter(
                         it.bookmarkStatus.progress = 1.0f
                     } else it.bookmarkStatus.hide()
                     it.title.text = title
-                    calendar.timeInMillis = publishedTime
+                    calendar.timeInMillis = getPublishTime()
                     it.date.text = calendar.persianLongDate
                     it.podcaster.text = podcast.title
                     it.setOnClickListener { onItemClick(this, adapterPosition) }

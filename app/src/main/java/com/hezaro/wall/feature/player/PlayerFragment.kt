@@ -1,6 +1,8 @@
 package com.hezaro.wall.feature.player
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,8 @@ import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
+import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
+import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.OnSwipeTouchListener
@@ -37,13 +41,13 @@ import kotlinx.android.synthetic.main.fragment_player.playerView
 import kotlinx.android.synthetic.main.fragment_player.speedChooser
 import kotlinx.android.synthetic.main.fragment_player.subtitle
 import kotlinx.android.synthetic.main.fragment_player.title
-import kotlinx.android.synthetic.main.playback_control.bookmarkStatus
+import kotlinx.android.synthetic.main.playback_control.downloadStatus
 import kotlinx.android.synthetic.main.playback_control.exo_ffwd
 import kotlinx.android.synthetic.main.playback_control.exo_rew
 import kotlinx.android.synthetic.main.playback_control.likeStatus
 import org.koin.android.ext.android.inject
 
-class PlayerFragment : Fragment() {
+class PlayerFragment : Fragment(), DownloadTracker.Listener {
     private fun layoutId() = R.layout.fragment_player
     fun tag(): String = this::class.java.simpleName
     private var isBuffering = false
@@ -53,6 +57,9 @@ class PlayerFragment : Fragment() {
     private lateinit var sharedVm: SharedViewModel
     private var behavior: BottomSheetBehavior<View>? = null
     private var showInfo = false
+
+    private val downloadHelper: PlayerDownloadHelper by inject()
+    private val downloader by lazy { downloadHelper.getDownloadTracker()!! }
 
     companion object {
         fun getInstance() = PlayerFragment()
@@ -146,11 +153,20 @@ class PlayerFragment : Fragment() {
                 }
             }
         }
+        downloadStatus.setOnClickListener {
+            val uri = Uri.parse(currentEpisode!!.source)
+            val title = currentEpisode!!.title
+            if (downloader.isDownloaded(uri))
+                removeDownloadDialog(title, uri)
+            else
+                downloader.startDownload(activity!!, title, uri)
+        }
+
+        miniPlayerLayout.setOnClickListener { behavior?.state = BottomSheetBehavior.STATE_EXPANDED }
         exo_rew.setOnClickListener { MediaPlayerServiceHelper.seekBackward(requireContext()) }
         exo_ffwd.setOnClickListener { MediaPlayerServiceHelper.seekForward(requireContext()) }
         playPause.setOnClickListener { if (!isBuffering) togglePause() }
         likeStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
-        bookmarkStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
         likeStatus.setOnClickListener {
 
             if (!currentEpisode!!.isLiked) {
@@ -169,25 +185,47 @@ class PlayerFragment : Fragment() {
             currentEpisode!!.isLiked = !currentEpisode!!.isLiked
             sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
         }
-        bookmarkStatus.setOnClickListener {
+    }
 
-            if (!currentEpisode!!.isBookmarked) {
-                bookmarkStatus.setMinAndMaxFrame(0, 50)
-                bookmarkStatus.speed = 1.0F
-                bookmarkStatus.playAnimation()
-            } else {
-                bookmarkStatus.setMinAndMaxFrame(0, 50)
-                bookmarkStatus.speed = -1.0F
-                bookmarkStatus.playAnimation()
-            }
-            vm.sendBookmarkAction(!currentEpisode!!.isBookmarked, currentEpisode!!.id)
-            currentEpisode!!.isBookmarked = !currentEpisode!!.isBookmarked
-            sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
+    private fun removeDownloadDialog(title: String, uri: Uri) {
+        val alertDialog = AlertDialog.Builder(context, android.R.style.ThemeOverlay_Material_Dialog_Alert)
+        alertDialog.setMessage("$title جذف شود؟ ")
+        alertDialog.setNegativeButton("خیر") { _a, _ -> _a.dismiss() }
+        alertDialog.setPositiveButton("بله") { _, _ ->
+            vm.delete(currentEpisode!!)
+            downloader.removeDownload(uri, title)
         }
+        alertDialog.create().show()
+    }
+
+    override fun onDownloadsChanged(isDownload: Boolean) {
+        val downloaded = downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
+        if (downloaded) {
+            vm.save(currentEpisode!!)
+            currentEpisode!!.isDownloaded = 1
+            downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
+            downloadStatus.speed = 1.0F
+            downloadStatus.playAnimation()
+        } else {
+            vm.delete(currentEpisode!!)
+            currentEpisode!!.isDownloaded = 0
+            downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
+            downloadStatus.speed = -1.0F
+            downloadStatus.playAnimation()
+        }
+
+        sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
+    }
+
+    override fun onStart() {
+        downloader.addListener(this)
+        super.onStart()
     }
 
     override fun onStop() {
         super.onStop()
+
+        downloader.removeListener(this)
         currentEpisode?.let {
             vm.sendLastPosition(it.id, playerView.player.currentPosition)
         }
@@ -282,9 +320,15 @@ class PlayerFragment : Fragment() {
         behavior?.isHideable = true
         behavior?.state = BottomSheetBehavior.STATE_HIDDEN
         behavior?.peekHeight = 0
+        (activity as MainActivity).unbindService()
     }
 
     private fun updatePlayerView() {
+        val downloaded = downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
+        if (downloaded)
+            downloadStatus.progress = 0.74f
+        else downloadStatus.progress = 0.12f
+
         behavior?.isHideable = false
         val height = resources.getDimension(R.dimen.mini_player_height).toInt()
         sharedVm.listMargin(height)
@@ -293,7 +337,6 @@ class PlayerFragment : Fragment() {
 
         currentEpisode?.let {
             likeStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
-            bookmarkStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
 
             title.text = it.title
             subtitle.text = it.podcast.creator
@@ -301,9 +344,6 @@ class PlayerFragment : Fragment() {
             if (it.isLiked)
                 likeStatus.frame = 100
             else likeStatus.frame = 50
-            if (it.isBookmarked)
-                bookmarkStatus.frame = 20
-            else bookmarkStatus.frame = 0
         }
     }
 

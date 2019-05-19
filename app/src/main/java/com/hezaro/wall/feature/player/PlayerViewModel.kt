@@ -25,10 +25,6 @@ class PlayerViewModel(private val repository: PlayerRepository) : BaseViewModel(
             repository.likeAction(like, id)
         }
 
-    fun sendBookmarkAction(like: Boolean, id: Long) =
-        launch {
-            repository.bookmarkAction(like, id)
-        }
 
     fun userIsLogin() = repository.userIsLogin()
 
@@ -36,4 +32,9 @@ class PlayerViewModel(private val repository: PlayerRepository) : BaseViewModel(
         launch {
             repository.updateEpisode(it)
         }
+
+    fun save(episode: Episode) = launch { repository.save(episode) }
+    fun delete(episode: Episode) = launch { repository.delete(episode) }
+
+
 }

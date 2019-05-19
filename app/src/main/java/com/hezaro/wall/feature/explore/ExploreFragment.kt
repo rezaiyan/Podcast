@@ -16,7 +16,6 @@ import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Status.Companion.BEST
 import com.hezaro.wall.data.model.Status.Companion.NEWEST
-import com.hezaro.wall.data.model.Status.Companion.OLDEST
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
@@ -46,6 +45,7 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     private lateinit var episodeAdapter: EpisodeAdapter
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
+    override fun id() = 101
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private lateinit var avatar: ImageView
     private var isReset = false
@@ -56,12 +56,10 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         sortDialog.setContentView(R.layout.dialog_sort)
         val radioBest = sortDialog.findViewById<RadioButton>(R.id.radioBest)
         val radioNewest = sortDialog.findViewById<RadioButton>(R.id.radioNewest)
-        val radioOldest = sortDialog.findViewById<RadioButton>(R.id.radioOldest)
         radioBest.setOnClickListener {
             isReset = true
             radioBest.isChecked = true
             radioNewest.isChecked = false
-            radioOldest.isChecked = false
             sortDialog.dismiss()
             sortPlaylist(BEST)
         }
@@ -69,21 +67,11 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             isReset = true
             radioBest.isChecked = false
             radioNewest.isChecked = true
-            radioOldest.isChecked = false
             sortDialog.dismiss()
             sortPlaylist(NEWEST)
         }
-        radioOldest.setOnClickListener {
-            isReset = true
-            radioBest.isChecked = false
-            radioNewest.isChecked = false
-            radioOldest.isChecked = true
-            sortDialog.dismiss()
-            sortPlaylist(OLDEST)
-        }
         sortDialog.findViewById<RelativeLayout>(R.id.bestLayout).setOnClickListener { radioBest.performClick() }
         sortDialog.findViewById<RelativeLayout>(R.id.newLayout).setOnClickListener { radioNewest.performClick() }
-        sortDialog.findViewById<RelativeLayout>(R.id.oldLayout).setOnClickListener { radioOldest.performClick() }
         sortDialog
     }
 

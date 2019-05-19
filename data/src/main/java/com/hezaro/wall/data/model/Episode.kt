@@ -64,6 +64,12 @@ class Episode(
         }
     }
 
+    fun getPublishTime(): Long {
+        return if (publishedTime.toString().length == 10)
+            return publishedTime * 1000
+        else publishedTime
+    }
+
     fun getFormattedDuration() = formatSeconds(0)
     fun getView() = formatLongNumber(views)
     fun getLike() = formatLongNumber(likes)

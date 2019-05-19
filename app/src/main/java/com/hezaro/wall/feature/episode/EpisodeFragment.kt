@@ -1,8 +1,6 @@
 package com.hezaro.wall.feature.episode
 
 import android.animation.ValueAnimator
-import android.app.AlertDialog
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -18,11 +16,9 @@ import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
-import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
-import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
+import kotlinx.android.synthetic.main.fragment_episode.bookmarkStatus
 import kotlinx.android.synthetic.main.fragment_episode.description
-import kotlinx.android.synthetic.main.fragment_episode.downloadStatus
 import kotlinx.android.synthetic.main.fragment_episode.episodeCover
 import kotlinx.android.synthetic.main.fragment_episode.episodeTitle
 import kotlinx.android.synthetic.main.fragment_episode.likeCount
@@ -31,14 +27,11 @@ import kotlinx.android.synthetic.main.fragment_episode.podcastCover
 import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
 import org.koin.android.ext.android.inject
 
-class EpisodeFragment : BaseFragment(), DownloadTracker.Listener {
-
-    private val downloadHelper: PlayerDownloadHelper by inject()
-    private val downloader by lazy { downloadHelper.getDownloadTracker()!! }
+class EpisodeFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_episode
     override fun tag(): String = this::class.java.simpleName
-
+    override fun id() = 104
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     private val vm: EpisodeViewModel by inject()
@@ -65,54 +58,23 @@ class EpisodeFragment : BaseFragment(), DownloadTracker.Listener {
 
         updateView()
         podcastTitle.setOnClickListener { activity.openPodcastInfo(currentEpisode!!.podcast) }
-        downloadStatus.setOnClickListener {
-            val uri = Uri.parse(currentEpisode!!.source)
-            val title = currentEpisode!!.title
-            if (downloader.isDownloaded(uri))
-                removeDownloadDialog(title, uri)
-            else
-                downloader.startDownload(activity, title, uri)
+        bookmarkStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
+
+        bookmarkStatus.setOnClickListener {
+
+            if (!currentEpisode!!.isBookmarked) {
+                bookmarkStatus.setMinAndMaxFrame(0, 50)
+                bookmarkStatus.speed = 1.0F
+                bookmarkStatus.playAnimation()
+            } else {
+                bookmarkStatus.setMinAndMaxFrame(0, 50)
+                bookmarkStatus.speed = -1.0F
+                bookmarkStatus.playAnimation()
+            }
+            vm.sendBookmarkAction(!currentEpisode!!.isBookmarked, currentEpisode!!.id)
+            currentEpisode!!.isBookmarked = !currentEpisode!!.isBookmarked
+            sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
         }
-    }
-
-    private fun removeDownloadDialog(title: String, uri: Uri) {
-        val alertDialog = AlertDialog.Builder(context)
-        alertDialog.setMessage("$title جذف شود؟ ")
-        alertDialog.setNegativeButton("خیر") { _a, _ -> _a.dismiss() }
-        alertDialog.setPositiveButton("بله") { _, _ ->
-            vm.delete(currentEpisode!!)
-            downloader.removeDownload(uri, title)
-        }
-        alertDialog.create().show()
-    }
-
-    override fun onDownloadsChanged(isDownload: Boolean) {
-        val downloaded = downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
-        if (downloaded) {
-            vm.save(currentEpisode!!)
-            currentEpisode!!.isDownloaded = 1
-            downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
-            downloadStatus.speed = 1.0F
-            downloadStatus.playAnimation()
-        } else {
-            vm.delete(currentEpisode!!)
-            currentEpisode!!.isDownloaded = 0
-            downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
-            downloadStatus.speed = -1.0F
-            downloadStatus.playAnimation()
-        }
-
-        sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
-    }
-
-    override fun onStart() {
-        downloader.addListener(this)
-        super.onStart()
-    }
-
-    override fun onStop() {
-        downloader.removeListener(this)
-        super.onStop()
     }
 
     private fun updateMarginScroller(i: Int = -1) {
@@ -133,12 +95,12 @@ class EpisodeFragment : BaseFragment(), DownloadTracker.Listener {
     }
 
     private fun updateView() {
-        val downloaded = downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
-        if (downloaded)
-            downloadStatus.progress = 0.74f
-        else downloadStatus.progress = 0.12f
 
         currentEpisode?.let {
+            bookmarkStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
+            if (it.isBookmarked)
+                bookmarkStatus.frame = 50
+            else bookmarkStatus.frame = 0
 
             podcastCover.load(it.podcast.cover)
             episodeCover.load(it.cover)

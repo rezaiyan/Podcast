@@ -28,6 +28,7 @@ class EpisodeListFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
+    override fun id() = 202
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private lateinit var sharedVm: SharedViewModel
 
@@ -66,6 +67,11 @@ class EpisodeListFragment : BaseFragment() {
         }
 
         sharedVm.listMargin.observe(this, Observer { listMargin(it) })
+    }
+
+    override fun onStop() {
+        hideProgress()
+        super.onStop()
     }
 
     private fun onProgress(isProgress: Boolean) {

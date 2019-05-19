@@ -27,7 +27,7 @@ class PodcastFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_podcast
     override fun tag(): String = this::class.java.simpleName
-
+    override fun id() = 105
     companion object {
         fun newInstance(podcast: Podcast) = PodcastFragment().also {
             it.arguments = Bundle().apply {

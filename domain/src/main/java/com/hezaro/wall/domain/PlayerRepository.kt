@@ -20,9 +20,10 @@ interface PlayerRepository {
     fun getSpeed(): Float
     fun savePlayedEpisode(episode: Episode)
     fun likeAction(like: Boolean, id: Long)
-    fun bookmarkAction(bookmark: Boolean, id: Long)
     fun userIsLogin(): Boolean
     fun updateEpisode(it: Episode)
+    fun save(episode: Episode)
+    fun delete(episode: Episode)
 
     class PlayerRepositoryImpl(
         private val storage: SharedPreferences,
@@ -32,18 +33,20 @@ interface PlayerRepository {
         BaseRepository(),
         PlayerRepository {
 
+        override fun save(episode: Episode) {
+            episode.isDownloaded = 1
+            episode.creationDate = System.currentTimeMillis()
+            database.saveEpisode(episode)
+        }
+
+        override fun delete(episode: Episode) = database.removeDownloaded(episode)
+
+
         override fun updateEpisode(it: Episode) =
             database.update(it.id, it.isBookmarked, it.likes, it.isDownloaded, it.lastPlayed, it.state)
 
 
         override fun userIsLogin() = storage.get(EMAIL, "").isNotEmpty()
-
-        override fun bookmarkAction(bookmark: Boolean, id: Long) {
-            if (bookmark)
-                request(api.bookmark(id)) {}
-            else
-                request(api.unBookmark(id)) {}
-        }
 
         override fun likeAction(like: Boolean, id: Long) {
             if (like)

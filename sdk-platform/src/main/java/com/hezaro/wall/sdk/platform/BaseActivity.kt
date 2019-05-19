@@ -52,25 +52,28 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun addFragment(fragment: BaseFragment) {
-        val gravity = Gravity.END
-        if (fragment.tag() == "SearchFragment" || fragment.tag() == "ExploreFragment" || fragment.tag() == "ProfileFragment") {
-            fragment.enterTransition = Fade()
-            fragment.exitTransition = Fade()
-        } else {
-            fragment.enterTransition = Slide(gravity)
-            fragment.exitTransition = Slide(gravity)
+        when {
+            (fragment.id() in 101..103) -> {
+                fragment.enterTransition = Fade()
+                fragment.exitTransition = Fade()
+            }
+            (fragment.id() in 104..105) -> {
+                fragment.enterTransition = Slide(Gravity.BOTTOM)
+                fragment.exitTransition = Slide(Gravity.TOP)
+            }
+            else -> {
+                fragment.enterTransition = Slide(Gravity.END)
+                fragment.exitTransition = Slide(Gravity.END)
+            }
         }
 
-        if (fragment.tag() == "EpisodeFragment" || fragment.tag() == "PodcastFragment") {
-            fragment.enterTransition = Slide(Gravity.BOTTOM)
-            fragment.exitTransition = Slide(Gravity.TOP)
-        }
+
 
         with(supportFragmentManager) {
-            if (fragments.indexOf(findFragmentByTag(fragment.tag())) == -1) {
+            if (fragments.indexOf(findFragmentByTag(fragment.id().toString())) == -1) {
                 beginTransaction()
-                    .replace(fragmentContainer(), fragment, fragment.tag()).doAddToBackStack(fragments.size).commit()
-
+                    .replace(fragmentContainer(), fragment, fragment.id().toString()).doAddToBackStack(fragments.size)
+                    .commit()
             }
         }
     }

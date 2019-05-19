@@ -5,7 +5,7 @@ object App {
     val minSdkTv = 21
     val targetSdk = 28
     val versionCode = 1
-    val versionName = "1.0.0-alpha01"
+    val versionName = "1.0.0-alpha03"
 }
 
 object GradleDir {
@@ -59,6 +59,7 @@ object Versions {
     val leakCanary = "1.6.2"
     val koin = "1.0.0"
     val gson = "2.8.5"
+    val okio = "2.2.2"
     val coroutinesAdapter = "0.9.2"
     val logger = "2.2.0"
 
@@ -135,6 +136,7 @@ object Libraries {
     val koinAndroid = "org.koin:koin-android:${Versions.koin}"
     val koinCore = "org.koin:koin-core:${Versions.koin}"
     val gson = "com.google.code.gson:gson:${Versions.gson}"
+    val okio = "com.squareup.okio:okio:${Versions.okio}"
     val javaxInject = "javax.inject:javax.inject:${Versions.javaxInject_version}"
     val javaxAnnotation = "javax.annotation:jsr250-api:${Versions.javaxAnnotations_version}"
     val picasso = "com.squareup.picasso:picasso:${Versions.picasso}"

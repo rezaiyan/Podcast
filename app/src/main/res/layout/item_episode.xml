@@ -6,6 +6,10 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/margin_4"
+    android:layout_marginEnd="@dimen/margin_8"
+    android:layout_marginStart="@dimen/margin_8"
+    android:layout_marginTop="@dimen/margin_4"
     android:weightSum="10">
 
 
@@ -14,11 +18,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_8"
         android:layout_weight="7"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
 
         <TextView
-            android:layout_marginTop="@dimen/margin_20"
             android:id="@+id/title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
             android:layout_width="match_parent"

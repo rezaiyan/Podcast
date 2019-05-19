@@ -121,14 +121,12 @@
 
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/bookmarkStatus"
+            android:id="@+id/downloadStatus"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_margin="@dimen/margin_8"
             android:scaleType="centerCrop"
-            android:scaleX="1.7"
-            android:scaleY="1.7"
-            app:lottie_rawRes="@raw/bookmark"
+            app:lottie_rawRes="@raw/download"
             app:lottie_renderMode="automatic" />
 
     </LinearLayout>

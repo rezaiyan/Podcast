@@ -10,7 +10,6 @@ import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.adapter.PagerAdapter
-import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
@@ -26,9 +25,8 @@ import org.koin.android.ext.android.inject
 class ProfileFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_profile
     override fun tag(): String = this::class.java.simpleName
-
+    override fun id() = 103
     private val vm: ProfileViewModel by inject()
-    private val sharedVm: SharedViewModel by inject()
 
     companion object {
         fun getInstance() = ProfileFragment()

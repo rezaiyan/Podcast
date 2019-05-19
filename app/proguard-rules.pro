@@ -58,4 +58,3 @@
 -keepclassmembers class com.hezaro.wall.data.model.** { *; }
 -keep public class com.hezaro.wall.data.model.**
 -keep public class com.hezaro.wall.sdk.base.**
--keepnames public class com.hezaro.wall.**

@@ -20,7 +20,7 @@
             android:fontFamily="@font/traffic"
             android:text="@string/the_bests"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <RadioButton
             android:id="@+id/radioBest"
@@ -47,7 +47,7 @@
             android:fontFamily="@font/traffic"
             android:text="@string/the_newest"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <RadioButton
             android:id="@+id/radioNewest"

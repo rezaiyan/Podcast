@@ -9,7 +9,7 @@ class PagerAdapter(
     private val fragments: Array<Fragment>,
     private val titles: Array<String>
 ) :
-    FragmentPagerAdapter(fragmentManager) {
+    FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int) = fragments[position]
     override fun getCount() = fragments.size

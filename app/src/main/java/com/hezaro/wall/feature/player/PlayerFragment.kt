@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.Player
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.R.drawable
@@ -336,7 +337,8 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         behavior?.peekHeight = height
 
         currentEpisode?.let {
-            likeStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
+            likeStatus.visibility =
+                if (GoogleSignIn.getLastSignedInAccount(context) != null) View.VISIBLE else View.INVISIBLE
 
             title.text = it.title
             subtitle.text = it.podcast.creator

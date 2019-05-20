@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
@@ -30,6 +29,7 @@ import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
+import kotlinx.android.synthetic.main.fragment_explore.avatar
 import kotlinx.android.synthetic.main.fragment_explore.emptyViewLayout
 import kotlinx.android.synthetic.main.fragment_explore.exploreList
 import kotlinx.android.synthetic.main.fragment_explore.refreshLayout
@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.fragment_explore.search
 import kotlinx.android.synthetic.main.fragment_explore.sort
 import org.koin.android.ext.android.inject
 
-class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
+class ExploreFragment : BaseFragment() {
 
     private val vm: ExploreViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
@@ -47,7 +47,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
     override fun tag(): String = this::class.java.simpleName
     override fun id() = 101
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
-    private lateinit var avatar: ImageView
     private var isReset = false
     private var isLoadMoreAction = false
 
@@ -79,16 +78,6 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         fun getInstance() = ExploreFragment()
     }
 
-    override fun invoke(e: Episode, index: Int) {
-        if (isReset or sharedVm.isPlaying.value!!) {
-            sharedVm.isPlaying(true)
-            isReset = false
-            activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
-        } else {
-            sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
-        }
-    }
-
     override fun onDestroyView() {
         vm.explore.postValue(episodeAdapter.episodes)
         vm.page = exploreList.page
@@ -101,14 +90,24 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         sharedVm.listMargin.observe(this@ExploreFragment, Observer { updateMarginList(it) })
         sharedVm.resetPlaylist.observe(this@ExploreFragment, Observer { isReset = it })
-        sharedVm.userInfo.observe(this@ExploreFragment, Observer { updateUserInf(it) })
+        sharedVm.userInfo.observe(this@ExploreFragment, Observer { updateUser(it) })
         sharedVm.episode.observe(this@ExploreFragment, Observer {
             if (it.first == UPDATE_VIEW)
                 episodeAdapter.updateRow(it.second)
         })
 
-        avatar = view.findViewById(R.id.avatar)
-        episodeAdapter = EpisodeAdapter(onItemClick = this@ExploreFragment)
+        episodeAdapter = EpisodeAdapter(
+            onItemClick = { e, _ ->
+                if (isReset or sharedVm.isPlaying.value!!) {
+                    sharedVm.isPlaying(true)
+                    isReset = false
+                    activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
+                } else {
+                    sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
+                }
+            },
+            longClickListener = { activity.openPodcastInfo(it) }
+        )
         exploreList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = episodeAdapter
@@ -225,10 +224,10 @@ class ExploreFragment : BaseFragment(), (Episode, Int) -> Unit {
             emptyViewLayout.show()
     }
 
-    private fun updateUserInf(it: UserInfo) {
-        if (::avatar.isInitialized)
+    private fun updateUser(it: UserInfo?) =
+        it?.let {
             avatar.load(it.avatar, transformation = CircleTransform())
-    }
+        }
 }
 
 

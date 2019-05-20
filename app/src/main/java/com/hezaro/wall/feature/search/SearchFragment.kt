@@ -72,12 +72,15 @@ class SearchFragment : BaseFragment() {
 
         searchList.apply {
             layoutManager = EndlessLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
-            adapter = EpisodeAdapter { e, _ ->
-                sharedVm.resetPlaylist(true)
-                sharedVm.isPlaying(true)
-                updateMarginList()
-                sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
-            }
+            adapter = EpisodeAdapter(
+                onItemClick = { e, _ ->
+                    sharedVm.resetPlaylist(true)
+                    sharedVm.isPlaying(true)
+                    updateMarginList()
+                    sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
+                },
+                longClickListener = { activity.openPodcastInfo(it) }
+            )
         }
 
         podcastList.apply {

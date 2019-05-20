@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.feature.adapter.EpisodeAdapter.ItemHolder
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
@@ -22,7 +23,8 @@ import kotlinx.android.synthetic.main.item_episode.view.title
 class EpisodeAdapter(
     val episodes: ArrayList<Episode> = arrayListOf(),
     private val isDownloadList: Boolean = false,
-    private val onItemClick: (Episode, Int) -> Unit
+    private val onItemClick: (Episode, Int) -> Unit,
+    private val longClickListener: (Podcast) -> Unit
 ) :
     RecyclerView.Adapter<ItemHolder>() {
 
@@ -81,6 +83,7 @@ class EpisodeAdapter(
                     it.date.text = calendar.persianLongDate
                     it.podcaster.text = podcast.title
                     it.setOnClickListener { onItemClick(this, adapterPosition) }
+                    it.setOnLongClickListener { longClickListener(podcast);true }
 
                 }
 

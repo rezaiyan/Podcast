@@ -38,7 +38,7 @@ object Versions {
     val appcompat = "1.1.0-alpha05"
     val archComponents_version = "2.0.0-rc01"
 
-    val constraint = "1.1.2"
+    val constraint = "2.0.0-alpha3"
     val design = "1.1.0-alpha05"
     val cardview = "1.0.0"
     val recyclerview = "1.0.0"

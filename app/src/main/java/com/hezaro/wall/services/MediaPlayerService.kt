@@ -62,10 +62,6 @@ class MediaPlayerService : Service() {
             get() = this@MediaPlayerService
     }
 
-    fun serviceConnected() {
-        notificationHelper.initNotificationHelper()
-    }
-
     override fun onCreate() {
         super.onCreate()
         liveError.value = Pair(false, mediaPlayer.player)

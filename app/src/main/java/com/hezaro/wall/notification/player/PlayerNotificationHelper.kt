@@ -33,25 +33,31 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.Target
 
+private const val CHANNEL_NAME = R.string.exo_download_notification_channel_name
+private const val CHANNEL_ID = "321"
+private const val REQUEST_CODE = 991
+private const val NOTIFICATION_ID = 114
+
 class PlayerNotificationHelper(
     private val context: Context,
     private val service: MediaPlayerService,
     private val mediaSession: MediaSessionHelper
 ) : NotificationHelper, MediaDescriptionAdapter, NotificationListener {
 
-    private val CHANNEL_NAME = R.string.exo_download_notification_channel_name
-    private val CHANNEL_ID = "321"
-    private val REQUEST_CODE = 991
-    private val NOTIFICATION_ID = 114
     var episode: Episode? = null
-    private lateinit var notificationManager: PlayerNotificationManager
-    private val pendingIntent = PendingIntent
-        .getActivity(
-            context,
-            REQUEST_CODE,
-            Intent(context, MainActivity::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT
+    private val notificationManager: PlayerNotificationManager by lazy {
+        PlayerNotificationManager.createWithNotificationChannel(
+            context, CHANNEL_ID, CHANNEL_NAME, NOTIFICATION_ID, this
         )
+            .apply {
+                setNotificationListener(this@PlayerNotificationHelper)
+                setMediaSessionToken(mediaSession.sessionToken)
+                setFastForwardIncrementMs(0)
+                setRewindIncrementMs(0)
+                setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                setStopAction(ACTION_STOP)
+            }
+    }
 
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -80,20 +86,7 @@ class PlayerNotificationHelper(
         }
     }
 
-    fun initNotificationHelper() {
-
-        notificationManager = PlayerNotificationManager.createWithNotificationChannel(
-            context, CHANNEL_ID, CHANNEL_NAME, NOTIFICATION_ID, this
-        )
-            .apply {
-                setNotificationListener(this@PlayerNotificationHelper)
-                setMediaSessionToken(mediaSession.sessionToken)
-                setFastForwardIncrementMs(0)
-                setRewindIncrementMs(0)
-                setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                setStopAction(ACTION_STOP)
-            }
-
+    init {
         LocalBroadcastManager.getInstance(context)
             .registerReceiver(receiver, IntentFilter(ACTION_EPISODE).also { it.addAction(ACTION_PLAYER) })
     }
@@ -110,7 +103,13 @@ class PlayerNotificationHelper(
         return episode?.title ?: "Unknown"
     }
 
-    override fun createCurrentContentIntent(player: Player): PendingIntent = pendingIntent
+    override fun createCurrentContentIntent(player: Player): PendingIntent = PendingIntent
+        .getActivity(
+            context,
+            REQUEST_CODE,
+            Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
     override fun getCurrentContentText(player: Player): String? {
         return episode?.podcast?.title ?: "Unknown"

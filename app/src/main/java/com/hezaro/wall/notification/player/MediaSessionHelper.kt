@@ -152,12 +152,10 @@ class MediaSessionHelper(private val context: Context, private val mediaPlayer: 
         episode.apply {
             mediaSession.setMetadata(
                 MediaMetadataCompat.Builder()
-//                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
-                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, podcast.title)
-                    .putString(MediaMetadataCompat.METADATA_KEY_AUTHOR, podcast.title)
-                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, description)
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, podcast.creator)
+                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, podcast.title)
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
                     .build()
             )
         }

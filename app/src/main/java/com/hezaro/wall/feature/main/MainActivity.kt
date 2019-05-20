@@ -86,7 +86,6 @@ class MainActivity : BaseActivity() {
                 sharedVm.notifyEpisode(Pair(RESUME_VIEW, currentEpisode))
             }
 
-            playerService.serviceConnected()
             sharedVm.serviceConnection(true)
             playerService.mediaPlayer.setPlaybackSpeed(vm.defaultSpeed())
 
@@ -130,7 +129,7 @@ class MainActivity : BaseActivity() {
     fun userIsLogin() = mGoogleSignInClient.signInIntent
     fun search() {
         sharedVm.collapsePlayer()
-        addFragment(SearchFragment())
+        addFragment(SearchFragment.newInstance())
     }
 
     fun profile() {

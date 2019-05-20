@@ -127,6 +127,7 @@ class MainActivity : BaseActivity() {
             }
     }
 
+    fun userIsLogin() = mGoogleSignInClient.signInIntent
     fun search() {
         sharedVm.collapsePlayer()
         addFragment(SearchFragment())
@@ -151,7 +152,14 @@ class MainActivity : BaseActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    private fun signOut() = mGoogleSignInClient.signOut()!!
+    private fun signOut() {
+        if (GoogleSignIn.getLastSignedInAccount(this) != null) {
+            mGoogleSignInClient.signOut()!!
+            vm.signOut()
+            sharedVm.userInfo(null)
+        }
+    }
+
     fun bindService() {
         serviceIsBounded = true
         bindService(Intent(this, MediaPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
@@ -205,7 +213,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun onLogin(it: UserInfo) = sharedVm.userLogin(it)
+    private fun onLogin(it: UserInfo) = sharedVm.userInfo(it)
 
     private fun onFailure(failure: Failure?) {
         when (failure) {

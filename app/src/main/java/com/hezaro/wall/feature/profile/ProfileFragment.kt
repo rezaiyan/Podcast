@@ -41,7 +41,7 @@ class ProfileFragment : BaseFragment() {
             .build()
         val googleSignInClient = GoogleSignIn.getClient(context!!, gso)
 
-        val menu = PopupMenu(context!!, moreProfile)
+        val menu = PopupMenu(requireContext().applicationContext, moreProfile)
         menu.inflate(R.menu.profile)
         val switchItem = menu.menu.findItem(R.id.switchTheme)
         menu.setOnMenuItemClickListener {

@@ -37,10 +37,6 @@ class SharedViewModel : ViewModel() {
         downloadCount.value = it
     }
 
-    fun userLogin(it: UserInfo?) {
-        userInfo.value = it
-    }
-
     fun notifyEpisode(it: Pair<Int, Episode>) {
         episode.value = it
     }
@@ -69,5 +65,8 @@ class SharedViewModel : ViewModel() {
 
     fun isPlaying(b: Boolean) {
         isPlaying.value = b
+    }
+    fun userInfo(it: UserInfo?) {
+        userInfo.value = it
     }
 }

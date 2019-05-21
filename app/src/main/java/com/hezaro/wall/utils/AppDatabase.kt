@@ -7,17 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.hezaro.wall.data.local.EpisodeConverter
 import com.hezaro.wall.data.local.EpisodeDao
-import com.hezaro.wall.data.local.PodcastDao
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Podcast
 
-@Database(entities = [Episode::class, Podcast::class], version = 1, exportSchema = false)
+@Database(entities = [Episode::class], version = 1, exportSchema = false)
 @TypeConverters(EpisodeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun episodeDao(): EpisodeDao
-
-    abstract fun podcastDao(): PodcastDao
 
     companion object {
         @Volatile

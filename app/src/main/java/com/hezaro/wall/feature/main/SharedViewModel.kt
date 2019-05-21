@@ -19,7 +19,6 @@ class SharedViewModel : ViewModel() {
     val playerIsOpen = MutableLiveData<Boolean>()
     val isServiceConnected = MutableLiveData<Boolean>()
     val isPlaying = MutableLiveData<Boolean>()
-    val downloadCount = MutableLiveData<Int>()
 
     fun listMargin(i: Int) {
         listMargin.value = i
@@ -33,9 +32,6 @@ class SharedViewModel : ViewModel() {
         resetPlaylist.value = it
     }
 
-    fun setDownloadSize(it: Int) {
-        downloadCount.value = it
-    }
 
     fun notifyEpisode(it: Pair<Int, Episode>) {
         episode.value = it

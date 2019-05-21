@@ -6,17 +6,16 @@ import androidx.annotation.StringDef
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 
+const val DOWNLOADED = 1
+const val IS_NOT_DOWNLOADED = 0
+
 @Keep
 class Status{
 
 companion object {
 
-    const val DOWNLOADED: Int = 3
-    const val DOWNLOADING: Int = 2
-    const val NOT_DOWNLOADED: Int = 1
-
     @Target(AnnotationTarget.TYPE, AnnotationTarget.PROPERTY)
-    @IntDef(DOWNLOADED, DOWNLOADING, NOT_DOWNLOADED)
+    @IntDef(DOWNLOADED, IS_NOT_DOWNLOADED)
     @Retention(RetentionPolicy.SOURCE)
     annotation class DownloadStatus
 
@@ -24,10 +23,6 @@ companion object {
     const val IN_PROGRESS = 2
     const val PLAYED = 3
 
-    @Target(AnnotationTarget.TYPE, AnnotationTarget.PROPERTY)
-    @IntDef(DOWNLOADED, DOWNLOADING, NOT_DOWNLOADED)
-    @Retention(RetentionPolicy.SOURCE)
-    annotation class PlayStatus
 
     const val BEST = "best"
     const val BEST_ = "بهترین ها"

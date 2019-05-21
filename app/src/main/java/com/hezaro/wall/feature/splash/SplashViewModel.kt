@@ -12,12 +12,10 @@ class SplashViewModel(private val repository: SplashRepository) : BaseViewModel(
 
     fun version() =
         launch {
-            isExecute = true
             repository.version().either(::onFailure, ::onVersion)
         }
 
     private fun onVersion(it: Version) {
-        isExecute = false
         version.postValue(it)
     }
 

@@ -19,14 +19,14 @@ class MainViewModel(
 
     fun login(idToken: String) =
         launch {
-            isExecute = true
+            progress.postValue(true)
             repository.login(idToken).either(::onFailure, ::onLogin)
         }
 
     fun defaultSpeed() = playerRepository.getSpeed()
 
     private fun onLogin(it: UserInfo) {
-        isExecute = false
+        progress.postValue(false)
         login.postValue(it)
     }
 

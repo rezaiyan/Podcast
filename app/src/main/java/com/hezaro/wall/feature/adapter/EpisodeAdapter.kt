@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
+import com.hezaro.wall.data.model.DOWNLOADED
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.feature.adapter.EpisodeAdapter.ItemHolder
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.item_episode.view.title
 class EpisodeAdapter(
     val episodes: ArrayList<Episode> = arrayListOf(),
     private val isDownloadList: Boolean = false,
+    private val isBookmarkList: Boolean = false,
     private val onItemClick: (Episode, Int) -> Unit,
     private val longClickListener: (Podcast) -> Unit
 ) :
@@ -70,11 +72,11 @@ class EpisodeAdapter(
 
                 episode.run {
                     it.logo.load(cover, transformation = RoundRectTransform())
-                    if (isDownloaded == 1 && isDownloadList.not()) {
+                    if (downloadStatus == DOWNLOADED && isDownloadList.not()) {
                         it.downloadStatus.show()
                         it.downloadStatus.progress = 0.74f
                     } else it.downloadStatus.hide()
-                    if (isBookmarked) {
+                    if (isBookmarked && isBookmarkList.not()) {
                         it.bookmarkStatus.show()
                         it.bookmarkStatus.progress = 1.0f
                     } else it.bookmarkStatus.hide()

@@ -13,12 +13,10 @@ class PodcastViewModel(private val repository: PodcastRepository) : BaseViewMode
     fun getEpisodes(podcastId: Long) =
         launch {
             progress.postValue(true)
-            isExecute = true
             repository.getEpisodes(podcastId).either(::onFailure, ::onSuccess)
         }
 
     private fun onSuccess(it: ArrayList<Episode>) {
-        isExecute = false
         progress.postValue(false)
         episodes.postValue(it)
     }

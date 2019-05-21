@@ -1,4 +1,4 @@
-package com.hezaro.wall.data.utils
+package com.hezaro.wall.data.base
 
 import com.hezaro.wall.data.model.ErrorModel
 import com.hezaro.wall.data.model.UserInfo

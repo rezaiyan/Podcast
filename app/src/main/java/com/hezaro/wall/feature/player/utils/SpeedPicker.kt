@@ -1,4 +1,4 @@
-package com.hezaro.wall.feature.player
+package com.hezaro.wall.feature.player.utils
 
 import android.app.Dialog
 import android.content.Context

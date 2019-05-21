@@ -1,4 +1,4 @@
-package com.hezaro.wall.data.utils
+package com.hezaro.wall.sdk.base.extention
 
 import org.json.JSONArray
 import org.json.JSONException

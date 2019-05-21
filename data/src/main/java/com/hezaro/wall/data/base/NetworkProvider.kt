@@ -1,4 +1,4 @@
-package com.hezaro.wall.data.utils
+package com.hezaro.wall.data.base
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,7 @@ import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.extention.JWT
 import com.hezaro.wall.sdk.base.extention.get
+import com.hezaro.wall.sdk.base.extention.isJson
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.orhanobut.logger.Logger
 import okhttp3.Cache

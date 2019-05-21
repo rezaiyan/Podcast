@@ -21,6 +21,7 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.normalize
 import com.hezaro.wall.utils.EndlessLayoutManager
+import com.hezaro.wall.utils.SEARCH
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import kotlinx.android.synthetic.main.fragment_search.back
@@ -43,7 +44,7 @@ class SearchFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_search
     override fun tag(): String = this::class.java.simpleName
-    override fun id() = 102
+    override fun id() = SEARCH
     private val vm: SearchViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
 
@@ -133,16 +134,10 @@ class SearchFragment : BaseFragment() {
         }
     }
 
-    private fun onProgress(isProgress: Boolean) {
-        if (isProgress)
-            showProgress()
-        else hideProgress()
-    }
-
-    override fun onStop() {
+    private fun onProgress(it: Boolean) = if (it) {
+        showProgress()
+    } else
         hideProgress()
-        super.onStop()
-    }
 
     private fun onPodcast(it: ArrayList<Podcast>) {
         podcastProgressbar.hide()

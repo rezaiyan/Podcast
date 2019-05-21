@@ -3,7 +3,6 @@ package com.hezaro.wall.feature.profile
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.sdk.platform.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,28 +11,28 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repository: ProfileRepository) : BaseViewModel() {
 
-    val userInfo: MutableLiveData<UserInfo> = MutableLiveData()
-    val episodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
+    val downloadEpisodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
+    val bookmarkEpisodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
 
-    fun userInfo() =
+    fun getBookmarks() =
         launch {
-            isExecute = true
-            repository.userInfo().either(::onFailure, ::onSuccess)
+            progress.postValue(true)
+            repository.getBookmarks().either(::onFailure, ::onSuccessBookmark)
         }
 
-    private fun onSuccess(it: UserInfo) {
-        isExecute = false
-        userInfo.postValue(it)
-    }
-
     @SuppressLint("CheckResult")
-    fun getEpisodes() {
-        repository.getDownloadEpisodes()
+    fun getDownloads() {
+        repository.getDownloads()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                episodes.value = it
+                downloadEpisodes.value = it
             }
+    }
+
+    private fun onSuccessBookmark(it: ArrayList<Episode>) {
+        progress.postValue(false)
+        bookmarkEpisodes.postValue(it)
     }
 
     fun setThemeStatus(night: Boolean) = repository.setThemeStatus(night)

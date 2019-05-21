@@ -6,12 +6,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.hezaro.wall.data.model.DOWNLOADED
 import com.hezaro.wall.data.model.Episode
 import io.reactivex.Flowable
 
+/**
+ * This class is a Data Access Object for [Episode] table of Room database
+ * This is used in the Room database class @see {com.hezaro.wall.utils.AppDatabase}
+ * */
 @Dao
 interface EpisodeDao {
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveEpisode(episode: Episode)
@@ -19,69 +23,92 @@ interface EpisodeDao {
     @Delete
     fun delete(episode: Episode)
 
-    @Query("UPDATE episode SET isDownloaded = 0 WHERE lastPlayed = 1 AND id = :id ")
-    fun update(id: Long): Int
+    @Query("SELECT * FROM episode")
+    fun getAllEpisodes(): List<Episode>
 
-    @Query("UPDATE episode SET isBookmarked = :bookmarked,likes = :likes,isDownloaded = :isDownloaded,lastPlayed = :lastPlayed,state = :state WHERE id = :id ")
-    fun update(
+    /**
+     * Helper function (private)
+     * Updates the field of [Episode.downloadStatus]
+     * @see {downloadStatus = 0} means --> downloadStatus = [IS_NOT_DOWNLOADED]
+     *
+     * @param id Is [Episode.id]
+     * @param lastPlayed It has default value to using in the where condition
+     * @return {[Int] > 0} if any field is updated else {[Int] < 0}
+     */
+    @Query("UPDATE episode SET downloadStatus = 0 , creationDate = :updateTime WHERE isLastPlay = :lastPlayed AND id = :id ")
+    fun updateDownloadStatus(id: Long, lastPlayed: Boolean = true, updateTime: Long = System.currentTimeMillis()): Int
+
+    /**
+     * Updates the fields of [Episode]
+     *
+     * @param id            Is [Episode.id]
+     * @param bookmarked    Is [Episode.isBookmarked]
+     * @param likes         Is [Episode.likes]
+     * @param isDownloaded  Is [Episode.downloadStatus]
+     * @param lastPlayed    Is [Episode.isLastPlay]
+     * @param state         Is [Episode.state]
+     */
+    @Query("UPDATE episode SET isBookmarked = :bookmarked,likes = :likes,downloadStatus = :isDownloaded,isLastPlay = :lastPlayed,state = :state , creationDate = :updateTime WHERE id = :id ")
+    fun updateDownloadStatus(
         id: Long,
         bookmarked: Boolean,
         likes: Long,
         isDownloaded: Int,
-        lastPlayed: Int,
-        state: Long
+        lastPlayed: Boolean,
+        state: Long,
+        updateTime: Long = System.currentTimeMillis()
     )
 
+    /**
+     * Remove the downloaded [Episode]
+     * if the [Episode.isLastPlay] is TRUE
+     * only updates the [Episode.downloadStatus] field to [IS_NOT_DOWNLOADED]
+     * else delete it
+     */
     @Transaction
     fun removeDownloaded(episode: Episode) {
-
-        val result = update(episode.id)
-
-        if (result > 0)
+        if (updateDownloadStatus(episode.id) > 0) {
             return
-        else delete(episode)
+        } else delete(episode)
     }
 
+    /**
+     * @param episode To updating the [Episode.isLastPlay] field to TRUE
+     *
+     * Updates the [Episode.isLastPlay] status
+     * if [Episode] already is downloaded only update it
+     * else delete that episode and replace another one
+     */
     @Transaction
-    open fun deleteIfIsNotLastPlayed(episode: Episode) {
-        val e = getLastPlayed()
-        e?.forEach {
-            if (it.lastPlayed != 1 && it.isDownloaded == 0) {
-                delete(it)
-            }
-        }
-        episode.lastPlayed = 1
-        episode.creationDate = System.currentTimeMillis()
-        saveLastPlayed(episode)
-    }
+    fun updateLastEpisode(episode: Episode) {
 
-    @Query("SELECT * FROM episode")
-    fun getAllEpisodes(): List<Episode>
-
-    @Query("SELECT * FROM episode WHERE isDownloaded = 1")
-    fun getDownloadEpisodes(): Flowable<List<Episode>>
-
-    @Query("SELECT * FROM episode WHERE lastPlayed = 1 ORDER BY creationDate DESC LIMIT 1")
-    fun getLastPlayedEpisode(): Episode?
-
-    @Transaction
-    open fun updateLastEpisode(episode: Episode) {
-        val e = getLastPlayed()
-        e?.forEach {
-            if (it.isDownloaded == 1) {
-                it.lastPlayed = 0
+        val it = getLastPlayedEpisode()
+        it?.let {
+            if (it.downloadStatus == DOWNLOADED) {
+                it.isLastPlay = false
                 saveEpisode(it)
-            } else
+            } else {
                 delete(it)
+                episode.isLastPlay = true
+                episode.creationDate = System.currentTimeMillis()
+                saveEpisode(episode)
+            }
+        } ?: run {
+            episode.isLastPlay = true
+            episode.creationDate = System.currentTimeMillis()
+            saveEpisode(episode)
         }
-        episode.lastPlayed = 1
-        episode.creationDate = System.currentTimeMillis()
-        saveLastPlayed(episode)
     }
 
-    @Query("SELECT * FROM episode WHERE lastPlayed = 1")
-    fun getLastPlayed(): List<Episode>?
+    /**
+     * @return A list of [Episode] that [Episode.downloadStatus] is [DOWNLOADED]
+     */
+    @Query("SELECT * FROM episode WHERE downloadStatus = :downloadStatus")
+    fun getDownloadEpisodes(downloadStatus: Int = DOWNLOADED): Flowable<List<Episode>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveLastPlayed(episode: Episode)
+    /**
+     * @return An [Episode] that [Episode.isLastPlay] is TRUE
+     */
+    @Query("SELECT * FROM episode WHERE isLastPlay = :lastPlayed ORDER BY creationDate DESC LIMIT 1")
+    fun getLastPlayedEpisode(lastPlayed: Boolean = true): Episode?
 }

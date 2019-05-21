@@ -64,4 +64,4 @@ const val ACTION_PLAYER_STATUS = "com.hezaro.wall.player.action.playStatus"
 
 const val ACTION_EPISODE = "com.hezaro.wall.openEpisodeInfo.action"
 
-const val ACTION_EPISODE_GET = "com.hezaro.wall.openEpisodeInfo.action.update"
+const val ACTION_EPISODE_GET = "com.hezaro.wall.openEpisodeInfo.action.updateDownloadStatus"

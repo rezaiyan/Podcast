@@ -17,6 +17,7 @@ import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
+import com.hezaro.wall.utils.EPISODE
 import kotlinx.android.synthetic.main.fragment_episode.bookmarkStatus
 import kotlinx.android.synthetic.main.fragment_episode.description
 import kotlinx.android.synthetic.main.fragment_episode.episodeCover
@@ -31,7 +32,7 @@ class EpisodeFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_episode
     override fun tag(): String = this::class.java.simpleName
-    override fun id() = 104
+    override fun id() = EPISODE
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
 
     private val vm: EpisodeViewModel by inject()
@@ -106,8 +107,8 @@ class EpisodeFragment : BaseFragment() {
             episodeCover.load(it.cover)
             episodeTitle.text = it.title
             podcastTitle.text = it.podcast.title
-            playedCount.text = it.views.toString()
-            likeCount.text = it.likes.toString()
+            playedCount.text = it.getView()
+            likeCount.text = it.getLike()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 description.text = Html.fromHtml(it.description, Html.FROM_HTML_MODE_LEGACY)
             } else {

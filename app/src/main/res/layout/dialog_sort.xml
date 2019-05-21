@@ -9,12 +9,13 @@
         android:id="@+id/bestLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:background="?selectableItemBackground">
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_margin="@dimen/margin_8"
             android:layout_toStartOf="@+id/radioBest"
             android:fontFamily="@font/traffic"
@@ -26,8 +27,9 @@
             android:id="@+id/radioBest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
+            android:checked="true" />
 
     </RelativeLayout>
 
@@ -42,6 +44,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_margin="@dimen/margin_8"
             android:layout_toStartOf="@+id/radioNewest"
             android:fontFamily="@font/traffic"
@@ -53,11 +56,10 @@
             android:id="@+id/radioNewest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

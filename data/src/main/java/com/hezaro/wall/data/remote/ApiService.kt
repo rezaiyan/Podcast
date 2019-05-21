@@ -26,6 +26,9 @@ interface ApiService {
     @GET("$BASE/podcasts/{episode_id}/episodes")
     fun episode(@Path("episode_id") episode_id: Long, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
+    @GET("$BASE/bookmarks")
+    fun bookmarks(): Call<Response<ArrayList<Episode>>>
+
     @GET("$BASE/podcasts")
     fun podcast(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
 

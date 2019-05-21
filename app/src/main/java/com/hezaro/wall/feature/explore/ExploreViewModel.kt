@@ -17,12 +17,12 @@ class ExploreViewModel(private val repository: ExploreRepository) :
     fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String = sort) =
         launch {
             sort = sortBy
-            isExecute = true
+            progress.postValue(true)
             repository.explore(page, offset, sort).either(::onFailure, ::onSuccess)
         }
 
     private fun onSuccess(it: ArrayList<Episode>) {
-        isExecute = false
+        progress.postValue(false)
         explore.postValue(it)
     }
 }

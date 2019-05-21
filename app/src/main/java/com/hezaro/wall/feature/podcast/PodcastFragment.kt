@@ -13,6 +13,7 @@ import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.utils.PARAM_PODCAST
+import com.hezaro.wall.utils.PODCAST
 import kotlinx.android.synthetic.main.fragment_podcast.podcastCover
 import kotlinx.android.synthetic.main.fragment_podcast.podcastDescription
 import kotlinx.android.synthetic.main.fragment_podcast.podcastTitle
@@ -27,7 +28,7 @@ class PodcastFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_podcast
     override fun tag(): String = this::class.java.simpleName
-    override fun id() = 105
+    override fun id() = PODCAST
     companion object {
         fun newInstance(podcast: Podcast) = PodcastFragment().also {
             it.arguments = Bundle().apply {

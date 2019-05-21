@@ -1,8 +1,8 @@
-package com.hezaro.wall.data.utils
+package com.hezaro.wall.data.base
 
 import com.hezaro.wall.sdk.test.UnitTest
 import kotlinx.coroutines.runBlocking
-import org.junit.Test
+import org.junit.*
 
 class BaseRepositoryTest : UnitTest() {
 

@@ -1,8 +1,8 @@
 package com.hezaro.wall.domain
 
 import android.content.SharedPreferences
+import com.hezaro.wall.data.base.BaseRepository
 import com.hezaro.wall.data.remote.ApiService
-import com.hezaro.wall.data.utils.BaseRepository
 import com.hezaro.wall.sdk.base.extention.EMAIL
 import com.hezaro.wall.sdk.base.extention.get
 

@@ -20,7 +20,6 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     var progress: MutableLiveData<Boolean> = MutableLiveData()
     var failure: MutableLiveData<Failure> = MutableLiveData()
-    var isExecute = false
     var job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -29,13 +28,11 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     public override fun onCleared() {
         super.onCleared()
         progress.postValue(false)
-        isExecute = false
         job.cancel()
         job = Job()
     }
 
     protected fun onFailure(it: Failure) {
-        isExecute = false
         progress.postValue(false)
         failure.postValue(it)
     }

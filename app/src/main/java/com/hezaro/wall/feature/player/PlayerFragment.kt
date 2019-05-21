@@ -15,9 +15,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hezaro.wall.R
 import com.hezaro.wall.R.drawable
+import com.hezaro.wall.data.model.DOWNLOADED
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.IS_NOT_DOWNLOADED
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.player.utils.SpeedPicker
 import com.hezaro.wall.feature.search.PLAY_SINGLE_TRACK
 import com.hezaro.wall.feature.search.RESUME_VIEW
 import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
@@ -202,14 +205,14 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
     override fun onDownloadsChanged(isDownload: Boolean) {
         val downloaded = downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
         if (downloaded) {
+            currentEpisode!!.downloadStatus = DOWNLOADED
             vm.save(currentEpisode!!)
-            currentEpisode!!.isDownloaded = 1
             downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
             downloadStatus.speed = 1.0F
             downloadStatus.playAnimation()
         } else {
+            currentEpisode!!.downloadStatus = IS_NOT_DOWNLOADED
             vm.delete(currentEpisode!!)
-            currentEpisode!!.isDownloaded = 0
             downloadStatus.setMinAndMaxProgress(0.12f, 0.74f)
             downloadStatus.speed = -1.0F
             downloadStatus.playAnimation()

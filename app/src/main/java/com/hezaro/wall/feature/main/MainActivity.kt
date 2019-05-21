@@ -126,7 +126,6 @@ class MainActivity : BaseActivity() {
             }
     }
 
-    fun userIsLogin() = mGoogleSignInClient.signInIntent
     fun search() {
         sharedVm.collapsePlayer()
         addFragment(SearchFragment.newInstance())
@@ -145,13 +144,12 @@ class MainActivity : BaseActivity() {
 
     private fun prepareGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
             .requestIdToken(getString(string.server_client_id))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    private fun signOut() {
+    fun signOut() {
         if (GoogleSignIn.getLastSignedInAccount(this) != null) {
             mGoogleSignInClient.signOut()!!
             vm.signOut()

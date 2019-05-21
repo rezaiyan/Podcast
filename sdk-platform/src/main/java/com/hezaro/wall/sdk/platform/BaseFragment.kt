@@ -26,6 +26,11 @@ abstract class BaseFragment : Fragment() {
         Timber.tag("BaseFragment").i("BaseTag : ${tag()}")
     }
 
+    override fun onStop() {
+        hideProgress()
+        super.onStop()
+    }
+
     fun showMessage(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     fun showProgress() = progressStatus(View.VISIBLE)

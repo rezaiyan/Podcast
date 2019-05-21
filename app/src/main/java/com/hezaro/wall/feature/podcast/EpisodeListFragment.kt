@@ -18,6 +18,7 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.sdk.platform.utils.PARAM_PODCAST_ID
 import com.hezaro.wall.utils.EndlessLayoutManager
+import com.hezaro.wall.utils.PODCAST_EPISODE
 import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
 import kotlinx.android.synthetic.main.fragment_list.recyclerList
 import org.koin.android.ext.android.inject
@@ -28,7 +29,7 @@ class EpisodeListFragment : BaseFragment() {
 
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
-    override fun id() = 202
+    override fun id() = PODCAST_EPISODE
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private lateinit var sharedVm: SharedViewModel
 
@@ -72,16 +73,10 @@ class EpisodeListFragment : BaseFragment() {
         sharedVm.listMargin.observe(this, Observer { listMargin(it) })
     }
 
-    override fun onStop() {
+    private fun onProgress(it: Boolean) = if (it) {
+        showProgress()
+    } else
         hideProgress()
-        super.onStop()
-    }
-
-    private fun onProgress(isProgress: Boolean) {
-        if (isProgress)
-            showProgress()
-        else hideProgress()
-    }
 
     private fun onSuccess(episodes: ArrayList<Episode>) {
         (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(episodes)

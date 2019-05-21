@@ -1,9 +1,9 @@
 package com.hezaro.wall.domain
 
 import android.content.SharedPreferences
+import com.hezaro.wall.data.base.BaseRepository
 import com.hezaro.wall.data.model.Meta
 import com.hezaro.wall.data.remote.ApiService
-import com.hezaro.wall.data.utils.BaseRepository
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.base.extention.NOTIFICATION_TOKEN

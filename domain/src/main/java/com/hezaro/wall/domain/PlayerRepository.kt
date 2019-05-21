@@ -1,11 +1,11 @@
 package com.hezaro.wall.domain
 
 import android.content.SharedPreferences
+import com.hezaro.wall.data.base.BaseRepository
 import com.hezaro.wall.data.local.EpisodeDao
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Meta
 import com.hezaro.wall.data.remote.ApiService
-import com.hezaro.wall.data.utils.BaseRepository
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.base.extention.EMAIL
@@ -34,7 +34,6 @@ interface PlayerRepository {
         PlayerRepository {
 
         override fun save(episode: Episode) {
-            episode.isDownloaded = 1
             episode.creationDate = System.currentTimeMillis()
             database.saveEpisode(episode)
         }
@@ -43,7 +42,14 @@ interface PlayerRepository {
 
 
         override fun updateEpisode(it: Episode) =
-            database.update(it.id, it.isBookmarked, it.likes, it.isDownloaded, it.lastPlayed, it.state)
+            database.updateDownloadStatus(
+                it.id,
+                it.isBookmarked,
+                it.likes,
+                it.downloadStatus,
+                it.isLastPlay,
+                it.state
+            )
 
 
         override fun userIsLogin() = storage.get(EMAIL, "").isNotEmpty()

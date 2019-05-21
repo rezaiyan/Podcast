@@ -1,8 +1,8 @@
 package com.hezaro.wall.utils
 
 import android.preference.PreferenceManager
-import com.hezaro.wall.data.utils.provideHttpClient
-import com.hezaro.wall.data.utils.provideRetrofit
+import com.hezaro.wall.data.base.provideHttpClient
+import com.hezaro.wall.data.base.provideRetrofit
 import com.hezaro.wall.domain.EpisodeRepository
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.domain.MainRepository
@@ -55,7 +55,7 @@ val module: Module = module {
     single { MainRepository.MainRepositoryImpl(get(), get(), get()) } bind MainRepository::class
 
     viewModel { ProfileViewModel(get()) }
-    single { ProfileRepository.ProfileRepositoryImpl(get(), get()) } bind ProfileRepository::class
+    single { ProfileRepository.ProfileRepositoryImpl(get(), get(), get()) } bind ProfileRepository::class
 
     single { PlayerRepository.PlayerRepositoryImpl(get(), get(), get()) } bind PlayerRepository::class
     viewModel { PlayerViewModel(get()) }
@@ -71,7 +71,6 @@ val module: Module = module {
 
     single { AppDatabase.getInstance(androidApplication()) }
     single { getEpisodeDAO(get()) }
-    single { getPodcastDAO(get()) }
 
     single { MediaSessionHelper(androidApplication(), get()) }
     single { PlayerNotificationHelper(androidApplication(), it[0], get()) }
@@ -80,6 +79,3 @@ val module: Module = module {
 }
 
 fun getEpisodeDAO(appDatabase: AppDatabase) = appDatabase.episodeDao()
-
-fun getPodcastDAO(appDatabase: AppDatabase) = appDatabase.podcastDao()
-

@@ -8,7 +8,6 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.hezaro.wall.data.model.Status.Companion.NEW
-import com.hezaro.wall.data.model.Status.Companion.PlayStatus
 
 @Keep
 @Entity(tableName = "episode", indices = [Index("id", unique = true)])
@@ -44,9 +43,8 @@ class Episode(
     var commentCount: Long = 0,
     @SerializedName("podcast")
     var podcast: Podcast = Podcast(),
-    var lastPlayed: Int = 0,
-    var isDownloaded: Int = 0,
-    @PlayStatus
+    var isLastPlay: Boolean = false,
+    var downloadStatus: Int = IS_NOT_DOWNLOADED,
     var playStatus: Int = NEW,
     var creationDate: Long = 0
 ) : Parcelable {
@@ -114,8 +112,8 @@ class Episode(
         publishedTime = parcel.readLong()
         commentCount = parcel.readLong()
         podcast = parcel.readParcelable(Podcast::class.java.classLoader)!!
-        lastPlayed = parcel.readInt()
-        isDownloaded = parcel.readInt()
+        isLastPlay = parcel.readBoolean()
+        downloadStatus = parcel.readInt()
         playStatus = parcel.readInt()
         creationDate = parcel.readLong()
     }
@@ -136,8 +134,8 @@ class Episode(
         parcel.writeLong(publishedTime)
         parcel.writeLong(commentCount)
         parcel.writeParcelable(podcast, flags)
-        parcel.writeInt(lastPlayed)
-        parcel.writeInt(isDownloaded)
+        parcel.writeBoolean(isLastPlay)
+        parcel.writeInt(downloadStatus)
         parcel.writeInt(playStatus)
         parcel.writeLong(creationDate)
     }
@@ -158,8 +156,8 @@ class Episode(
             publishedTime = it.publishedTime
             commentCount = it.commentCount
             podcast = it.podcast
-            lastPlayed = it.lastPlayed
-            isDownloaded = it.isDownloaded
+            isLastPlay = it.isLastPlay
+            downloadStatus = it.downloadStatus
             playStatus = it.playStatus
             creationDate = it.creationDate
         }

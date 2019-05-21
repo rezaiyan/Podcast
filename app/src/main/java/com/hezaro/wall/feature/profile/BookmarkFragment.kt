@@ -13,32 +13,34 @@ import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.search.UPDATE_VIEW
+import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.show
-import com.hezaro.wall.utils.DOWNLOAD
+import com.hezaro.wall.utils.BOOKMARK
 import com.hezaro.wall.utils.EndlessLayoutManager
 import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
 import kotlinx.android.synthetic.main.fragment_list.parentLayout
 import kotlinx.android.synthetic.main.fragment_list.recyclerList
 import org.koin.android.ext.android.inject
 
-class DownloadFragment : BaseFragment() {
+class BookmarkFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_list
     override fun tag(): String = this::class.java.simpleName
-    override fun id() = DOWNLOAD
+    override fun id() = BOOKMARK
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private lateinit var sharedVm: SharedViewModel
     private val vm: ProfileViewModel by inject()
 
     companion object {
-        fun getInstance() = DownloadFragment()
+        fun getInstance() = BookmarkFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        emptyTitleView.text = getString(R.string.is_not_bookmark_episode)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
-        sharedVm.episode.observe(this@DownloadFragment, Observer {
+        sharedVm.episode.observe(this@BookmarkFragment, Observer {
             if (it.first == UPDATE_VIEW)
                 (recyclerList.adapter as EpisodeAdapter).updateRow(it.second)
         })
@@ -46,7 +48,7 @@ class DownloadFragment : BaseFragment() {
         recyclerList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(
-                isDownloadList = true,
+                isBookmarkList = true,
                 onItemClick = { e, _ ->
                     sharedVm.isPlaying(true)
                     sharedVm.resetPlaylist(true)
@@ -56,20 +58,33 @@ class DownloadFragment : BaseFragment() {
                 longClickListener = { activity.openPodcastInfo(it) })
         }
         with(vm) {
-            observe(downloadEpisodes, ::onLoadEpisodes)
-            getDownloads()
+            observe(bookmarkEpisodes, ::onLoadEpisodes)
+            observe(failure, ::onFailure)
+            observe(progress, ::onProgress)
+            getBookmarks()
         }
 
         sharedVm.listMargin.observe(this, Observer { liftList(it) })
     }
 
-    private fun onLoadEpisodes(it: ArrayList<Episode>) {
-        if (recyclerList.adapter?.itemCount != it.size) {
-            (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
+    private fun onProgress(it: Boolean) = if (it) {
+        showProgress()
+    } else
+        hideProgress()
+
+    private fun onFailure(failure: Failure) {
+        emptyTitleView.apply {
+            text = getString(R.string.error_to_get_bookmarks)
+            show()
         }
-        if (recyclerList.adapter!!.itemCount > 0)
+    }
+
+    private fun onLoadEpisodes(it: ArrayList<Episode>) {
+        if (it.size > 0) {
+            it.reverse()
             emptyTitleView.hide()
-        else emptyTitleView.show()
+            (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
+        } else emptyTitleView.show()
     }
 
     private fun liftList(i: Int = -1) {

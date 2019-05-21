@@ -14,26 +14,22 @@ class SearchViewModel(private val repository: SearchRepository) : BaseViewModel(
 
     fun getPodcasts() =
         launch {
-            isExecute = true
             repository.podcast().either(::onFailure, ::onPodcast)
         }
 
     fun doSearch(query: String) =
         launch {
             progress.postValue(true)
-            isExecute = true
             if (query.isNotEmpty()) {
                 repository.search(query).either(::onFailure, ::onSearch)
             }
         }
 
     private fun onPodcast(list: ArrayList<Podcast>) {
-        isExecute = false
         podcast.postValue(list)
     }
 
     private fun onSearch(list: ArrayList<Episode>) {
-        isExecute = false
         progress.postValue(false)
         search.postValue(list)
     }

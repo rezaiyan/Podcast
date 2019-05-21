@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Status.Companion.BEST
@@ -27,6 +28,7 @@ import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.CircleTransform
+import com.hezaro.wall.utils.EXPLORE
 import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_explore.avatar
@@ -45,7 +47,7 @@ class ExploreFragment : BaseFragment() {
     private lateinit var episodeAdapter: EpisodeAdapter
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
-    override fun id() = 101
+    override fun id() = EXPLORE
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private var isReset = false
     private var isLoadMoreAction = false
@@ -112,15 +114,6 @@ class ExploreFragment : BaseFragment() {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = episodeAdapter
 
-            loadingStatus.observe(
-                this@ExploreFragment,
-                Observer<Boolean> { isLoading ->
-                    if (isLoading) {
-                        showProgress()
-                    } else
-                        hideProgress()
-                })
-
             setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
                     isLoadMoreAction = true
@@ -132,6 +125,7 @@ class ExploreFragment : BaseFragment() {
 
         with(vm) {
             observe(explore, ::onSuccess)
+            observe(progress, ::onProgress)
             failure(failure, ::onFailure)
             if (explore.value == null)
                 explore(exploreList.page)
@@ -141,7 +135,7 @@ class ExploreFragment : BaseFragment() {
         }
 
         retry.setOnClickListener {
-            if (!vm.isExecute) {
+            if (!vm.progress.value!!) {
                 exploreList.page = 1
                 vm.explore(page = exploreList.page)
                 exploreList.page = 2
@@ -168,6 +162,11 @@ class ExploreFragment : BaseFragment() {
             activity.profile()
         }
     }
+
+    private fun onProgress(it: Boolean) = if (it) {
+        showProgress()
+    } else
+        hideProgress()
 
     private fun sortPlaylist(sortBy: String): Boolean {
         exploreList.page = 2
@@ -224,10 +223,13 @@ class ExploreFragment : BaseFragment() {
             emptyViewLayout.show()
     }
 
-    private fun updateUser(it: UserInfo?) =
-        it?.let {
-            avatar.load(it.avatar, transformation = CircleTransform())
+    private fun updateUser(it: UserInfo?) {
+        val userInfo = GoogleSignIn.getLastSignedInAccount(context!!)
+
+        userInfo?.let {
+            avatar.load(it.photoUrl.toString(), CircleTransform())
         }
+    }
 }
 
 

@@ -84,7 +84,7 @@ class MediaSessionHelper(private val context: Context, private val mediaPlayer: 
     }
 
     private fun updatePlaybackState(stateVal: Int) {
-        // update current position
+        // updateDownloadStatus current position
         val currentPosition = mediaPlayer.currentPosition
         val playerState: Int
         var actions = MEDIA_SESSION_ACTIONS

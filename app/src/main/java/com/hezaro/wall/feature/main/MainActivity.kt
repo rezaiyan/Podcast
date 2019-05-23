@@ -149,13 +149,6 @@ class MainActivity : BaseActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    fun signOut() {
-        if (GoogleSignIn.getLastSignedInAccount(this) != null) {
-            mGoogleSignInClient.signOut()!!
-            vm.signOut()
-            sharedVm.userInfo(null)
-        }
-    }
 
     fun bindService() {
         serviceIsBounded = true
@@ -178,7 +171,6 @@ class MainActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         bindService()
-        updateUI(GoogleSignIn.getLastSignedInAccount(this))
         val iff = IntentFilter(ACTION_EPISODE)
         iff.addAction(ACTION_PLAYER)
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, iff)
@@ -205,7 +197,6 @@ class MainActivity : BaseActivity() {
 
     private fun updateUI(account: GoogleSignInAccount?) {
         account?.let {
-            Timber.i("idToken== ${it.idToken}")
             vm.login(it.idToken!!)
         }
     }
@@ -213,9 +204,6 @@ class MainActivity : BaseActivity() {
     private fun onLogin(it: UserInfo) = sharedVm.userInfo(it)
 
     private fun onFailure(failure: Failure?) {
-        when (failure) {
-            is Failure.UserNotFound -> signOut()
-        }
     }
 
     override fun onBackPressed() {

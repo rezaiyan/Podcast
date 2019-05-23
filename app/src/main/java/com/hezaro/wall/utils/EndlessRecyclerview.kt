@@ -22,9 +22,6 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
             page--
     }
 
-    val loadingStatus: MutableLiveData<Boolean>
-        get() = this.aeros.loadingStatus
-
     abstract inner class AdvancedEndlessRecyclerOnScrollListener(private val linearLayoutManager: RecyclerView.LayoutManager) :
         RecyclerView.OnScrollListener() {
 
@@ -88,6 +85,10 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
 
     fun setOnLoadMoreListener(onLoadMoreListener: OnLoadMoreListener) {
         this.loadMoreListener = onLoadMoreListener
+    }
+
+    fun removeOnLoadMoreListener() {
+        this.loadMoreListener = null
     }
 }
 

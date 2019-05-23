@@ -38,5 +38,4 @@ class MainViewModel(
         }
 
     fun userInfo() = repository.getUserInfo()
-    fun signOut() = repository.signOut()
 }

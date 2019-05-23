@@ -11,6 +11,7 @@ android {
     }
     compileSdkVersion App.compileSdk
     defaultConfig {
+        multiDexEnabled false
         applicationId App.id
         minSdkVersion App.minSdk
         targetSdkVersion App.targetSdk

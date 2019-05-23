@@ -15,14 +15,15 @@
     <string name="podcast">‌پادکست‌ها</string>
     <string name="_1_0x">1.0x</string>
     <string name="the_bests">چارت برترین‌ها</string>
-    <string name="the_newest">به‌ترتیب زمان انتشار</string>
+    <string name="the_newest">به ترتیب زمان انتشار</string>
     <string name="update">بروزرسانی</string>
     <string name="exit">خروج</string>
     <string name="new_version_alert">برای ادامه کار با اپلیکیشن, نسخه جدید را دریافت کنید</string>
-    <string name="signout">Sign Out</string>
-    <string name="dark_them">Change Theme</string>
+    <string name="signout">خروج از اکانت</string>
+    <string name="dark_them">تغییر تم</string>
     <string name="retry">تلاش مجدد</string>
     <string name="is_not_downloaded_episode">هیچ اپیزودی دانلود نشده است</string>
     <string name="is_not_bookmark_episode">هیچ اپیزودی بوکمارت نشده است</string>
     <string name="error_to_get_bookmarks">درحین دریافت بوکمارک‌ها مشکلی پیش آمده است</string>
+    <string name="error_to_get_episodes">درحین دریافت اپیزودها مشکلی پیش آمده است</string>
 </resources>

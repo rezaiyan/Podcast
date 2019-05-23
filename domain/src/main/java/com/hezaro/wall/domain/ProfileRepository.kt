@@ -8,7 +8,9 @@ import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
+import com.hezaro.wall.sdk.base.extention.AVATAR
 import com.hezaro.wall.sdk.base.extention.EMAIL
+import com.hezaro.wall.sdk.base.extention.JWT
 import com.hezaro.wall.sdk.base.extention.THEME
 import com.hezaro.wall.sdk.base.extention.USER_NAME
 import com.hezaro.wall.sdk.base.extention.get
@@ -21,6 +23,7 @@ interface ProfileRepository {
     fun getDownloads(): Flowable<ArrayList<Episode>>
     fun getBookmarks(): Either<Failure, ArrayList<Episode>>
     fun setThemeStatus(night: Boolean)
+    fun signOut()
 
     class ProfileRepositoryImpl(
         private val api: ApiService,
@@ -29,6 +32,15 @@ interface ProfileRepository {
     ) :
         BaseRepository(),
         ProfileRepository {
+
+        override fun signOut() {
+            storage.apply {
+                put(USER_NAME, "")
+                put(EMAIL, "")
+                put(AVATAR, "")
+                put(JWT, "")
+            }
+        }
 
         override fun setThemeStatus(night: Boolean) = storage.put(THEME, night)
         override fun getBookmarks(): Either<Failure, ArrayList<Episode>> =

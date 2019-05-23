@@ -26,7 +26,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        addFragment(fragment())
+        // To prevent be add again when recreation happen
+        if (supportFragmentManager.fragments.size == 0)
+            addFragment(fragment())
     }
 
     fun progressbarMargin(margin: Int = -1) {

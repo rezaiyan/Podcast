@@ -85,7 +85,7 @@ class EpisodeListFragment : BaseFragment() {
     private fun onFailure(failure: Failure) {
         if (recyclerList.adapter!!.itemCount == 0) {
             emptyTitleView.show()
-            emptyTitleView.text = "فرایند دریافت اپیزودها با مشکل مواجه شده است"
+            emptyTitleView.text = getString(R.string.error_to_get_episodes)
         }
     }
 

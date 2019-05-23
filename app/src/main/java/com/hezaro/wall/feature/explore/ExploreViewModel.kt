@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 class ExploreViewModel(private val repository: ExploreRepository) :
     BaseViewModel() {
 
-    var page = 1
     val explore: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
     private var sort = BEST
     fun explore(page: Int = 1, offset: Int = 20, sortBy: @SortBy String = sort) =

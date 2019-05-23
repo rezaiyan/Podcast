@@ -27,6 +27,8 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.show
+import com.hezaro.wall.sdk.platform.utils.SAVE_INSTANCE_EPISODES
+import com.hezaro.wall.sdk.platform.utils.SAVE_INSTANCE_PAGE
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EXPLORE
 import com.hezaro.wall.utils.EndlessLayoutManager
@@ -44,13 +46,28 @@ class ExploreFragment : BaseFragment() {
 
     private val vm: ExploreViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
-    private lateinit var episodeAdapter: EpisodeAdapter
+    private val episodeAdapter: EpisodeAdapter by lazy {
+        EpisodeAdapter(
+            onItemClick = { e, _ ->
+                if (isReset or sharedVm.isPlaying.value!!) {
+                    sharedVm.isPlaying(true)
+                    isReset = false
+                    activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
+                } else {
+                    sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
+                }
+            },
+            longClickListener = { activity.openPodcastInfo(it) }
+        )
+    }
+
     override fun layoutId() = R.layout.fragment_explore
     override fun tag(): String = this::class.java.simpleName
     override fun id() = EXPLORE
     private val activity: MainActivity by lazy { requireActivity() as MainActivity }
     private var isReset = false
     private var isLoadMoreAction = false
+    private var page = 1
 
     private val sortDialog by lazy {
         val sortDialog = Dialog(context!!)
@@ -80,15 +97,24 @@ class ExploreFragment : BaseFragment() {
         fun getInstance() = ExploreFragment()
     }
 
-    override fun onDestroyView() {
-        vm.explore.postValue(episodeAdapter.episodes)
-        vm.page = exploreList.page
-        super.onDestroyView()
+    override fun onStop() {
+        exploreList.removeOnLoadMoreListener()
+        page = exploreList.page
+        super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (episodeAdapter.episodes.size > 0)
+            outState.apply {
+                putParcelableArrayList(SAVE_INSTANCE_EPISODES, episodeAdapter.episodes)
+                putInt(SAVE_INSTANCE_PAGE, page)
+            }
+        super.onSaveInstanceState(outState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        exploreList.page = vm.page
+
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         sharedVm.listMargin.observe(this@ExploreFragment, Observer { updateMarginList(it) })
         sharedVm.resetPlaylist.observe(this@ExploreFragment, Observer { isReset = it })
@@ -98,18 +124,6 @@ class ExploreFragment : BaseFragment() {
                 episodeAdapter.updateRow(it.second)
         })
 
-        episodeAdapter = EpisodeAdapter(
-            onItemClick = { e, _ ->
-                if (isReset or sharedVm.isPlaying.value!!) {
-                    sharedVm.isPlaying(true)
-                    isReset = false
-                    activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
-                } else {
-                    sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
-                }
-            },
-            longClickListener = { activity.openPodcastInfo(it) }
-        )
         exploreList.apply {
             layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = episodeAdapter
@@ -127,11 +141,6 @@ class ExploreFragment : BaseFragment() {
             observe(explore, ::onSuccess)
             observe(progress, ::onProgress)
             failure(failure, ::onFailure)
-            if (explore.value == null)
-                explore(exploreList.page)
-            exploreList.page++
-            vm.page = exploreList.page
-            exploreList.setLoading(true)
         }
 
         retry.setOnClickListener {
@@ -148,7 +157,12 @@ class ExploreFragment : BaseFragment() {
         }
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
-        refreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.ic_controller))
+        refreshLayout.setProgressBackgroundColorSchemeColor(
+            ContextCompat.getColor(
+                context!!,
+                R.color.ic_controller
+            )
+        )
         refreshLayout.setOnRefreshListener {
             retry.performClick()
         }
@@ -160,6 +174,29 @@ class ExploreFragment : BaseFragment() {
         }
         avatar.setOnClickListener {
             activity.profile()
+        }
+
+        savedInstanceState?.let {
+            val episodes = savedInstanceState.getParcelableArrayList<Episode>(SAVE_INSTANCE_EPISODES)
+            if (!episodes.isNullOrEmpty()) {
+                episodeAdapter.clearAndAddEpisode(episodes)
+                val page = savedInstanceState.getInt(SAVE_INSTANCE_PAGE)
+                exploreList.page = page
+            } else {
+                with(vm) {
+                    if (explore.value == null)
+                        explore(exploreList.page)
+                    exploreList.page++
+                    exploreList.setLoading(true)
+                }
+            }
+        } ?: run {
+            with(vm) {
+                if (explore.value == null)
+                    explore(exploreList.page)
+                exploreList.page++
+                exploreList.setLoading(true)
+            }
         }
     }
 

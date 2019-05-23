@@ -20,7 +20,6 @@ interface MainRepository {
     fun login(idToken: String): Either<Failure, UserInfo>
     fun retrieveLatestPlayedEpisode(): Episode?
     fun getUserInfo(): UserInfo
-    fun signOut()
 
     class MainRepositoryImpl(
         private val api: ApiService,
@@ -30,14 +29,6 @@ interface MainRepository {
         BaseRepository(),
         MainRepository {
 
-        override fun signOut() {
-            storage.apply {
-                put(USER_NAME, "")
-                put(EMAIL, "")
-                put(AVATAR, "")
-                put(JWT, "")
-            }
-        }
 
         override fun getUserInfo() = UserInfo(
             username = storage.get(USER_NAME, ""),

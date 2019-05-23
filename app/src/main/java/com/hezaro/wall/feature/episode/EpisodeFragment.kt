@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.main.MainActivity
@@ -59,7 +60,8 @@ class EpisodeFragment : BaseFragment() {
 
         updateView()
         podcastTitle.setOnClickListener { activity.openPodcastInfo(currentEpisode!!.podcast) }
-        bookmarkStatus.visibility = if (vm.userIsLogin()) View.VISIBLE else View.INVISIBLE
+        bookmarkStatus.visibility =
+            if (GoogleSignIn.getLastSignedInAccount(context) != null) View.VISIBLE else View.INVISIBLE
 
         bookmarkStatus.setOnClickListener {
 

@@ -2,8 +2,8 @@ package com.hezaro.wall.data.base
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
 import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.extention.JWT
@@ -15,23 +15,24 @@ import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.context.ModuleDefinition
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit.SECONDS
 
-fun provideRetrofit(okHttpClient: OkHttpClient): ApiService {
+fun ModuleDefinition.provideRetrofit(): ApiService {
     return Retrofit.Builder()
         .baseUrl("http://wall.hezaro.com")
-        .client(okHttpClient)
+        .client(provideHttpClient())
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build().create(ApiService::class.java)
 }
 
-fun ModuleDefinition.provideHttpClient(storage: SharedPreferences): OkHttpClient {
-    val jwt = storage.get(JWT, "")
+fun ModuleDefinition.provideHttpClient(): OkHttpClient {
+    val jwt = PreferenceManager.getDefaultSharedPreferences(androidApplication()).get(JWT, "")
     val clientBuilder = OkHttpClient.Builder()
         .cache(provideCache())
         .addNetworkInterceptor(networkCacheProvider())

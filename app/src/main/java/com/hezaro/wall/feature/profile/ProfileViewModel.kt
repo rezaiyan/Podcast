@@ -14,6 +14,8 @@ class ProfileViewModel(private val repository: ProfileRepository) : BaseViewMode
     val downloadEpisodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
     val bookmarkEpisodes: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
 
+    fun signOut() = repository.signOut()
+
     fun getBookmarks() =
         launch {
             progress.postValue(true)

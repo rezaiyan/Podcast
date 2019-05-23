@@ -1,7 +1,6 @@
 package com.hezaro.wall.utils
 
 import android.preference.PreferenceManager
-import com.hezaro.wall.data.base.provideHttpClient
 import com.hezaro.wall.data.base.provideRetrofit
 import com.hezaro.wall.domain.EpisodeRepository
 import com.hezaro.wall.domain.ExploreRepository
@@ -65,9 +64,7 @@ val module: Module = module {
     single { PlayerDownloadHelper(androidApplication()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
 
-    single { provideRetrofit(get()) }
-    single { provideHttpClient(get()) }
-
+    single { provideRetrofit() }
 
     single { AppDatabase.getInstance(androidApplication()) }
     single { getEpisodeDAO(get()) }

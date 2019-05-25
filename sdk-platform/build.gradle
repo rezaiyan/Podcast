@@ -21,6 +21,7 @@ dependencies {
     testImplementation TestLibraries.rules
     testImplementation TestLibraries.kluent
     testImplementation TestLibraries.junit
+    implementation Libraries.crashlytics
     testImplementation project(Modules.sdkTest)
 
 }

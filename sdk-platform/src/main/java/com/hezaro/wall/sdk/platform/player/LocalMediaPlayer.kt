@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
@@ -279,11 +280,20 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
 
     override fun onPlayerError(error: ExoPlaybackException) {
         errorOccurred = true
+        var errorString = ""
+        Crashlytics.logException(error)
+        Crashlytics.setInt("PlayerStatus", exoPlayer!!.playbackState)
+        Crashlytics.setBool("EpisodeIsNull", episode == null)
+        Crashlytics.setBool("PlaylistIsNull", playlist == null)
+        Crashlytics.setInt("PlaylistSize", if (playlist != null) playlist!!.getItemCount() else -1)
 
-        var errorString = "خطایی رخ داده است"
         when (error.type) {
             ExoPlaybackException.TYPE_RENDERER -> {
-                errorString = "TYPE_RENDERER ${error.rendererException.message}"
+                stopPlayback()
+                onDestroy()
+                init()
+                concatPlaylist(playlist!!.getItems())
+                Timber.w(error, "Player error encountered -> TYPE_RENDERER ${error.rendererException.message}")
             }
             ExoPlaybackException.TYPE_SOURCE -> {
                 val message = error.sourceException.message!!
@@ -299,11 +309,15 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
                     errorString = "اینترنت دردسترس نیست"
             }
             ExoPlaybackException.TYPE_UNEXPECTED -> {
-                errorString = "TYPE_UNEXPECTED ${error.unexpectedException.message}"
+                stopPlayback()
+                onDestroy()
+                init()
+                concatPlaylist(playlist!!.getItems())
+                Timber.w(error, "Player error encountered -> TYPE_UNEXPECTED ${error.unexpectedException.message}")
             }
         }
-        Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
-        Timber.w(error, "Player error encountered -> $errorString")
+        if (errorString.isNotEmpty())
+            Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroy() {

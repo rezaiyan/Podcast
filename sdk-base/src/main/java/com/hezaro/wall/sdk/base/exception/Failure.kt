@@ -9,5 +9,6 @@ sealed class Failure : Throwable() {
     class UserNotFound : Failure()
     class NetworkConnection : Failure()
     data class ServerError(val code: Int, override val message: String) : Failure()
-    data class FeatureFailure(val throwable: Throwable) : Failure()
+    data class ExceptionFailure(val throwable: Throwable) : Failure()
+    data class FeatureFailure(val code: Int, override val message: String) : Failure()
 }

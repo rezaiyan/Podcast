@@ -38,7 +38,7 @@ interface PlayerRepository {
             database.saveEpisode(episode)
         }
 
-        override fun delete(episode: Episode) = database.removeDownloaded(episode)
+        override fun delete(episode: Episode) = database.removeDownloaded(storage.get(EMAIL, ""), episode)
 
 
         override fun updateEpisode(it: Episode) =
@@ -69,7 +69,7 @@ interface PlayerRepository {
             else Either.Left(Failure.UserNotFound())
 
         override fun savePlayedEpisode(episode: Episode) {
-            database.updateLastEpisode(episode)
+            database.updateLastEpisode(storage.get(EMAIL, ""), episode)
         }
     }
 }

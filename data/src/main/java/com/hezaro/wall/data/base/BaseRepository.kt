@@ -1,10 +1,11 @@
 package com.hezaro.wall.data.base
 
+import com.google.gson.Gson
 import com.google.gson.JsonParseException
-import com.hezaro.wall.data.model.ErrorModel
+import com.google.gson.reflect.TypeToken
+import com.hezaro.wall.data.model.ErrorBody
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
-import com.squareup.moshi.Moshi
 import retrofit2.Call
 import java.net.HttpURLConnection
 
@@ -34,36 +35,31 @@ open class BaseRepository {
         return try {
 
             val response = call.execute()
-
+            val errorBody = response.errorBody()?.string()
             if (response == null)
                 Either.Left(Failure.NetworkConnection())
             else {
-                val errorBody = response.errorBody()
                 when {
                     response.isSuccessful -> Either.Right(transform((response.body()!!)))
-                    (!response.isSuccessful && errorBody != null) -> {
+                    (!response.isSuccessful) -> {
                         when {
-                            response.code() >= HttpURLConnection.HTTP_INTERNAL_ERROR -> Either.Left(
-                                Failure.ServerError(
-                                    response.code(),
-                                    "خطایی از سمت سرور پیش آمده, بزودی رفع میشود"
+                            response.code() >= HttpURLConnection.HTTP_INTERNAL_ERROR ->
+                                Either.Left(
+                                    Failure.ServerError(
+                                        response.code(),
+                                        "خطایی از سمت سرور پیش آمده, بزودی رفع میشود"
+                                    )
                                 )
-                            )
-                            response.code() != HttpURLConnection.HTTP_OK -> Either.Left(
-                                Failure.ServerError(
-                                    response.code(),
-                                    "Payload is invalid"
-                                )
-                            )
+                            errorBody.isNullOrEmpty() -> {
+                                Either.Left(Failure.FeatureFailure(response.raw().code(), ""))
+                            }
                             else -> {
-                                val moshi = Moshi.Builder().build()
-                                val jsonAdapter = moshi.adapter(ErrorModel::class.java)
-                                val errorModel = jsonAdapter.fromJson(errorBody.string())
+                                val type = object : TypeToken<ErrorBody>() {}.type
+                                val errorModel = Gson().fromJson<ErrorBody>(errorBody, type)
+                                val errorMessage = errorModel!!.meta.message
+                                val errorCode = errorModel.meta.status
 
-                                val errorMessage = errorModel!!.msg
-                                val errorCode = response.code()
-
-                                Either.Left(Failure.ServerError(errorCode, errorMessage))
+                                Either.Left(Failure.FeatureFailure(errorCode, errorMessage))
                             }
                         }
                     }
@@ -71,7 +67,7 @@ open class BaseRepository {
                 }
             }
         } catch (exception: Throwable) {
-            Either.Left(Failure.FeatureFailure(exception))
+            Either.Left(Failure.ExceptionFailure(exception))
         }
     }
 }

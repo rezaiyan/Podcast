@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="top"
-    android:layoutDirection="ltr"
     android:orientation="vertical">
 
 
@@ -18,13 +17,13 @@
             android:id="@id/exo_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_8"
             android:layout_marginTop="@dimen/margin_4"
             android:includeFontPadding="false"
             android:paddingEnd="@dimen/margin_4"
             android:paddingStart="@dimen/margin_4"
             android:textColor="@color/ic_controller"
-            android:textSize="14sp"
+            android:textSize="@dimen/subtitle_size"
             app:layout_constraintStart_toStartOf="@+id/exo_progress"
             app:layout_constraintTop_toBottomOf="@id/exo_progress"
             tools:text="00:00" />
@@ -33,7 +32,7 @@
             android:id="@id/exo_progress"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_8"
             android:layout_marginEnd="50dp"
             android:layout_marginStart="50dp"
             app:buffered_color="@color/colorPrimary"
@@ -49,13 +48,13 @@
             android:id="@id/exo_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/margin_8"
             android:layout_marginTop="@dimen/margin_4"
             android:includeFontPadding="false"
             android:paddingEnd="@dimen/margin_4"
             android:paddingStart="@dimen/margin_4"
             android:textColor="@color/ic_controller"
-            android:textSize="14sp"
+            android:textSize="@dimen/subtitle_size"
             app:layout_constraintEnd_toEndOf="@+id/exo_progress"
             app:layout_constraintTop_toBottomOf="@id/exo_progress"
             tools:text="00:00" />
@@ -67,13 +66,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="horizontal"
         android:paddingTop="4dp">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/likeStatus"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/lottie_size"
+            android:layout_height="@dimen/lottie_size"
             android:layout_margin="@dimen/margin_8"
             android:scaleType="centerCrop"
             android:scaleX="1.2"
@@ -84,46 +84,46 @@
         <ImageButton
             android:id="@id/exo_prev"
             style="@style/ExoMediaButton.Previous"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/player_button_size"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_rew"
             style="@style/ExoMediaButton.Rewind"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/player_button_size"
             android:src="@drawable/ic_replay_10"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_play"
             style="@style/ExoMediaButton.Play"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/player_button_size"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_pause"
             style="@style/ExoMediaButton.Pause"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/player_button_size"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_ffwd"
             style="@style/ExoMediaButton.FastForward"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/player_button_size"
             android:src="@drawable/ic_forward_30"
             android:tint="@color/ic_controller" />
 
         <ImageButton
             android:id="@id/exo_next"
             style="@style/ExoMediaButton.Next"
-            android:layout_width="45dp"
+            android:layout_width="@dimen/player_button_size"
             android:tint="@color/ic_controller" />
 
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/downloadStatus"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/lottie_size"
+            android:layout_height="@dimen/lottie_size"
             android:layout_margin="@dimen/margin_8"
             android:scaleType="centerCrop"
             app:lottie_rawRes="@raw/download"

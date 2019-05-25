@@ -36,7 +36,7 @@ interface MainRepository {
             email = storage.get(EMAIL, "")
         )
 
-        override fun retrieveLatestPlayedEpisode(): Episode? = database.getLastPlayedEpisode()
+        override fun retrieveLatestPlayedEpisode(): Episode? = database.getLastPlayedEpisode(storage.get(EMAIL, ""))
 
         override fun login(idToken: String) =
             request(api.login(idToken)) {

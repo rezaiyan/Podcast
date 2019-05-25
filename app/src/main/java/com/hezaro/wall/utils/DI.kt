@@ -45,7 +45,7 @@ val module: Module = module {
     single { EpisodeRepository.EpisodeRepositoryImpl(get(), get()) } bind EpisodeRepository::class
 
     viewModel { ExploreViewModel(get()) }
-    single { ExploreRepository.ExploreRepositoryImpl(get(), get()) } bind ExploreRepository::class
+    single { ExploreRepository.ExploreRepositoryImpl(get(), get(), get()) } bind ExploreRepository::class
 
     viewModel { PodcastViewModel(get()) }
     single { PodcastRepository.PodcastRepositoryImpl(get()) } bind PodcastRepository::class
@@ -58,7 +58,7 @@ val module: Module = module {
 
     single { PlayerRepository.PlayerRepositoryImpl(get(), get(), get()) } bind PlayerRepository::class
     viewModel { PlayerViewModel(get()) }
-    single { SearchRepository.SearchRepositoryImpl(get(), get()) } bind SearchRepository::class
+    single { SearchRepository.SearchRepositoryImpl(get(), get(), get()) } bind SearchRepository::class
     viewModel { SearchViewModel(get()) }
 
     single { PlayerDownloadHelper(androidApplication()) }

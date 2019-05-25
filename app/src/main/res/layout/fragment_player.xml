@@ -15,8 +15,6 @@
         android:id="@+id/miniPlayerLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mini_player_height"
-        android:clickable="true"
-        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -80,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/margin_8"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_8"
             android:ellipsize="marquee"
             android:focusableInTouchMode="true"
             android:fontFamily="@font/traffic"
@@ -89,7 +87,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="16sp"
+            android:textSize="@dimen/title_size"
             app:layout_constraintBottom_toBottomOf="@id/logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/logo"
@@ -106,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/margin_8"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_8"
             android:clickable="false"
             android:ellipsize="start"
             android:focusable="false"
@@ -114,7 +112,7 @@
             android:gravity="right"
             android:singleLine="true"
             android:textColor="@color/colorTextSecondary"
-            android:textSize="16sp"
+            android:textSize="@dimen/subtitle_size"
             app:layout_constraintBottom_toBottomOf="@id/logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/logo"
@@ -138,7 +136,7 @@
         android:id="@+id/playerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/margin_8"
         app:auto_show="true"
         app:controller_layout_id="@layout/playback_control"
         app:hide_on_touch="false"
@@ -176,7 +174,7 @@
             android:paddingRight="@dimen/margin_10"
             android:text="@string/_1_0x"
             android:textColor="@color/ic_controller"
-            android:textSize="12sp" />
+            android:textSize="@dimen/subtitle_size" />
 
         <ImageView
             android:id="@+id/episodeInfo"

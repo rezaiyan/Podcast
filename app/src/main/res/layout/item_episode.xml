@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
     android:layout_marginBottom="@dimen/margin_4"
     android:layout_marginEnd="@dimen/margin_8"
     android:layout_marginStart="@dimen/margin_8"
     android:layout_marginTop="@dimen/margin_4"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:weightSum="10">
 
 
@@ -24,7 +24,6 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -35,6 +34,7 @@
             android:maxLines="2"
             android:textAlignment="gravity"
             android:textColor="@color/colorTextPrimary"
+            android:textSize="@dimen/title_size"
             tools:ignore="RtlHardcoded"
             tools:text="@tools:sample/lorem/random" />
 
@@ -48,6 +48,7 @@
             android:gravity="right"
             android:singleLine="true"
             android:textColor="@color/colorTextSecondary"
+            android:textSize="@dimen/subtitle_size"
             tools:text="@tools:sample/lorem/random" />
 
 
@@ -63,7 +64,7 @@
                 android:layout_width="@dimen/item_list_icon"
                 android:layout_height="@dimen/item_list_icon"
                 android:layout_margin="@dimen/margin_8"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/margin_8"
                 app:lottie_autoPlay="false"
                 app:lottie_enableMergePathsForKitKatAndAbove="true"
                 app:lottie_rawRes="@raw/download"
@@ -74,7 +75,7 @@
                 android:layout_width="@dimen/item_list_icon"
                 android:layout_height="@dimen/item_list_icon"
                 android:layout_margin="@dimen/margin_8"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/margin_8"
                 android:scaleX="1.7"
                 android:scaleY="1.7"
                 app:lottie_rawRes="@raw/bookmark"
@@ -94,14 +95,14 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/traffic"
                     android:textColor="@color/colorTextSecondary"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/subtitle_size"
                     tools:text="۲۶ اردیبهشت ۹۸" />
 
 
                 <ImageView
                     android:id="@+id/dateIcon"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/margin_16"
+                    android:layout_height="@dimen/margin_16"
                     android:layout_marginStart="@dimen/margin_8"
                     android:src="@drawable/ic_event" />
 
@@ -115,9 +116,9 @@
         android:id="@+id/logo"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
         android:layout_weight="3"
         tools:ignore="MissingConstraints"
         tools:src="@tools:sample/avatars" />

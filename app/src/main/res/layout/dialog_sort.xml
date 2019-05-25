@@ -6,34 +6,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/bestLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/margin_8"
-            android:layout_toStartOf="@+id/radioBest"
-            android:fontFamily="@font/traffic"
-            android:text="@string/the_bests"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15sp" />
-
-        <RadioButton
-            android:id="@+id/radioBest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:checked="true" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/newLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,10 +22,38 @@
             android:fontFamily="@font/traffic"
             android:text="@string/the_newest"
             android:textColor="@color/colorPrimary"
-            android:textSize="15sp" />
+            android:textSize="@dimen/title_size" />
 
         <RadioButton
             android:id="@+id/radioNewest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:checked="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bestLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/margin_8"
+            android:layout_toStartOf="@+id/radioBest"
+            android:fontFamily="@font/traffic"
+            android:text="@string/the_bests"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/title_size" />
+
+        <RadioButton
+            android:id="@+id/radioBest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

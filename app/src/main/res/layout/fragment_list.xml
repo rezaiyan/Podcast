@@ -22,9 +22,10 @@
         android:layout_gravity="center"
         android:fontFamily="@font/traffic"
         android:gravity="center"
+        android:layout_margin="@dimen/margin_20"
         android:text="@string/is_not_downloaded_episode"
         android:textColor="@color/colorTextPrimary"
-        android:textSize="18sp"
+        android:textSize="@dimen/title_size"
         android:visibility="invisible"
         tools:visibility="visible" />
 

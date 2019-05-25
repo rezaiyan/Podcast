@@ -45,7 +45,7 @@ interface ProfileRepository {
         override fun setThemeStatus(night: Boolean) = storage.put(THEME, night)
         override fun getBookmarks(): Either<Failure, ArrayList<Episode>> =
             request(api.bookmarks()) { remote ->
-                val localList = database.getAllEpisodes()
+                val localList = database.getAllEpisodes(storage.get(EMAIL, ""))
                 remote.response.forEach { e ->
                     if (localList.contains(e))
                         localList[localList.indexOf(e)].update(e)
@@ -55,7 +55,7 @@ interface ProfileRepository {
 
             }
 
-        override fun getDownloads() = database.getDownloadEpisodes().map { ArrayList(it) }!!
+        override fun getDownloads() = database.getDownloadEpisodes(storage.get(EMAIL, "")).map { ArrayList(it) }!!
         override fun userInfo(): Either<Failure, UserInfo> {
             with(storage) {
                 val username = get(USER_NAME, "")

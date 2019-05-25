@@ -8,4 +8,9 @@
     <dimen name="avatar_size">100dp</dimen>
     <dimen name="margin_20">20dp</dimen>
     <dimen name="margin_16">16dp</dimen>
+    <dimen name="x_large_title_size">30sp</dimen>
+    <dimen name="title_size">14sp</dimen>
+    <dimen name="subtitle_size">12sp</dimen>
+    <dimen name="lottie_size">28dp</dimen>
+    <dimen name="player_button_size">45dp</dimen>
 </resources>

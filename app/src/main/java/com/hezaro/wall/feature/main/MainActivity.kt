@@ -17,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.iid.FirebaseInstanceId
 import com.hezaro.wall.R
 import com.hezaro.wall.R.string
 import com.hezaro.wall.data.model.Episode
@@ -39,6 +38,7 @@ import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE
 import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE_GET
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER_STATUS
+import com.hezaro.wall.sdk.platform.utils.ERROR_LOGIN_CODE
 import com.hezaro.wall.sdk.platform.utils.RC_SIGN_IN
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.services.MediaPlayerServiceHelper
@@ -50,6 +50,7 @@ class MainActivity : BaseActivity() {
 
     override fun fragment() = ExploreFragment.getInstance()
 
+    private var gso: GoogleSignInOptions? = null
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val vm: MainViewModel by inject()
     private lateinit var sharedVm: SharedViewModel
@@ -116,14 +117,6 @@ class MainActivity : BaseActivity() {
         if (userInfo.email.isNotEmpty()) {
             onLogin(userInfo)
         }
-
-
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener { task ->
-                val token = task.result?.token
-                Timber.i("onNewIntent firebaseToken = $token")
-
-            }
     }
 
     fun search() {
@@ -143,12 +136,11 @@ class MainActivity : BaseActivity() {
     }
 
     private fun prepareGoogleSignIn() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(string.server_client_id))
             .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso!!)
     }
-
 
     fun bindService() {
         serviceIsBounded = true
@@ -204,6 +196,15 @@ class MainActivity : BaseActivity() {
     private fun onLogin(it: UserInfo) = sharedVm.userInfo(it)
 
     private fun onFailure(failure: Failure?) {
+        when (failure) {
+            is Failure.FeatureFailure -> {
+                if (failure.code == ERROR_LOGIN_CODE) {
+                    GoogleSignIn.getClient(this, gso!!).signOut()!!
+                    sharedVm.userInfo(null)
+                    showMessage(if (failure.message.isNullOrEmpty().not()) failure.message else getString(R.string.login_error))
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {

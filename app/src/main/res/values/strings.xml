@@ -26,4 +26,7 @@
     <string name="is_not_bookmark_episode">هیچ اپیزودی بوکمارت نشده است</string>
     <string name="error_to_get_bookmarks">درحین دریافت بوکمارک‌ها مشکلی پیش آمده است</string>
     <string name="error_to_get_episodes">درحین دریافت اپیزودها مشکلی پیش آمده است</string>
+    <string name="login_error">درحین فرایند لاگین مشکلی پیش آمده است</string>
+    <string name="remove">حذف</string>
+    <string name="cancel">انصراف</string>
 </resources>

@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll">
+
             <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/avatar_size"
@@ -34,6 +35,7 @@
                 android:lines="1"
                 android:maxLength="50"
                 android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/title_size"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"
                 app:layout_constraintEnd_toStartOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="@id/avatar"
@@ -48,7 +50,7 @@
                 android:lines="1"
                 android:maxLength="50"
                 android:textColor="@color/colorTextSecondary"
-                android:textSize="12sp"
+                android:textSize="@dimen/subtitle_size"
                 app:layout_constraintEnd_toEndOf="@id/username"
                 app:layout_constraintTop_toBottomOf="@id/username"
                 tools:text="@tools:sample/last_names" />
@@ -71,6 +73,7 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             app:layout_scrollFlags="exitUntilCollapsed"
+            app:tabIndicatorColor="@color/colorTextPrimary"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorTextPrimary"
             app:tabTextAppearance="@style/TrafficTextAppearance"

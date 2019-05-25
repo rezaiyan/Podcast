@@ -25,14 +25,10 @@ companion object {
 
 
     const val BEST = "best"
-    const val BEST_ = "بهترین ها"
-    const val OLDEST = "old"
-    const val OLDEST_ = "قدیمی ترین"
     const val NEWEST = "new"
-    const val NEWEST_ = "جدیدترین"
 
     @Target(AnnotationTarget.TYPE, AnnotationTarget.PROPERTY)
-    @StringDef(BEST, OLDEST, NEWEST)
+    @StringDef(BEST, NEWEST)
     @Retention(RetentionPolicy.SOURCE)
     annotation class SortBy
 

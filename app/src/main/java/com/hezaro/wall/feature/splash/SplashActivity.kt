@@ -54,6 +54,7 @@ class SplashActivity : AppCompatActivity() {
             .setOnClickListener { System.exit(0) }
         dialog.findViewById<Button>(R.id.update).setOnClickListener {
             Intent(Intent.ACTION_VIEW).apply {
+                dialog.dismiss()
                 data = Uri.parse("http://hezaro.com")
                 startActivity(this)
             }

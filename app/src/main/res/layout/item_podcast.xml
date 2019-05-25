@@ -9,25 +9,30 @@
         android:id="@+id/podcastCover"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_marginStart="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
 
+
     <TextView
         android:id="@+id/podcastName"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_4"
         android:fontFamily="@font/traffic"
-        android:maxLines="1"
+        android:gravity="center"
+        android:singleLine="true"
         android:textColor="@color/colorTextPrimary"
+        android:textSize="@dimen/title_size"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/podcastCover"
         app:layout_constraintStart_toStartOf="@+id/podcastCover"
         app:layout_constraintTop_toBottomOf="@+id/podcastCover"
-        tools:text="@tools:sample/last_names" />
+        tools:text="@tools:sample/lorem/random" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

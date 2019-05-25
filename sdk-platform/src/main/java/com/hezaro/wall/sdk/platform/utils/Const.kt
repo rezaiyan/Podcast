@@ -8,6 +8,9 @@ val rewindIncrementMs = 10000L
 const val DEFAULT_PLAYBACK_SPEED = 1.0f
 const val MS_TO_REVERSE_ON_PAUSE = 0
 
+const val ERROR_LOGIN_CODE = 422
+
+
 const val SAVE_INSTANCE_EPISODES = "com.hezaro.wall.explore"
 const val SAVE_INSTANCE_PAGE = "com.hezaro.wall.explore.page"
 const val RC_SIGN_IN = 991

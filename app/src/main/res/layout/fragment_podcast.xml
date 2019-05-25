@@ -19,8 +19,8 @@
                 android:id="@+id/podcastCover"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:scaleType="centerCrop"
                 android:background="@color/white"
+                android:scaleType="centerCrop"
                 android:src="@drawable/placeholder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -32,30 +32,31 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_16"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/margin_8"
                 android:layout_marginTop="@dimen/margin_8"
                 android:ellipsize="start"
                 android:fontFamily="@font/traffic"
                 android:maxLines="2"
                 android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/title_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintTop_toBottomOf="@id/podcastCover"
-                tools:text="شسپیشس سیب سیبسی بسیبس بسیب سیب سیبسیب " />
+                tools:text="@tools:sample/lorem/random" />
 
             <TextView
                 android:id="@+id/podcasterName"
-                style="@style/CustomTitleTextAppearance"
+                style="@style/TrafficTextAppearance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="start"
                 android:fontFamily="@font/traffic"
                 android:singleLine="true"
                 android:textColor="@color/colorTextSecondary"
-                android:textSize="14sp"
+                android:textSize="@dimen/subtitle_size"
                 app:layout_constraintEnd_toEndOf="@+id/podcastTitle"
                 app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
-                tools:text="عنوان تست" />
+                tools:text="@tools:sample/lorem" />
 
             <TextView
                 android:id="@+id/podcastDescription"
@@ -70,10 +71,11 @@
                 android:paddingBottom="@dimen/margin_20"
                 android:paddingTop="@dimen/margin_10"
                 android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/subtitle_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/podcasterName"
-                tools:text="عنوان تست" />
+                tools:text="@tools:sample/lorem" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -83,6 +85,7 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             app:layout_scrollFlags="exitUntilCollapsed"
+            app:tabIndicatorColor="@color/colorTextPrimary"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorTextPrimary"
             app:tabTextAppearance="@style/TrafficTextAppearance"

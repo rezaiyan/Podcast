@@ -112,7 +112,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_20"
                     android:fontFamily="@font/traffic"
-                    android:text="@string/retry" />
+                    android:text="@string/retry"
+                    android:textSize="@dimen/subtitle_size" />
             </LinearLayout>
         </FrameLayout>
 

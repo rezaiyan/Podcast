@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
@@ -51,6 +52,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun hideProgress() {
         progressBar().hide()
+    }
+
+    fun showMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     fun addFragment(fragment: BaseFragment) {

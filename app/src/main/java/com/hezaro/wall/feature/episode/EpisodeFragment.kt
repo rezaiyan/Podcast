@@ -7,6 +7,8 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.app.ShareCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -27,10 +29,12 @@ import kotlinx.android.synthetic.main.fragment_episode.likeCount
 import kotlinx.android.synthetic.main.fragment_episode.playedCount
 import kotlinx.android.synthetic.main.fragment_episode.podcastCover
 import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
+import kotlinx.android.synthetic.main.fragment_episode.share
 import org.koin.android.ext.android.inject
 
 class EpisodeFragment : BaseFragment() {
 
+    private var shareActionProvider: ShareActionProvider? = null
     override fun layoutId() = R.layout.fragment_episode
     override fun tag(): String = this::class.java.simpleName
     override fun id() = EPISODE
@@ -63,6 +67,16 @@ class EpisodeFragment : BaseFragment() {
         bookmarkStatus.visibility =
             if (GoogleSignIn.getLastSignedInAccount(context) != null) View.VISIBLE else View.INVISIBLE
 
+        share.setOnClickListener {
+            val shareIntent = ShareCompat.IntentBuilder.from(activity)
+                .setType("text/plain")
+                .setChooserTitle("ارسال اپیزود ${currentEpisode?.title} ")
+                .setText("http://wall.hezaro.com/episode/${currentEpisode?.id}/")
+                .intent
+            if (shareIntent.resolveActivity(context!!.packageManager) != null) {
+                startActivity(shareIntent)
+            }
+        }
         bookmarkStatus.setOnClickListener {
 
             if (!currentEpisode!!.isBookmarked) {

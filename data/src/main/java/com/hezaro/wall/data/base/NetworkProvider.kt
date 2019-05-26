@@ -15,48 +15,45 @@ import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidApplication
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.context.ModuleDefinition
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit.SECONDS
 
-fun ModuleDefinition.provideRetrofit(): ApiService {
+fun provideRetrofit(context: Context): ApiService {
+    val jwt = PreferenceManager.getDefaultSharedPreferences(context).get(JWT, "")
     return Retrofit.Builder()
         .baseUrl("http://wall.hezaro.com")
-        .client(provideHttpClient())
+        .client(provideHttpClient(context, jwt))
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build().create(ApiService::class.java)
 }
 
-fun ModuleDefinition.provideHttpClient(): OkHttpClient {
-    val jwt = PreferenceManager.getDefaultSharedPreferences(androidApplication()).get(JWT, "")
+fun provideHttpClient(context: Context, jwt: String): OkHttpClient {
     val clientBuilder = OkHttpClient.Builder()
-        .cache(provideCache())
-        .addNetworkInterceptor(networkCacheProvider())
-        .addInterceptor(offlineCacheProvider())
+        .cache(provideCache(context))
+        .addNetworkInterceptor(networkCacheProvider(context))
+        .addInterceptor(offlineCacheProvider(context))
         .readTimeout(5, SECONDS)
         .connectTimeout(10, SECONDS)
-        .addInterceptor(setHeader("User-Agent", androidContext().packageName))
-        .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
         .addInterceptor(setHeader("Authorization", "Bearer $jwt"))
+        .addInterceptor(setHeader("User-Agent", context.packageName))
+        .addInterceptor(setHeader("X-App-Token", BuildConfig.API_KEY))
 
     val httpLoggingInterceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
         if (message.isJson())
             Logger.json(message)
         else Logger.d(message)
     })
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        clientBuilder.addInterceptor(httpLoggingInterceptor)
+    httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+    clientBuilder.addInterceptor(httpLoggingInterceptor)
 
     return clientBuilder.build()
 }
 
-fun ModuleDefinition.provideCache(): Cache {
+fun provideCache(context: Context): Cache {
     val cacheSize = 10 * 1024 * 1024
-    val fileCache = java.io.File(androidContext().cacheDir, "responses")
+    val fileCache = java.io.File(context.cacheDir, "responses")
     return okhttp3.Cache(fileCache, cacheSize.toLong())
 }
 
@@ -71,11 +68,11 @@ fun setHeader(key: String, value: String): Interceptor {
     }
 }
 
-fun ModuleDefinition.offlineCacheProvider(): Interceptor {
+fun offlineCacheProvider(context: Context): Interceptor {
     return Interceptor {
         var request = it.request()
 
-        if (!isOnline()) {
+        if (!isOnline(context)) {
             val maxStale = 60 * 60 * 24 * 28 // tolerate 4-weeks stale
             request = request.newBuilder()
                 .removeHeader("Pragma")
@@ -86,14 +83,14 @@ fun ModuleDefinition.offlineCacheProvider(): Interceptor {
     }
 }
 
-fun ModuleDefinition.networkCacheProvider(): Interceptor {
+fun networkCacheProvider(context: Context): Interceptor {
     return Interceptor {
         val originalResponse = it.proceed(it.request())
         val cacheControl = originalResponse.header("Cache-Control")
         if ((cacheControl == null || cacheControl.contains("no-store") ||
                     cacheControl.contains("no-cache") ||
                     cacheControl.contains("must-revalidate") || cacheControl.contains("max-age=0")) &&
-            !isOnline()
+            !isOnline(context)
         ) {
             val maxAge = 60 // read from cache for 1 minute
             originalResponse.newBuilder()
@@ -107,8 +104,8 @@ fun ModuleDefinition.networkCacheProvider(): Interceptor {
 }
 
 @SuppressLint("MissingPermission")
-fun ModuleDefinition.isOnline(): Boolean {
-    val cm = androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+fun isOnline(context: Context): Boolean {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
     val netInfo = cm!!.activeNetworkInfo
     return netInfo != null && netInfo.isConnected
 }

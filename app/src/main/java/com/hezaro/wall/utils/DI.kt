@@ -27,9 +27,10 @@ import com.hezaro.wall.sdk.platform.player.LocalMediaPlayer
 import com.hezaro.wall.sdk.platform.player.MediaPlayer
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import org.koin.android.ext.koin.androidApplication
-import org.koin.androidx.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.module
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.Module
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 val module: Module = module {
 
@@ -64,7 +65,7 @@ val module: Module = module {
     single { PlayerDownloadHelper(androidApplication()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
 
-    single { provideRetrofit() }
+    single { provideRetrofit(androidApplication()) }
 
     single { AppDatabase.getInstance(androidApplication()) }
     single { getEpisodeDAO(get()) }

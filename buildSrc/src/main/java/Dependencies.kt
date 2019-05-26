@@ -57,7 +57,7 @@ object Versions {
     val moshi = "1.8.0"
     val lifecycle = "2.0.0"
     val leakCanary = "1.6.2"
-    val koin = "1.0.0"
+    val koin = "2.0.0"
     val gson = "2.8.5"
     val okio = "2.2.2"
     val coroutinesAdapter = "0.9.2"

@@ -56,7 +56,7 @@ dependencies {
     kapt Libraries.roomCompiler
     implementation Libraries.koinCore
     implementation Libraries.koinAndroid
-    implementation Libraries.koinViewModel
+    implementation(Libraries.koinViewModel) { exclude module: "lifecycle-extensions" }
     implementation Libraries.coroutinesCore
     implementation Libraries.coroutinesAndroid
     implementation Libraries.picasso

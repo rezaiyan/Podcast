@@ -94,6 +94,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())

@@ -32,7 +32,21 @@
         <activity
             android:name="com.hezaro.wall.feature.main.MainActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="wall.hezaro.com"
+                    android:pathPattern="/episode"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".services.MediaPlayerService"

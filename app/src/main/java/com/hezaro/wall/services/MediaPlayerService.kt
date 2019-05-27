@@ -81,14 +81,13 @@ class MediaPlayerService : Service() {
     override fun onDestroy() {
         endPlayback()
         mediaPlayer.stopPlayback()
-        player.value!!.stop()
-        notificationHelper.onDestroy()
+        notificationHelper.onHide()
         mediaPlayer.onDestroy()
         super.onDestroy()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+        notificationHelper.onShow(mediaPlayer)
         if (intent != null && intent.action != null) {
             val action = intent.action
 
@@ -146,7 +145,6 @@ class MediaPlayerService : Service() {
 
     override fun onUnbind(intent: Intent): Boolean {
         Timber.d("Unbinded from service")
-        notificationHelper.onGoing(false)
         if (mediaPlayerState == MediaPlayerState.STATE_IDLE) {
             stopSelf()
         }
@@ -155,13 +153,13 @@ class MediaPlayerService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        notificationHelper.onGoing(true)
         Timber.d("Binded to service")
         mServiceBound = true
         return ServiceBinder()
     }
 
     private fun endPlayback() {
+        notificationHelper.onGoing(false)
         currentEpisode?.playStatus = Status.PLAYED
     }
 

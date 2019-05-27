@@ -65,7 +65,7 @@ val module: Module = module {
     single { PlayerDownloadHelper(androidApplication()) }
     single { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
 
-    single { provideRetrofit(androidApplication()) }
+    factory { provideRetrofit(androidApplication()) }
 
     single { AppDatabase.getInstance(androidApplication()) }
     single { getEpisodeDAO(get()) }

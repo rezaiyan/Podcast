@@ -31,8 +31,9 @@
                 android:layout_width="@dimen/navigator_icon"
                 android:layout_height="@dimen/navigator_icon"
                 android:layout_margin="@dimen/margin_8"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_share"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -141,7 +142,7 @@
                 android:ellipsize="start"
                 android:fontFamily="@font/traffic"
                 android:gravity="right"
-                android:maxLines="2"
+                android:singleLine="true"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/title_size"
                 app:layout_constraintEnd_toEndOf="parent"

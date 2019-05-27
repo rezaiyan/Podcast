@@ -35,7 +35,7 @@ import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 const val SELECT_SINGLE_TRACK = 1
-const val SELECT_FROM_PLAYLIST = 2
+const val PLAY_EPISODEـFROM_PLAYLIST = 2
 const val UPDATE_VIEW = 3
 const val RESUME_VIEW = 4
 const val PLAY_SINGLE_TRACK = 5
@@ -115,7 +115,9 @@ class SearchFragment : BaseFragment() {
             .debounce(250, TimeUnit.MILLISECONDS)
             .distinct()
             .filter { text -> text.length > 2 }
-            .subscribe { text -> vm.doSearch(text) }
+            .subscribe { text ->
+                vm.doSearch(text)
+            }
     }
 
     private fun updateMarginList(i: Int = -1) {

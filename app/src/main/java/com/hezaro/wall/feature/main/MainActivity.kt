@@ -100,6 +100,7 @@ class MainActivity : BaseActivity() {
         handleIntent(intent)
     }
 
+    private var comFromDeepLink = false
     private fun handleIntent(intent: Intent?) {
         intent?.let {
             val appLinkAction = intent.action
@@ -109,14 +110,13 @@ class MainActivity : BaseActivity() {
                     uri.path?.let { path ->
                         uri.lastPathSegment?.let {
                             if (path.contains("episode")) {
-
+                                comFromDeepLink = true
                                 with(vm) {
                                     observe(deepEpisode, ::openEpisodeInfo)
                                     getEpisode(it.toLong())
 
                                 }
                             } else if (path.contains("podcast")) {
-
                                 with(vm) {
                                     observe(deepPodcast, ::openPodcastInfo)
                                     getPodcast(it.toLong())
@@ -278,7 +278,14 @@ class MainActivity : BaseActivity() {
 
     private fun onLatestEpisode(episode: Episode) = sharedVm.notifyEpisode(Pair(SELECT_SINGLE_TRACK, episode))
 
-    fun openEpisodeInfo(episode: Episode) = addFragment(EpisodeFragment.newInstance(episode))
+    fun openEpisodeInfo(episode: Episode) {
+        if (comFromDeepLink) {
+            comFromDeepLink = false
+            onLatestEpisode(episode)
+        }
+
+        addFragment(EpisodeFragment.newInstance(episode))
+    }
 
     fun openPodcastInfo(p: Podcast) = addFragment(PodcastFragment.newInstance(p))
 

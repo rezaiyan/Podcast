@@ -24,9 +24,9 @@ import com.hezaro.wall.data.model.IS_NOT_DOWNLOADED
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.player.utils.SpeedPicker
+import com.hezaro.wall.feature.search.PLAY_EPISODEـFROM_PLAYLIST
 import com.hezaro.wall.feature.search.PLAY_SINGLE_TRACK
 import com.hezaro.wall.feature.search.RESUME_VIEW
-import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
 import com.hezaro.wall.feature.search.SELECT_SINGLE_TRACK
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.platform.ext.hide
@@ -303,7 +303,7 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
                 )
                 collapse()
             }
-            SELECT_FROM_PLAYLIST -> {
+            PLAY_EPISODEـFROM_PLAYLIST -> {
                 MediaPlayerServiceHelper.selectEpisode(requireContext(), currentEpisode!!)
                 collapse()
             }

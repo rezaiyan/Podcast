@@ -20,7 +20,7 @@ import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
-import com.hezaro.wall.feature.search.SELECT_FROM_PLAYLIST
+import com.hezaro.wall.feature.search.PLAY_EPISODEـFROM_PLAYLIST
 import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
@@ -54,7 +54,7 @@ class ExploreFragment : BaseFragment() {
                     isReset = false
                     activity.prepareAndPlayPlaylist(episodeAdapter.episodes, e)
                 } else {
-                    sharedVm.notifyEpisode(Pair(SELECT_FROM_PLAYLIST, e))
+                    sharedVm.notifyEpisode(Pair(PLAY_EPISODEـFROM_PLAYLIST, e))
                 }
             },
             longClickListener = { activity.openPodcastInfo(it) }
@@ -229,8 +229,8 @@ class ExploreFragment : BaseFragment() {
             animator.start()
         }
     }
-
     private fun onSuccess(episodes: ArrayList<Episode>) {
+        emptyViewLayout.hide()
         exploreList.setLoading(false)
         val playerIsOpen = sharedVm.playerIsOpen.value?.let { sharedVm.playerIsOpen.value } ?: false
 

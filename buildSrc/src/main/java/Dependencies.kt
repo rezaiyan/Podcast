@@ -5,7 +5,7 @@ object App {
     val minSdkTv = 21
     val targetSdk = 28
     val versionCode = 1
-    val versionName = "1.0.0-alpha04"
+    val versionName = "1.0.0-alpha05"
 }
 
 object GradleDir {

@@ -139,7 +139,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_8"
-                android:ellipsize="start"
+                android:ellipsize="marquee"
                 android:fontFamily="@font/traffic"
                 android:gravity="right"
                 android:singleLine="true"

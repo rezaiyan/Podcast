@@ -354,6 +354,7 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
             likeStatus.visibility =
                 if (GoogleSignIn.getLastSignedInAccount(context) != null) View.VISIBLE else View.INVISIBLE
 
+            title.isSelected = true
             title.text = it.title
             subtitle.text = it.podcast.creator
             logo.load(it.cover)

@@ -20,6 +20,7 @@ interface MainRepository {
     fun login(idToken: String): Either<Failure, UserInfo>
     fun retrieveLatestPlayedEpisode(): Episode?
     fun getUserInfo(): UserInfo
+    fun getEpisode(id: Long): Either<Failure, Episode>
 
     class MainRepositoryImpl(
         private val api: ApiService,
@@ -30,6 +31,7 @@ interface MainRepository {
         MainRepository {
 
 
+        override fun getEpisode(id: Long) = request(api.episode(id)) { it.response }
         override fun getUserInfo() = UserInfo(
             username = storage.get(USER_NAME, ""),
             avatar = storage.get(AVATAR, ""),

@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
 import com.hezaro.wall.data.model.Status.Companion.NEW
 
 @Keep
-@Entity(tableName = "episode", indices = [Index("id", unique = true)])
+@Entity(tableName = "episodes", indices = [Index("id", unique = true)])
 class Episode(
     @SerializedName("userId")
     var userId: Long = 0,

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.ProgressBar
@@ -96,11 +97,45 @@ class MainActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        handleIntent(intent)
     }
+
+    private fun handleIntent(intent: Intent?) {
+        intent?.let {
+            val appLinkAction = intent.action
+            val appLinkData: Uri? = intent.data
+            if (Intent.ACTION_VIEW == appLinkAction) {
+                appLinkData?.let { uri ->
+                    uri.path?.let { path ->
+                        uri.lastPathSegment?.let {
+                            if (path.contains("episode")) {
+
+                                with(vm) {
+                                    observe(deepEpisode, ::openEpisodeInfo)
+                                    getEpisode(it.toLong())
+
+                                }
+                            } else if (path.contains("podcast")) {
+
+                                with(vm) {
+                                    observe(deepPodcast, ::openPodcastInfo)
+                                    getPodcast(it.toLong())
+
+                                }
+                            }
+                        }
+                    }
+                }
+                Timber.d("appLinkData?.path == ${appLinkData?.path}")
+                Timber.d("appLinkData?.lastPathSegment == ${appLinkData?.lastPathSegment}")
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
-
+        handleIntent(intent)
         sharedVm = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         (supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment).setBehavior()

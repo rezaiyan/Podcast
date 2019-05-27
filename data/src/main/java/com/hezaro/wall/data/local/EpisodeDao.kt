@@ -23,7 +23,7 @@ interface EpisodeDao {
     @Delete
     fun delete(episode: Episode)
 
-    @Query("SELECT * FROM episode WHERE userId = :userId")
+    @Query("SELECT * FROM episodes WHERE userId = :userId")
     fun getAllEpisodes(userId: String): List<Episode>
 
     /**
@@ -35,7 +35,7 @@ interface EpisodeDao {
      * @param lastPlayed It has default value to using in the where condition
      * @return {[Int] > 0} if any field is updated else {[Int] < 0}
      */
-    @Query("UPDATE episode SET downloadStatus = 0 , creationDate = :updateTime WHERE isLastPlay = :lastPlayed AND id = :id AND userId = :userId ")
+    @Query("UPDATE episodes SET downloadStatus = 0 , creationDate = :updateTime WHERE isLastPlay = :lastPlayed AND id = :id AND userId = :userId ")
     fun updateDownloadStatus(
         userId: String,
         id: Long,
@@ -53,7 +53,7 @@ interface EpisodeDao {
      * @param lastPlayed    Is [Episode.isLastPlay]
      * @param state         Is [Episode.state]
      */
-    @Query("UPDATE episode SET isBookmarked = :bookmarked,likes = :likes,downloadStatus = :isDownloaded,isLastPlay = :lastPlayed,state = :state , creationDate = :updateTime WHERE id = :id ")
+    @Query("UPDATE episodes SET isBookmarked = :bookmarked,likes = :likes,downloadStatus = :isDownloaded,isLastPlay = :lastPlayed,state = :state , creationDate = :updateTime WHERE id = :id ")
     fun updateDownloadStatus(
         id: Long,
         bookmarked: Boolean,
@@ -82,7 +82,7 @@ interface EpisodeDao {
      *
      * Updates the [Episode.isLastPlay] status
      * if [Episode] already is downloaded only update it
-     * else delete that episode and replace another one
+     * else delete that episodes and replace another one
      */
     @Transaction
     fun updateLastEpisode(userId: String, episode: Episode) {
@@ -108,12 +108,12 @@ interface EpisodeDao {
     /**
      * @return A list of [Episode] that [Episode.downloadStatus] is [DOWNLOADED]
      */
-    @Query("SELECT * FROM episode WHERE downloadStatus = :downloadStatus AND userId = :userId")
+    @Query("SELECT * FROM episodes WHERE downloadStatus = :downloadStatus AND userId = :userId")
     fun getDownloadEpisodes(userId: String, downloadStatus: Int = DOWNLOADED): Flowable<List<Episode>>
 
     /**
      * @return An [Episode] that [Episode.isLastPlay] is TRUE
      */
-    @Query("SELECT * FROM episode WHERE isLastPlay = :lastPlayed AND userId = :userId ORDER BY creationDate DESC LIMIT 1")
+    @Query("SELECT * FROM episodes WHERE isLastPlay = :lastPlayed AND userId = :userId ORDER BY creationDate DESC LIMIT 1")
     fun getLastPlayedEpisode(userId: String, lastPlayed: Boolean = true): Episode?
 }

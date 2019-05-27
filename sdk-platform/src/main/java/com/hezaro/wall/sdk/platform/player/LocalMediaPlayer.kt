@@ -142,7 +142,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
         broadcastEpisode(episode)
         val currentIndex = playlist!!.getIndex(episode)
         Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
-        Timber.tag("MediaPlayer").i("episode.state (SEEK) = ${episode.state}")
+        Timber.tag("MediaPlayer").i("episodes.state (SEEK) = ${episode.state}")
         exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
 
         exoPlayer!!.playWhenReady = readyToPlay
@@ -156,7 +156,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
         this.episode = e
         broadcastEpisode(e)
         Timber.tag("MediaPlayer").i("Selected track index = ${playlist?.getIndex(episode!!)}")
-        Timber.tag("MediaPlayer").i("episode.state (SEEK) = ${episode!!.state}")
+        Timber.tag("MediaPlayer").i("episodes.state (SEEK) = ${episode!!.state}")
         exoPlayer!!.seekTo(0, if (e.state >= 0) e.state else 0)
         exoPlayer!!.playWhenReady = true
     }
@@ -176,7 +176,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
                 exoPlayer!!.currentTimeline.windowCount >= currentIndex && exoPlayer!!.currentWindowIndex != currentIndex || currentIndex == 0
             ) {
                 Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
-                Timber.tag("MediaPlayer").i("episode.state (SEEK) = ${episode.state}")
+                Timber.tag("MediaPlayer").i("episodes.state (SEEK) = ${episode.state}")
                 exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
                 exoPlayer!!.playWhenReady = true
             }

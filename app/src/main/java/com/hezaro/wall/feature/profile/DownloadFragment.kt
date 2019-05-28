@@ -37,7 +37,7 @@ class DownloadFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.apply {
-            putParcelableArrayList(SAVE_INSTANCE_EPISODES, (recyclerList.adapter as EpisodeAdapter).episodes)
+            putParcelableArrayList(SAVE_INSTANCE_EPISODES, (recyclerList?.adapter as EpisodeAdapter).episodes)
         }
         super.onSaveInstanceState(outState)
     }

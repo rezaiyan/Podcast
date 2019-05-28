@@ -32,8 +32,11 @@ interface ApiService {
     @GET("$BASE/bookmarks")
     fun bookmarks(): Call<Response<ArrayList<Episode>>>
 
+    @GET("$BASE/podcasts/{id}")
+    fun podcast(@Path("id") id: Long): Call<Response<Podcast>>
+
     @GET("$BASE/podcasts")
-    fun podcast(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
+    fun podcasts(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
 
     @FormUrlEncoded
     @POST("$BASE/login")

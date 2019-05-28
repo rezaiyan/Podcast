@@ -7,7 +7,6 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -34,7 +33,6 @@ import org.koin.android.ext.android.inject
 
 class EpisodeFragment : BaseFragment() {
 
-    private var shareActionProvider: ShareActionProvider? = null
     override fun layoutId() = R.layout.fragment_episode
     override fun tag(): String = this::class.java.simpleName
     override fun id() = EPISODE

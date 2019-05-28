@@ -25,7 +25,6 @@ android {
             storePassword keystore_storePassword
             keyAlias keystore_keyAlias
             keyPassword keystore_keyPassword
-
         }
     }
 

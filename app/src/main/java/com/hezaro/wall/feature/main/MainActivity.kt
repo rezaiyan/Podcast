@@ -111,12 +111,15 @@ class MainActivity : BaseActivity() {
                         uri.lastPathSegment?.let {
                             if (path.contains("episode")) {
                                 comFromDeepLink = true
+                                showProgress()
                                 with(vm) {
                                     observe(deepEpisode, ::openEpisodeInfo)
                                     getEpisode(it.toLong())
 
                                 }
                             } else if (path.contains("podcast")) {
+                                showProgress()
+                                comFromDeepLink = true
                                 with(vm) {
                                     observe(deepPodcast, ::openPodcastInfo)
                                     getPodcast(it.toLong())
@@ -234,6 +237,7 @@ class MainActivity : BaseActivity() {
     private fun onLogin(it: UserInfo) = sharedVm.userInfo(it)
 
     private fun onFailure(failure: Failure?) {
+        hideProgress()
         when (failure) {
             is Failure.FeatureFailure -> {
                 if (failure.code == ERROR_LOGIN_CODE) {
@@ -241,6 +245,9 @@ class MainActivity : BaseActivity() {
                     sharedVm.userInfo(null)
                     showMessage(if (failure.message.isNullOrEmpty().not()) failure.message else getString(R.string.login_error))
                 }
+            }
+            is Failure.ServerError -> {
+                showMessage(failure.message)
             }
         }
     }
@@ -280,6 +287,7 @@ class MainActivity : BaseActivity() {
 
     fun openEpisodeInfo(episode: Episode) {
         if (comFromDeepLink) {
+            hideProgress()
             comFromDeepLink = false
             onLatestEpisode(episode)
         }
@@ -287,7 +295,13 @@ class MainActivity : BaseActivity() {
         addFragment(EpisodeFragment.newInstance(episode))
     }
 
-    fun openPodcastInfo(p: Podcast) = addFragment(PodcastFragment.newInstance(p))
+    fun openPodcastInfo(p: Podcast) {
+        if (comFromDeepLink) {
+            hideProgress()
+            comFromDeepLink = false
+        }
+        addFragment(PodcastFragment.newInstance(p))
+    }
 
     fun preparePlaylist(
         playlist: ArrayList<Episode>,

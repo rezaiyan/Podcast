@@ -14,7 +14,7 @@ import com.hezaro.wall.sdk.base.extention.get
 interface SearchRepository {
 
     fun search(query: String, page: Int = 1, offset: Int = 20): Either<Failure, ArrayList<Episode>>
-    fun podcast(): Either<Failure, ArrayList<Podcast>>
+    fun podcasts(): Either<Failure, ArrayList<Podcast>>
 
     class SearchRepositoryImpl(
         private val storage: SharedPreferences,
@@ -24,7 +24,7 @@ interface SearchRepository {
         BaseRepository(),
         SearchRepository {
 
-        override fun podcast(): Either<Failure, ArrayList<Podcast>> = request(api.podcast()) { it.response }
+        override fun podcasts(): Either<Failure, ArrayList<Podcast>> = request(api.podcasts()) { it.response }
 
         override fun search(query: String, page: Int, offset: Int) =
             request(api.search(query = query, page = page, offset = offset)) { remote ->

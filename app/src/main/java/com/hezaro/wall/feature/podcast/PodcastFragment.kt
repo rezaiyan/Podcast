@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
+import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModelProviders
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Podcast
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_podcast.podcastCover
 import kotlinx.android.synthetic.main.fragment_podcast.podcastDescription
 import kotlinx.android.synthetic.main.fragment_podcast.podcastTitle
 import kotlinx.android.synthetic.main.fragment_podcast.podcasterName
+import kotlinx.android.synthetic.main.fragment_podcast.share
 import kotlinx.android.synthetic.main.fragment_podcast.tabLayout
 import kotlinx.android.synthetic.main.fragment_podcast.viewpager
 
@@ -43,6 +45,19 @@ class PodcastFragment : BaseFragment() {
 
         val podcast = arguments?.getParcelable<Podcast>(PARAM_PODCAST)
         episodeCount = podcast?.episodeCount!!
+
+
+        share.setOnClickListener {
+            val shareIntent = ShareCompat.IntentBuilder.from(activity)
+                .setType("text/plain")
+                .setChooserTitle("ارسال  پادکست ${podcast.title} ")
+                .setText("http://d105f8.hezaro.ir/podcast/${podcast.id}/")
+                .intent
+            if (shareIntent.resolveActivity(context!!.packageManager) != null) {
+                startActivity(shareIntent)
+            }
+        }
+
         podcast.let {
             podcastTitle.text = it.title
             podcasterName.text = it.creator

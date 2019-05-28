@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.hezaro.wall.data.base.BaseRepository
 import com.hezaro.wall.data.local.EpisodeDao
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.Either
@@ -21,6 +22,7 @@ interface MainRepository {
     fun retrieveLatestPlayedEpisode(): Episode?
     fun getUserInfo(): UserInfo
     fun getEpisode(id: Long): Either<Failure, Episode>
+    fun getPodcast(id: Long): Either<Failure, Podcast>
 
     class MainRepositoryImpl(
         private val api: ApiService,
@@ -31,6 +33,7 @@ interface MainRepository {
         MainRepository {
 
 
+        override fun getPodcast(id: Long) = request(api.podcast(id)) { it.response }
         override fun getEpisode(id: Long) = request(api.episode(id)) { it.response }
         override fun getUserInfo() = UserInfo(
             username = storage.get(USER_NAME, ""),

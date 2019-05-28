@@ -52,7 +52,7 @@ class MainViewModel(
     fun getPodcast(id: Long) {
         launch {
             progress.postValue(true)
-//            repository.getPodcast(id).either(::onFailure, ::onLoad)
+            repository.getPodcast(id).either(::onFailure, ::onLoad)
         }
     }
 

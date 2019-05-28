@@ -14,7 +14,7 @@ class SearchViewModel(private val repository: SearchRepository) : BaseViewModel(
 
     fun getPodcasts() =
         launch {
-            repository.podcast().either(::onFailure, ::onPodcast)
+            repository.podcasts().either(::onFailure, ::onPodcast)
         }
 
     fun doSearch(query: String) =

@@ -10,13 +10,13 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Status.Companion.BEST
 import com.hezaro.wall.data.model.Status.Companion.NEWEST
-import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
@@ -31,21 +31,22 @@ import com.hezaro.wall.sdk.platform.utils.SAVE_INSTANCE_EPISODES
 import com.hezaro.wall.sdk.platform.utils.SAVE_INSTANCE_PAGE
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EXPLORE
-import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.OnLoadMoreListener
-import kotlinx.android.synthetic.main.fragment_explore.avatar
-import kotlinx.android.synthetic.main.fragment_explore.emptyViewLayout
-import kotlinx.android.synthetic.main.fragment_explore.exploreList
-import kotlinx.android.synthetic.main.fragment_explore.refreshLayout
-import kotlinx.android.synthetic.main.fragment_explore.retry
-import kotlinx.android.synthetic.main.fragment_explore.search
-import kotlinx.android.synthetic.main.fragment_explore.sort
+import kotlinx.android.synthetic.main.fragment_explore.*
 import org.koin.android.ext.android.inject
 
 class ExploreFragment : BaseFragment() {
 
     private val vm: ExploreViewModel by inject()
+    private val activity: MainActivity by lazy { requireActivity() as MainActivity }
+    private var isReset = false
+    private var isLoadMoreAction = false
+    private var page = 1
     private lateinit var sharedVm: SharedViewModel
+    override fun layoutId() = R.layout.fragment_explore
+    override fun tag(): String = this::class.java.simpleName
+    override fun id() = EXPLORE
+
     private val episodeAdapter: EpisodeAdapter by lazy {
         EpisodeAdapter(
             onItemClick = { e, _ ->
@@ -60,14 +61,6 @@ class ExploreFragment : BaseFragment() {
             longClickListener = { activity.openPodcastInfo(it) }
         )
     }
-
-    override fun layoutId() = R.layout.fragment_explore
-    override fun tag(): String = this::class.java.simpleName
-    override fun id() = EXPLORE
-    private val activity: MainActivity by lazy { requireActivity() as MainActivity }
-    private var isReset = false
-    private var isLoadMoreAction = false
-    private var page = 1
 
     private val sortDialog by lazy {
         val sortDialog = Dialog(context!!)
@@ -118,14 +111,14 @@ class ExploreFragment : BaseFragment() {
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         sharedVm.listMargin.observe(this@ExploreFragment, Observer { updateMarginList(it) })
         sharedVm.resetPlaylist.observe(this@ExploreFragment, Observer { isReset = it })
-        sharedVm.userInfo.observe(this@ExploreFragment, Observer { updateUser(it) })
+        sharedVm.userInfo.observe(this@ExploreFragment, Observer { updateUser() })
         sharedVm.episode.observe(this@ExploreFragment, Observer {
             if (it.first == UPDATE_VIEW)
                 episodeAdapter.updateRow(it.second)
         })
 
         exploreList.apply {
-            layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = episodeAdapter
 
             setOnLoadMoreListener(object : OnLoadMoreListener {
@@ -149,7 +142,7 @@ class ExploreFragment : BaseFragment() {
                 vm.explore(page = exploreList.page)
                 exploreList.page = 2
                 exploreList.setLoading(true)
-                episodeAdapter.episodes.clear()
+                isReset = true
                 emptyViewLayout.hide()
             }
             refreshLayout.isRefreshing = false
@@ -229,9 +222,12 @@ class ExploreFragment : BaseFragment() {
             animator.start()
         }
     }
+
     private fun onSuccess(episodes: ArrayList<Episode>) {
         emptyViewLayout.hide()
         exploreList.setLoading(false)
+
+
         val playerIsOpen = sharedVm.playerIsOpen.value?.let { sharedVm.playerIsOpen.value } ?: false
 
         if (!playerIsOpen && (sharedVm.isPlaying.value == null || !sharedVm.isPlaying.value!!))
@@ -252,6 +248,9 @@ class ExploreFragment : BaseFragment() {
     }
 
     private fun onFailure(failure: Failure) {
+        when (failure) {
+            is Failure.NetworkConnection -> showMessage(failure.message)
+        }
         isLoadMoreAction = false
         exploreList.onError()
         failure.message?.let { showMessage(it) }
@@ -260,7 +259,7 @@ class ExploreFragment : BaseFragment() {
             emptyViewLayout.show()
     }
 
-    private fun updateUser(it: UserInfo?) {
+    private fun updateUser() {
         val userInfo = GoogleSignIn.getLastSignedInAccount(context!!)
 
         userInfo?.let {

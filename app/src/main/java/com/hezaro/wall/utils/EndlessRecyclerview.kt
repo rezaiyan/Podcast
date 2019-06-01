@@ -5,9 +5,6 @@ import android.util.AttributeSet
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
-import androidx.recyclerview.widget.RecyclerView.State
-import timber.log.Timber
 
 class EndlessLinearLayoutRecyclerview : RecyclerView {
 
@@ -43,7 +40,7 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
 
             totalItemCount = recyclerView.adapter!!.itemCount
             lastVisibleItem = (linearLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-            if (!(loadingStatus.value)!! && totalItemCount <= lastVisibleItem + visibleThreshold) {
+            if (dy >= 0 && !(loadingStatus.value)!! && totalItemCount <= lastVisibleItem + visibleThreshold) {
                 onLoadMore()
                 page++
                 loadingStatus.postValue(true)
@@ -95,18 +92,4 @@ class EndlessLinearLayoutRecyclerview : RecyclerView {
 interface OnLoadMoreListener {
 
     fun onLoadMore()
-}
-
-class EndlessLayoutManager(context: Context?, orientation: Int, reverseLayout: Boolean) :
-    LinearLayoutManager(context, orientation, reverseLayout) {
-
-    override fun onLayoutChildren(recycler: Recycler?, state: State?) {
-        try {
-            super.onLayoutChildren(recycler, state)
-        } catch (e: IndexOutOfBoundsException) {
-            Timber.e("meet a IOOBE in RecyclerView")
-        }
-    }
-
-    override fun supportsPredictiveItemAnimations() = false
 }

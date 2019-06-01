@@ -1,11 +1,6 @@
 package com.hezaro.wall.feature.main
 
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.ServiceConnection
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
@@ -35,15 +30,10 @@ import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
-import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE
-import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE_GET
-import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER
-import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER_STATUS
-import com.hezaro.wall.sdk.platform.utils.ERROR_LOGIN_CODE
-import com.hezaro.wall.sdk.platform.utils.RC_SIGN_IN
+import com.hezaro.wall.sdk.platform.utils.*
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.services.MediaPlayerServiceHelper
-import kotlinx.android.synthetic.main.activity_main.progressBar
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -60,6 +50,7 @@ class MainActivity : BaseActivity() {
     override fun fragmentContainer() = R.id.fragmentContainer
     var serviceIsBounded = false
     var errorOccurred = false
+    private var loginRequest = false
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             serviceIsBounded = false
@@ -167,6 +158,7 @@ class MainActivity : BaseActivity() {
 
     fun profile() {
         if (GoogleSignIn.getLastSignedInAccount(this) == null) {
+            loginRequest = true
             showProgress()
             val signInIntent = mGoogleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -234,15 +226,24 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun onLogin(it: UserInfo) = sharedVm.userInfo(it)
+    private fun onLogin(it: UserInfo) {
+        loginRequest = false
+        sharedVm.userInfo(it)
+    }
 
     private fun onFailure(failure: Failure?) {
         hideProgress()
+        if (loginRequest) {
+            loginRequest = false
+            GoogleSignIn.getClient(this, gso!!).signOut()!!
+            sharedVm.userInfo(null)
+        }
+
         when (failure) {
+            is Failure.NetworkConnection -> showMessage(failure.message)
+
             is Failure.FeatureFailure -> {
                 if (failure.code == ERROR_LOGIN_CODE) {
-                    GoogleSignIn.getClient(this, gso!!).signOut()!!
-                    sharedVm.userInfo(null)
                     showMessage(if (failure.message.isNullOrEmpty().not()) failure.message else getString(R.string.login_error))
                 }
             }

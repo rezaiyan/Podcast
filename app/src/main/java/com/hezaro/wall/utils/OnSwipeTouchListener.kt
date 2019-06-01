@@ -6,8 +6,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import java.util.Calendar
-import kotlin.reflect.KFunction2
+import java.util.*
 
 /**
  * Detects left and right swipes across a view.
@@ -15,12 +14,8 @@ import kotlin.reflect.KFunction2
 
 class OnSwipeTouchListener(
     private val panel: BottomSheetBehavior<View>,
-    private val onStateChange: KFunction2<@ParameterName(name = "bottomSheet") View, @ParameterName(
-        name = "onStateChange"
-    ) Int, Unit>,
-    private val onSlideChange: KFunction2<@ParameterName(name = "bottomSheet") View, @ParameterName(
-        name = "onSlideChange"
-    ) Float, Unit>,
+    private val onStateChange: (Int) -> Unit,
+    private val onSlideChange: (Float) -> Unit,
     private val function: () -> Unit
 ) : OnTouchListener {
 
@@ -34,10 +29,10 @@ class OnSwipeTouchListener(
 
     init {
         panel.setBottomSheetCallback(object : BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) = onSlideChange(p0, p1)
+            override fun onSlide(p0: View, p1: Float) = onSlideChange(p1)
 
             override fun onStateChanged(p0: View, p1: Int) {
-                onStateChange(p0, p1)
+                onStateChange(p1)
                 resetPosition(view)
             }
         })

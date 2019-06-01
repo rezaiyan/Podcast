@@ -20,15 +20,7 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
 import com.hezaro.wall.utils.EPISODE
-import kotlinx.android.synthetic.main.fragment_episode.bookmarkStatus
-import kotlinx.android.synthetic.main.fragment_episode.description
-import kotlinx.android.synthetic.main.fragment_episode.episodeCover
-import kotlinx.android.synthetic.main.fragment_episode.episodeTitle
-import kotlinx.android.synthetic.main.fragment_episode.likeCount
-import kotlinx.android.synthetic.main.fragment_episode.playedCount
-import kotlinx.android.synthetic.main.fragment_episode.podcastCover
-import kotlinx.android.synthetic.main.fragment_episode.podcastTitle
-import kotlinx.android.synthetic.main.fragment_episode.share
+import kotlinx.android.synthetic.main.fragment_episode.*
 import org.koin.android.ext.android.inject
 
 class EpisodeFragment : BaseFragment() {

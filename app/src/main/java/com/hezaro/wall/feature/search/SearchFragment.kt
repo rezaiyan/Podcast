@@ -21,16 +21,10 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.normalize
 import com.hezaro.wall.sdk.platform.ext.show
-import com.hezaro.wall.utils.EndlessLayoutManager
 import com.hezaro.wall.utils.SEARCH
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
-import kotlinx.android.synthetic.main.fragment_search.back
-import kotlinx.android.synthetic.main.fragment_search.clear
-import kotlinx.android.synthetic.main.fragment_search.inputSearch
-import kotlinx.android.synthetic.main.fragment_search.podcastList
-import kotlinx.android.synthetic.main.fragment_search.podcastProgressbar
-import kotlinx.android.synthetic.main.fragment_search.searchList
+import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
@@ -73,7 +67,7 @@ class SearchFragment : BaseFragment() {
         }
 
         searchList.apply {
-            layoutManager = EndlessLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
             adapter = EpisodeAdapter(
                 onItemClick = { e, _ ->
                     sharedVm.resetPlaylist(true)
@@ -86,7 +80,7 @@ class SearchFragment : BaseFragment() {
         }
 
         podcastList.apply {
-            layoutManager = EndlessLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
             adapter =
                 PodcastAdapter { p, _ -> activity.openPodcastInfo(p) }
         }

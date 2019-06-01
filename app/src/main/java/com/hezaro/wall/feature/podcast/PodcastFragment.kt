@@ -15,13 +15,7 @@ import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.utils.PARAM_PODCAST
 import com.hezaro.wall.utils.PODCAST
-import kotlinx.android.synthetic.main.fragment_podcast.podcastCover
-import kotlinx.android.synthetic.main.fragment_podcast.podcastDescription
-import kotlinx.android.synthetic.main.fragment_podcast.podcastTitle
-import kotlinx.android.synthetic.main.fragment_podcast.podcasterName
-import kotlinx.android.synthetic.main.fragment_podcast.share
-import kotlinx.android.synthetic.main.fragment_podcast.tabLayout
-import kotlinx.android.synthetic.main.fragment_podcast.viewpager
+import kotlinx.android.synthetic.main.fragment_podcast.*
 
 class PodcastFragment : BaseFragment() {
 
@@ -51,7 +45,7 @@ class PodcastFragment : BaseFragment() {
             val shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .setChooserTitle("ارسال  پادکست ${podcast.title} ")
-                .setText("http://d105f8.hezaro.ir/podcast/${podcast.id}/")
+                .setText("http://wall.hezaro.com/podcast/${podcast.id}/")
                 .intent
             if (shareIntent.resolveActivity(context!!.packageManager) != null) {
                 startActivity(shareIntent)

@@ -24,11 +24,7 @@ import com.hezaro.wall.data.model.IS_NOT_DOWNLOADED
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.feature.player.utils.SpeedPicker
-import com.hezaro.wall.feature.search.PLAY_EPISODEـFROM_PLAYLIST
-import com.hezaro.wall.feature.search.PLAY_SINGLE_TRACK
-import com.hezaro.wall.feature.search.RESUME_VIEW
-import com.hezaro.wall.feature.search.SELECT_SINGLE_TRACK
-import com.hezaro.wall.feature.search.UPDATE_VIEW
+import com.hezaro.wall.feature.search.*
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.show
@@ -38,20 +34,8 @@ import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.OnSwipeTouchListener
-import kotlinx.android.synthetic.main.fragment_player.episodeInfo
-import kotlinx.android.synthetic.main.fragment_player.logo
-import kotlinx.android.synthetic.main.fragment_player.miniPlayerLayout
-import kotlinx.android.synthetic.main.fragment_player.miniPlayerProgressBar
-import kotlinx.android.synthetic.main.fragment_player.minimize
-import kotlinx.android.synthetic.main.fragment_player.playPause
-import kotlinx.android.synthetic.main.fragment_player.playerView
-import kotlinx.android.synthetic.main.fragment_player.speedChooser
-import kotlinx.android.synthetic.main.fragment_player.subtitle
-import kotlinx.android.synthetic.main.fragment_player.title
-import kotlinx.android.synthetic.main.playback_control.downloadStatus
-import kotlinx.android.synthetic.main.playback_control.exo_ffwd
-import kotlinx.android.synthetic.main.playback_control.exo_rew
-import kotlinx.android.synthetic.main.playback_control.likeStatus
+import kotlinx.android.synthetic.main.fragment_player.*
+import kotlinx.android.synthetic.main.playback_control.*
 import org.koin.android.ext.android.inject
 
 class PlayerFragment : Fragment(), DownloadTracker.Listener {
@@ -72,14 +56,14 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         fun getInstance() = PlayerFragment()
     }
 
-    private fun onSlide(bottomSheet: View, slideOffset: Float) {
+    private fun onSlide(slideOffset: Float) {
         if (showInfo && slideOffset < 0.5F) {
             (activity as MainActivity).openEpisodeInfo(currentEpisode!!)
             showInfo = false
         }
     }
 
-    private fun onStateChanged(bottomSheet: View, newState: Int) {
+    private fun onStateChanged(newState: Int) {
         sharedVm.updateSheetState(newState)
         sharedVm.playerIsOpen(behavior?.peekHeight!! > 0)
 
@@ -107,14 +91,13 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
 
         miniPlayerLayout.setOnTouchListener(
             OnSwipeTouchListener(
-                behavior!!, ::onStateChanged, ::onSlide,
-                {
-                    (activity as MainActivity).unbindService()
-                    playerView.player.stop()
-                    MediaPlayerServiceHelper.stopService(requireContext())
-                    closeMiniPlayer()
-                }
-            )
+                behavior!!, ::onStateChanged, ::onSlide
+            ) {
+                (activity as MainActivity).unbindService()
+                playerView.player.stop()
+                MediaPlayerServiceHelper.stopService(requireContext())
+                closeMiniPlayer()
+            }
         )
     }
 

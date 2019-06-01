@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
@@ -18,9 +19,7 @@ import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.sdk.platform.utils.SAVE_INSTANCE_EPISODES
 import com.hezaro.wall.utils.DOWNLOAD
-import com.hezaro.wall.utils.EndlessLayoutManager
-import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
-import kotlinx.android.synthetic.main.fragment_list.recyclerList
+import kotlinx.android.synthetic.main.fragment_list.*
 import org.koin.android.ext.android.inject
 
 class DownloadFragment : BaseFragment() {
@@ -51,7 +50,7 @@ class DownloadFragment : BaseFragment() {
         })
 
         recyclerList.apply {
-            layoutManager = EndlessLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(
                 isDownloadList = true,
                 onItemClick = { e, _ ->

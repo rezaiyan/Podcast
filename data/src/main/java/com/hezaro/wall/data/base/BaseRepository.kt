@@ -41,15 +41,16 @@ open class BaseRepository {
             else {
                 when {
                     response.isSuccessful -> Either.Right(transform((response.body()!!)))
-                    (!response.isSuccessful) -> {
+                    (response.isSuccessful.not()) -> {
                         when {
-                            response.code() >= HttpURLConnection.HTTP_INTERNAL_ERROR ->
+                            response.code() >= HttpURLConnection.HTTP_INTERNAL_ERROR && response.code() != HttpURLConnection.HTTP_GATEWAY_TIMEOUT ->
                                 Either.Left(
                                     Failure.ServerError(
                                         response.code(),
                                         "خطایی از سمت سرور پیش آمده, بزودی رفع میشود"
                                     )
                                 )
+                            response.code() == HttpURLConnection.HTTP_GATEWAY_TIMEOUT -> Either.Left(Failure.NetworkConnection())
                             errorBody.isNullOrEmpty() -> {
                                 Either.Left(Failure.FeatureFailure(response.raw().code(), ""))
                             }

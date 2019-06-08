@@ -41,9 +41,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="wall.hezaro.com"
-                    android:pathPrefix="/episode"
-                    android:scheme="http" />
+                        android:host="wall.hezaro.com"
+                        android:pathPrefix="/e"
+                        android:scheme="http" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -52,9 +52,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="wall.hezaro.com"
-                    android:pathPrefix="/podcast"
-                    android:scheme="http" />
+                        android:host="wall.hezaro.com"
+                        android:pathPrefix="/p"
+                        android:scheme="http" />
             </intent-filter>
 
         </activity>

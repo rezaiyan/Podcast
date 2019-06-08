@@ -100,7 +100,7 @@ class MainActivity : BaseActivity() {
                 appLinkData?.let { uri ->
                     uri.path?.let { path ->
                         uri.lastPathSegment?.let {
-                            if (path.contains("episode")) {
+                            if (path.contains("e")) {
                                 comFromDeepLink = true
                                 showProgress()
                                 with(vm) {
@@ -108,7 +108,7 @@ class MainActivity : BaseActivity() {
                                     getEpisode(it.toLong())
 
                                 }
-                            } else if (path.contains("podcast")) {
+                            } else if (path.contains("p")) {
                                 showProgress()
                                 comFromDeepLink = true
                                 with(vm) {

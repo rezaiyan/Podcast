@@ -45,7 +45,7 @@ class PodcastFragment : BaseFragment() {
             val shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .setChooserTitle("ارسال  پادکست ${podcast.title} ")
-                .setText("http://wall.hezaro.com/podcast/${podcast.id}/")
+                .setText("http://wall.hezaro.com/p/${podcast.id}/")
                 .intent
             if (shareIntent.resolveActivity(context!!.packageManager) != null) {
                 startActivity(shareIntent)

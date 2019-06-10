@@ -61,7 +61,7 @@ class EpisodeFragment : BaseFragment() {
             val shareIntent = ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
                 .setChooserTitle("ارسال اپیزود ${currentEpisode?.title} ")
-                .setText("http://wall.hezaro.com/episode/${currentEpisode?.id}/")
+                .setText("http://wall.hezaro.com/e/${currentEpisode?.id}/")
                 .intent
             if (shareIntent.resolveActivity(context!!.packageManager) != null) {
                 startActivity(shareIntent)

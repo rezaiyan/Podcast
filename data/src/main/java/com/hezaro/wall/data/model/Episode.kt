@@ -24,7 +24,7 @@ class Episode(
     @SerializedName("creator")
     var creator: String = "",
     @SerializedName("likes_count")
-    var likes: Long = 0,
+    var likes: Int = 0,
     @SerializedName("views_count")
     var views: Long = 0,
     @SerializedName("is_liked")
@@ -72,7 +72,7 @@ class Episode(
 
     fun getFormattedDuration() = formatSeconds(0)
     fun getView() = formatLongNumber(views)
-    fun getLike() = formatLongNumber(likes)
+    fun getLike() = formatLongNumber(likes.toLong())
 
     private fun formatSeconds(timeInSeconds: Int): String {
         if (timeInSeconds > 0) {
@@ -103,7 +103,7 @@ class Episode(
         title = parcel.readString()!!
         description = parcel.readString()!!
         creator = parcel.readString()!!
-        likes = parcel.readLong()
+        likes = parcel.readInt()
         views = parcel.readLong()
         isLiked = parcel.readBoolean()
         isBookmarked = parcel.readBoolean()
@@ -125,7 +125,7 @@ class Episode(
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeString(creator)
-        parcel.writeLong(likes)
+        parcel.writeInt(likes)
         parcel.writeLong(views)
         parcel.writeBoolean(isLiked)
         parcel.writeBoolean(isBookmarked)
@@ -163,10 +163,6 @@ class Episode(
             playStatus = it.playStatus
             creationDate = it.creationDate
         }
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,6 +1,11 @@
 package com.hezaro.wall.feature.main
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
@@ -19,7 +24,7 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.episode.EpisodeFragment
-import com.hezaro.wall.feature.explore.ExploreFragment
+import com.hezaro.wall.feature.episodes.EpisodesFragment
 import com.hezaro.wall.feature.player.PlayerFragment
 import com.hezaro.wall.feature.podcast.PodcastFragment
 import com.hezaro.wall.feature.profile.ProfileFragment
@@ -30,16 +35,21 @@ import com.hezaro.wall.feature.search.UPDATE_VIEW
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseActivity
 import com.hezaro.wall.sdk.platform.player.MediaPlayerState
-import com.hezaro.wall.sdk.platform.utils.*
+import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE
+import com.hezaro.wall.sdk.platform.utils.ACTION_EPISODE_GET
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER
+import com.hezaro.wall.sdk.platform.utils.ACTION_PLAYER_STATUS
+import com.hezaro.wall.sdk.platform.utils.ERROR_LOGIN_CODE
+import com.hezaro.wall.sdk.platform.utils.RC_SIGN_IN
 import com.hezaro.wall.services.MediaPlayerService
 import com.hezaro.wall.services.MediaPlayerServiceHelper
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.progressBar
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
-    override fun fragment() = ExploreFragment.getInstance()
+    override fun fragment() = EpisodesFragment.getInstance()
 
     private var gso: GoogleSignInOptions? = null
     private lateinit var mGoogleSignInClient: GoogleSignInClient

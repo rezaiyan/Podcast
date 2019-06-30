@@ -19,7 +19,8 @@ import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.sdk.platform.utils.SAVE_INSTANCE_EPISODES
 import com.hezaro.wall.utils.DOWNLOAD
-import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
+import kotlinx.android.synthetic.main.fragment_list.recyclerList
 import org.koin.android.ext.android.inject
 
 class DownloadFragment : BaseFragment() {
@@ -36,7 +37,7 @@ class DownloadFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.apply {
-            putParcelableArrayList(SAVE_INSTANCE_EPISODES, (recyclerList?.adapter as EpisodeAdapter).episodes)
+            putParcelableArrayList(SAVE_INSTANCE_EPISODES, (recyclerList?.adapter as EpisodeAdapter).getEpisodeList())
         }
         super.onSaveInstanceState(outState)
     }
@@ -56,9 +57,9 @@ class DownloadFragment : BaseFragment() {
                 onItemClick = { e, _ ->
                     sharedVm.isPlaying(true)
                     sharedVm.resetPlaylist(true)
-                    activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).episodes, e)
+                    activity.prepareAndPlayPlaylist((recyclerList.adapter as EpisodeAdapter).getEpisodeList(), e)
                 },
-                longClickListener = { activity.openPodcastInfo(it) })
+                longClickListener = { it, _ -> activity.openPodcastInfo(it) })
         }
         with(vm) {
             observe(downloadEpisodes, ::onLoadEpisodes)

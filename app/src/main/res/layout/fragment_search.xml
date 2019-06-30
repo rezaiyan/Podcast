@@ -1,83 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.hezaro.wall.utils.HAppBar
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:corner_position="bottomRight|bottomLeft">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
-                android:paddingBottom="@dimen/margin_8"
-                android:paddingTop="@dimen/margin_8"
-                app:layout_collapseMode="parallax"
-                app:layout_constraintTop_toBottomOf="@+id/inputSearch">
-
-                <TextView
-                    android:id="@+id/podcastTitle"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_margin="@dimen/margin_8"
-                    android:layout_marginStart="@dimen/margin_8"
-                    android:fontFamily="@font/traffic"
-                    android:gravity="center"
-                    android:minHeight="30dp"
-                    android:text="@string/podcast"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/title_size"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/podcastList"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_below="@+id/podcastTitle"
-                    android:layout_marginTop="@dimen/margin_8"
-                    android:minHeight="120dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
-                    tools:itemCount="20"
-                    tools:listitem="@layout/item_podcast" />
-
-                <ProgressBar
-                    android:id="@+id/podcastProgressbar"
-                    android:layout_width="@dimen/navigator_icon"
-                    android:layout_height="@dimen/navigator_icon"
-                    android:layout_marginBottom="@dimen/margin_8"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="@+id/podcastList"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/podcastTitle"
-                    tools:visibility="visible" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:background="@color/colorPrimary"
                 app:contentInsetEnd="0dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetRight="0dp"
@@ -97,7 +38,7 @@
                         android:layout_marginStart="@dimen/margin_8"
                         android:layout_toStartOf="@id/back"
                         android:hint="@string/search"
-                        android:textColor="@color/colorTextPrimary"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/colorTextSecondary"
                         app:closeIcon="@null"
                         app:iconifiedByDefault="false"
@@ -135,7 +76,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.hezaro.wall.utils.HAppBar>
 
 
     <FrameLayout
@@ -144,12 +85,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:itemCount="20"
-            tools:listitem="@layout/item_episode" />
+        <include layout="@layout/fragment_list" />
 
     </FrameLayout>
 

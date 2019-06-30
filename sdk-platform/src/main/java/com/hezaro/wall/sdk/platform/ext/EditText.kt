@@ -17,7 +17,7 @@ fun SearchView.normalize(font: Int) {
     editText.hint = "جستجو"
     editText.typeface = ResourcesCompat.getFont(context, font)
     editText.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
-    editText.setTextColor(ContextCompat.getColor(context, R.color.colorTextPrimary))
+    editText.setTextColor(ContextCompat.getColor(context, R.color.black))
     editText.setHintTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
     editText.setCursorDrawableColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
 }

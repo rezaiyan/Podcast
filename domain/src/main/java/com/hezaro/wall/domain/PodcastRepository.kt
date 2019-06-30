@@ -17,6 +17,6 @@ interface PodcastRepository {
         PodcastRepository {
 
         override fun getEpisodes(podcastId: Long): Either<Failure, ArrayList<Episode>> =
-            request(api.episodes(podcastId)) { it.response }
+            request(api.episodesOfPodcast(podcastId)) { it.response }
     }
 }

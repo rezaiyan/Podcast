@@ -20,7 +20,7 @@ class ExploreRepositoryBot {
 
     private var api = mock(ApiService::class)
     private var database = mock(EpisodeDao::class)
-    private var repository = ExploreRepository.ExploreRepositoryImpl(api, database)
+    private var repository = EpisodesRepository.EpisodesRepositoryImpl(api, database)
 
     fun withInvalidResponse(page: Int, offset: Int, sort: String): ExploreRepositoryBot {
         val call = Calls.response(
@@ -29,15 +29,15 @@ class ExploreRepositoryBot {
                 ResponseBody.create(MediaType.parse("json"), "")
             )
         )
-        Mockito.`when`(api.explore(sort, page, offset)).thenReturn(call)
+        Mockito.`when`(api.episodes(sort, page, offset)).thenReturn(call)
         return this
     }
 
     fun runAndVerifyUnsuccessful(page: Int, offset: Int, sort: String): ExploreRepositoryBot {
-        val explore = repository.explore(page, offset, sort)
-        explore shouldBeInstanceOf Either::class.java
-        explore.isLeft shouldBe true
-        explore.either({ failure ->
+        val either = repository.episodes(page, offset, sort)
+        either shouldBeInstanceOf Either::class.java
+        either.isLeft shouldBe true
+        either.either({ failure ->
             failure shouldBeInstanceOf Failure.ServerError::class.java
             (failure as Failure.ServerError).code `should equal` 402
         }, {})
@@ -47,15 +47,15 @@ class ExploreRepositoryBot {
     fun withValidResponse(page: Int, offset: Int, sort: String): ExploreRepositoryBot {
         val list = arrayListOf<Episode>()
         val call = Calls.response(Response.success(com.hezaro.wall.data.model.Response(Meta(200, "OK"), list)))
-        Mockito.`when`(api.explore(sort, page, offset)).thenReturn(call)
+        Mockito.`when`(api.episodes(sort, page, offset)).thenReturn(call)
         return this
     }
 
     fun runAndVerifySuccessful(page: Int, offset: Int, sort: String): ExploreRepositoryBot {
-        val explore = repository.explore(page, offset, sort)
-        explore shouldBeInstanceOf Either::class.java
-        explore.isRight shouldBe true
-        explore.either({}, { response ->
+        val either = repository.episodes(page, offset, sort)
+        either shouldBeInstanceOf Either::class.java
+        either.isRight shouldBe true
+        either.either({}, { response ->
             response.size `should equal` 0
         })
         return this

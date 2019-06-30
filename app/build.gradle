@@ -81,6 +81,9 @@ dependencies {
     androidTestImplementation TestLibraries.rules
     androidTestImplementation TestLibraries.espressoCore
     androidTestImplementation TestLibraries.espressoContrib
+    implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
+    implementation 'com.github.minibugdev:drawablebadge:1.0.3'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

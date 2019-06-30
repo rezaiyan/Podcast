@@ -9,7 +9,6 @@ import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.extention.JWT
 import com.hezaro.wall.sdk.base.extention.get
 import com.hezaro.wall.sdk.base.extention.isJson
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.orhanobut.logger.Logger
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -25,7 +24,6 @@ fun provideRetrofit(context: Context): ApiService {
         .baseUrl("http://wall.hezaro.com")
         .client(provideHttpClient(context, jwt))
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build().create(ApiService::class.java)
 }
 

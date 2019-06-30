@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.hezaro.wall.utils.HAppBar
         android:layout_width="match_parent"
+        app:corner_position="bottomLeft|bottomRight"
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,7 +80,7 @@
             app:tabTextAppearance="@style/TrafficTextAppearance"
             app:tabTextColor="@color/colorTextSecondary" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.hezaro.wall.utils.HAppBar>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"

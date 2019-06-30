@@ -1,75 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hezaro.wall.utils.HAppBar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottomSheetLayout"
+    android:id="@+id/playerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="bottom"
-    android:background="@color/colorPrimaryDark"
-    android:elevation="4dp"
-    android:orientation="vertical"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:background="@drawable/bg_player"
+    app:corner_position="topLeft|topRight"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/miniPlayerLayout"
+        android:id="@+id/miniPlayer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mini_player_height"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/white">
 
-        <View
-            android:id="@+id/dividerTop"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorPrimary"
+        <ImageView
+            android:id="@+id/closePlayer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="@dimen/margin_16"
+            android:src="@drawable/ic_exit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="@dimen/margin_8"
-            android:layout_marginTop="@dimen/margin_8"
             android:clickable="false"
             android:focusable="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dividerTop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/closePlayer"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars" />
 
-        <ProgressBar
-            android:id="@+id/miniPlayerProgressBar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/margin_8"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/colorAccent"
-            android:indeterminateTintMode="multiply"
-            app:layout_constraintBottom_toBottomOf="@+id/logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/logo" />
-
-        <ImageView
-            android:id="@+id/playPause"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/margin_8"
-            android:src="@drawable/ic_play"
-            app:layout_constraintBottom_toBottomOf="@+id/logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/logo" />
-
-        <ImageView
-            android:id="@+id/minimize"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/margin_8"
-            android:src="@drawable/ic_minimize"
-            app:layout_constraintBottom_toBottomOf="@+id/logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/logo"
-            tools:visibility="invisible" />
 
         <TextView
             android:id="@+id/title"
@@ -83,17 +51,15 @@
             android:fontFamily="@font/traffic"
             android:gravity="right"
             android:marqueeRepeatLimit="marquee_forever"
-            android:singleLine="true"
             android:scrollHorizontally="true"
-            android:textColor="@color/colorTextPrimary"
+            android:singleLine="true"
+            android:textColor="@color/black"
             android:textSize="@dimen/title_size"
             app:layout_constraintBottom_toBottomOf="@id/logo"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/logo"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/playPause"
             app:layout_constraintTop_toTopOf="@id/logo"
-            app:layout_constraintVertical_bias="0.25"
+            app:layout_constraintVertical_bias="0.1"
             tools:text="@tools:sample/lorem" />
 
         <TextView
@@ -104,49 +70,69 @@
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/margin_8"
             android:layout_marginStart="@dimen/margin_8"
-            android:clickable="false"
-            android:ellipsize="start"
-            android:focusable="false"
             android:fontFamily="@font/traffic"
             android:gravity="right"
             android:singleLine="true"
+            android:text="@string/init_timer"
             android:textColor="@color/colorTextSecondary"
             android:textSize="@dimen/subtitle_size"
             app:layout_constraintBottom_toBottomOf="@id/logo"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/logo"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/playPause"
             app:layout_constraintTop_toTopOf="@id/logo"
-            app:layout_constraintVertical_bias="1.0"
-            tools:text="@tools:sample/lorem" />
+            app:layout_constraintVertical_bias="1.0" />
 
-        <View
-            android:id="@+id/dividerBottom"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/margin_10"
-            android:background="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.budiyev.android.circularprogressbar.CircularProgressBar
+            android:id="@+id/miniPlayerProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/margin_8"
+            app:animateProgress="true"
+            app:backgroundStrokeColor="#848484"
+            app:backgroundStrokeWidth="2dp"
+            app:drawBackgroundStroke="true"
+            app:foregroundStrokeCap="round"
+            app:foregroundStrokeColor="#A51951"
+            app:foregroundStrokeWidth="3dp"
+            app:indeterminate="false"
+            app:indeterminateMinimumAngle="45"
+            app:indeterminateRotationAnimationDuration="1200"
+            app:indeterminateSweepAnimationDuration="600"
+            app:layout_constraintBottom_toBottomOf="@+id/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/logo"
+            app:maximum="100"
+            app:progress="0"
+            app:progressAnimationDuration="100"
+            app:startAngle="270" />
+
+        <ImageView
+            android:id="@+id/playPause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/margin_8"
+            android:padding="@dimen/margin_12"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@+id/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/playerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/margin_8"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
         app:auto_show="true"
-        app:controller_layout_id="@layout/playback_control"
+        app:controller_layout_id="@layout/player_control"
         app:hide_on_touch="false"
-        app:layout_constraintBottom_toTopOf="@+id/bottomControllerLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/miniPlayerLayout"
         app:show_buffering="never"
         app:show_shuffle_button="false"
         app:show_timeout="0"
-        app:shutter_background_color="@color/colorPrimaryDark"
+        app:shutter_background_color="@android:color/transparent"
         app:surface_type="none"
         app:use_artwork="false"
         app:use_controller="true" />
@@ -156,9 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/speedChooser"
@@ -184,6 +168,4 @@
             android:src="@drawable/ic_more_horiz" />
     </RelativeLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</com.hezaro.wall.utils.HAppBar>

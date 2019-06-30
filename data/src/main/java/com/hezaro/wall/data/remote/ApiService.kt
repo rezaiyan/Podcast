@@ -2,6 +2,7 @@ package com.hezaro.wall.data.remote
 
 import com.hezaro.wall.data.BuildConfig
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.Explore
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.Response
 import com.hezaro.wall.data.model.Status.Companion.SortBy
@@ -20,23 +21,26 @@ private const val BASE = "api/v1"
 
 interface ApiService {
 
+    @GET("$BASE/explore")
+    fun explore(): Call<Response<Explore>>
+
     @GET("$BASE/episodes")
-    fun explore(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
+    fun episodes(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
+
+    @GET("$BASE/podcasts")
+    fun podcasts(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
+
+    @GET("$BASE/podcasts/{id}")
+    fun podcast(@Path("id") id: Long): Call<Response<Podcast>>
 
     @GET("$BASE/podcasts/{episode_id}/episodes")
-    fun episodes(@Path("episode_id") episode_id: Long, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
+    fun episodesOfPodcast(@Path("episode_id") episode_id: Long, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>
 
     @GET("$BASE/episodes/{id}")
     fun episode(@Path("id") id: Long): Call<Response<Episode>>
 
     @GET("$BASE/bookmarks")
     fun bookmarks(): Call<Response<ArrayList<Episode>>>
-
-    @GET("$BASE/podcasts/{id}")
-    fun podcast(@Path("id") id: Long): Call<Response<Podcast>>
-
-    @GET("$BASE/podcasts")
-    fun podcasts(@Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Podcast>>>
 
     @FormUrlEncoded
     @POST("$BASE/login")

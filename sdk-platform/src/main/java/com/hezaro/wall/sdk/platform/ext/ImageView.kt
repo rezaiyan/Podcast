@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.webkit.URLUtil
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import com.hezaro.wall.sdk.platform.utils.BlurImage
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.LoadedFrom
 import com.squareup.picasso.RequestCreator
@@ -34,7 +33,9 @@ fun ImageView.loadBlur(
             }
 
             override fun onBitmapLoaded(bitmap: Bitmap, from: LoadedFrom?) {
-                background = BitmapDrawable(resources, BlurImage.blur(context, bitmap))
+//                setBackgroundDrawable(BitmapDrawable(resources, BlurImage.fastblur(bitmap, 0.4f, 9)))
+//                setImageBitmap(BlurImage.blur(context,bitmap))
+                background = BitmapDrawable(resources, bitmap)
             }
         })
 }

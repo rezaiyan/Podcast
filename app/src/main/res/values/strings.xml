@@ -14,7 +14,7 @@
     <string name="search">جستجو</string>
     <string name="podcast">‌پادکست‌ها</string>
     <string name="_1_0x">1.0x</string>
-    <string name="the_bests">چارت برترین‌ها</string>
+    <string name="the_bests">چارت پرشنوده‌ها</string>
     <string name="the_newest">به ترتیب زمان انتشار</string>
     <string name="update">بروزرسانی</string>
     <string name="exit">خروج</string>
@@ -29,4 +29,6 @@
     <string name="login_error">درحین فرایند لاگین مشکلی پیش آمده است</string>
     <string name="remove">حذف</string>
     <string name="cancel">انصراف</string>
+    <string name="init_timer">00:00/00:00</string>
+    <string name="not_found_episode">اپیزودی پیدا نشد</string>
 </resources>

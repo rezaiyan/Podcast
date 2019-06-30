@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryDark">#212121</color>
-    <color name="colorPrimary">#424242</color>
-    <color name="colorAccent">#E91E63</color>
-    <color name="white">#F5F5F5</color>
-    <color name="colorTextPrimary">@color/white</color>
-    <color name="colorTextSecondary">#9E9E9E</color>
-    <color name="ic_controller">@color/colorTextSecondary</color>
+    <color name="colorPrimaryDark">#252525</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorAccent">#F7F5EB</color>
+    <color name="colorAccentLight">#F7F4EB</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colorDone">#1DC88D</color>
+    <color name="colorTextPrimary">#1B1B1B</color>
+    <color name="colorTextSecondary">#3D3D3D</color>
+    <color name="ic_controller">#3D3D3D</color>
     <color name="black">#000000</color>
-
+    <color name="bg_player_action">#9F050505</color>
+    <color name="bg_like_badge">#050505</color>
+    <color name="bg_count">#B1406B</color>
+    <color name="player_progress">#9B0B42</color>
+    <color name="unplayedColor">#37FFFFFF</color>
 </resources>

@@ -11,9 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
-import com.hezaro.wall.feature.adapter.PodcastAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
 import com.hezaro.wall.sdk.base.exception.Failure
@@ -24,12 +22,16 @@ import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.SEARCH
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
-import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_list.emptyTitleView
+import kotlinx.android.synthetic.main.fragment_list.recyclerList
+import kotlinx.android.synthetic.main.fragment_search.back
+import kotlinx.android.synthetic.main.fragment_search.clear
+import kotlinx.android.synthetic.main.fragment_search.inputSearch
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 const val SELECT_SINGLE_TRACK = 1
-const val PLAY_EPISODEـFROM_PLAYLIST = 2
+const val PLAY_EPISOD_FROM_PLAYLIST = 2
 const val UPDATE_VIEW = 3
 const val RESUME_VIEW = 4
 const val PLAY_SINGLE_TRACK = 5
@@ -51,22 +53,20 @@ class SearchFragment : BaseFragment() {
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        emptyTitleView.text = getString(R.string.not_found_episode)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         sharedVm.listMargin.observe(this@SearchFragment, Observer { updateMarginList(it) })
         sharedVm.episode.observe(this@SearchFragment, Observer {
             if (it.first == UPDATE_VIEW)
-                (searchList.adapter as EpisodeAdapter).updateRow(it.second)
+                (recyclerList.adapter as EpisodeAdapter).updateRow(it.second)
         })
         with(vm) {
             observe(search, ::onSearch)
-            observe(podcast, ::onPodcast)
             observe(progress, ::onProgress)
             failure(failure, ::onFailure)
-            podcastProgressbar.show()
-            getPodcasts()
         }
 
-        searchList.apply {
+        recyclerList.apply {
             layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
             adapter = EpisodeAdapter(
                 onItemClick = { e, _ ->
@@ -75,19 +75,14 @@ class SearchFragment : BaseFragment() {
                     updateMarginList()
                     sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
                 },
-                longClickListener = { activity.openPodcastInfo(it) }
+                longClickListener = { it, _ -> activity.openPodcastInfo(it) }
             )
-        }
-
-        podcastList.apply {
-            layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
-            adapter =
-                PodcastAdapter { p, _ -> activity.openPodcastInfo(p) }
         }
 
         back.setOnClickListener { activity.onBackPressed() }
         clear.setOnClickListener {
-            ((searchList.adapter as EpisodeAdapter).clearAll())
+            emptyTitleView.hide()
+            ((recyclerList.adapter as EpisodeAdapter).clearAll())
             inputSearch.setQuery("", false)
         }
         inputSearch.normalize(R.font.traffic)
@@ -110,12 +105,13 @@ class SearchFragment : BaseFragment() {
             .distinct()
             .filter { text -> text.length > 2 }
             .subscribe { text ->
+                emptyTitleView.hide()
                 vm.doSearch(text)
             }
     }
 
     private fun updateMarginList(i: Int = -1) {
-        val params = searchList.layoutParams as FrameLayout.LayoutParams
+        val params = recyclerList.layoutParams as FrameLayout.LayoutParams
         if (params.bottomMargin == 0 || i >= 0) {
             val animator =
                 ValueAnimator.ofInt(
@@ -124,7 +120,7 @@ class SearchFragment : BaseFragment() {
                 )
             animator.addUpdateListener { valueAnimator ->
                 params.bottomMargin = valueAnimator.animatedValue as Int
-                searchList?.requestLayout()
+                recyclerList?.requestLayout()
             }
             animator.duration = 100
             animator.start()
@@ -136,14 +132,16 @@ class SearchFragment : BaseFragment() {
     } else
         hideProgress()
 
-    private fun onPodcast(it: ArrayList<Podcast>) {
-        podcastProgressbar.hide()
-        (podcastList.adapter as PodcastAdapter).addPodcast(it)
+    private fun onSearch(it: ArrayList<Episode>) {
+        if (it.isNotEmpty())
+            (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
+        else {
+            (recyclerList.adapter as EpisodeAdapter).clearAll()
+            emptyTitleView.show()
+        }
     }
 
-    private fun onSearch(it: ArrayList<Episode>) = (searchList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
-
     private fun onFailure(failure: Failure) {
-        podcastProgressbar.hide()
+        emptyTitleView.show()
     }
 }

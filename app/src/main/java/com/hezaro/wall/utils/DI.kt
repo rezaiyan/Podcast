@@ -3,6 +3,7 @@ package com.hezaro.wall.utils
 import android.preference.PreferenceManager
 import com.hezaro.wall.data.base.provideRetrofit
 import com.hezaro.wall.domain.EpisodeRepository
+import com.hezaro.wall.domain.EpisodesRepository
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.domain.MainRepository
 import com.hezaro.wall.domain.MessagingRepository
@@ -12,6 +13,7 @@ import com.hezaro.wall.domain.ProfileRepository
 import com.hezaro.wall.domain.SearchRepository
 import com.hezaro.wall.domain.SplashRepository
 import com.hezaro.wall.feature.episode.EpisodeViewModel
+import com.hezaro.wall.feature.episodes.EpisodesViewModel
 import com.hezaro.wall.feature.explore.ExploreViewModel
 import com.hezaro.wall.feature.main.MainViewModel
 import com.hezaro.wall.feature.main.SharedViewModel
@@ -39,14 +41,17 @@ val module: Module = module {
     viewModel { SplashViewModel(get()) }
     single { SplashRepository.SplashRepositoryImpl(get(), get()) } bind SplashRepository::class
 
+    viewModel { ExploreViewModel(get()) }
+    single { ExploreRepository.ExploreRepositoryImpl(get()) } bind ExploreRepository::class
+
     viewModel { MessagingViewModel(get()) }
     single { MessagingRepository.MessagingRepositoryImpl(get(), get()) } bind MessagingRepository::class
 
     viewModel { EpisodeViewModel(get()) }
     single { EpisodeRepository.EpisodeRepositoryImpl(get(), get()) } bind EpisodeRepository::class
 
-    viewModel { ExploreViewModel(get()) }
-    single { ExploreRepository.ExploreRepositoryImpl(get(), get(), get()) } bind ExploreRepository::class
+    viewModel { EpisodesViewModel(get()) }
+    single { EpisodesRepository.EpisodesRepositoryImpl(get(), get(), get()) } bind EpisodesRepository::class
 
     viewModel { PodcastViewModel(get()) }
     single { PodcastRepository.PodcastRepositoryImpl(get()) } bind PodcastRepository::class

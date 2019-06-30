@@ -24,7 +24,7 @@ class MainActivityTest {
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     private val playerFragment: PlayerFragment by lazy {
-        (mActivityTestRule.activity.supportFragmentManager?.findFragmentById(R.id.playerFragment) as PlayerFragment?)!!
+        (mActivityTestRule.activity.supportFragmentManager.findFragmentById(R.id.playerFragment) as PlayerFragment?)!!
     }
     private val playerSheetBehavior: BottomSheetBehavior<View> by lazy {
         BottomSheetBehavior.from(playerFragment.view!!)
@@ -46,7 +46,7 @@ class MainActivityTest {
                             playerSheetBehavior.peekHeight == 0)
         )
 
-        onView(withId(R.id.exploreList))
+        onView(withId(R.id.episodeList))
             .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
         Assert.assertFalse(
             (
@@ -55,7 +55,7 @@ class MainActivityTest {
         )
         Thread.sleep(1000)
 
-        onView(withId(R.id.miniPlayerLayout)).perform(click())
+        onView(withId(R.id.playerLayout)).perform(click())
 
         Assert.assertFalse(
             (

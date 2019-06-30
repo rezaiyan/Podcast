@@ -11,7 +11,27 @@ import android.graphics.Rect
 import android.graphics.RectF
 import com.squareup.picasso.Transformation
 
-class RoundRectTransform : Transformation {
+class RoundRectTransform(private val round: Float = 7F) : Transformation {
+
+    override fun transform(source: Bitmap): Bitmap {
+        val size = Math.min(source.width, source.height)
+
+        val x = (source.width - size) / 2
+        val y = (source.height - size) / 2
+
+        val squaredBitmap = Bitmap.createBitmap(source, x, y, size, size)
+        if (squaredBitmap != source) {
+            source.recycle()
+        }
+
+        val r = size / round
+
+        val roundedBitmap = createRoundedRectBitmap(squaredBitmap, r, r, r, r)
+
+        squaredBitmap.recycle()
+
+        return roundedBitmap
+    }
 
     private fun createRoundedRectBitmap(
         bitmap: Bitmap,
@@ -48,26 +68,6 @@ class RoundRectTransform : Transformation {
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, rect, rect, paint)
         return output
-    }
-
-    override fun transform(source: Bitmap): Bitmap {
-        val size = Math.min(source.width, source.height)
-
-        val x = (source.width - size) / 2
-        val y = (source.height - size) / 2
-
-        val squaredBitmap = Bitmap.createBitmap(source, x, y, size, size)
-        if (squaredBitmap != source) {
-            source.recycle()
-        }
-
-        val r = size / 9f
-
-        val roundedBitmap = createRoundedRectBitmap(squaredBitmap, r, r, r, r)
-
-        squaredBitmap.recycle()
-
-        return roundedBitmap
     }
 
     override fun key(): String {

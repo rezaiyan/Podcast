@@ -1,43 +1,57 @@
 package com.hezaro.wall.feature.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.hezaro.wall.R
-import com.hezaro.wall.data.model.DOWNLOADED
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
-import com.hezaro.wall.feature.adapter.EpisodeAdapter.ItemHolder
-import com.hezaro.wall.sdk.platform.ext.hide
-import com.hezaro.wall.sdk.platform.ext.load
-import com.hezaro.wall.sdk.platform.ext.show
-import com.hezaro.wall.utils.RoundRectTransform
-import ir.smartlab.persindatepicker.util.PersianCalendar
-import kotlinx.android.synthetic.main.item_episode.view.bookmarkStatus
-import kotlinx.android.synthetic.main.item_episode.view.date
-import kotlinx.android.synthetic.main.item_episode.view.downloadStatus
-import kotlinx.android.synthetic.main.item_episode.view.logo
-import kotlinx.android.synthetic.main.item_episode.view.podcaster
-import kotlinx.android.synthetic.main.item_episode.view.title
+import com.hezaro.wall.feature.adapter.holder.EpisodeHolder
+import com.hezaro.wall.feature.adapter.holder.EpisodeHorizontalHolder
 
 class EpisodeAdapter(
-    val episodes: ArrayList<Episode> = arrayListOf(),
+    val episodes: ArrayList<Any> = arrayListOf(),
     private val isDownloadList: Boolean = false,
     private val isBookmarkList: Boolean = false,
     private val onItemClick: (Episode, Int) -> Unit,
-    private val longClickListener: (Podcast) -> Unit
+    private val longClickListener: (Podcast, Int) -> Unit
+    , private val viewType: Int = 0
 ) :
-    RecyclerView.Adapter<ItemHolder>() {
+    RecyclerView.Adapter<ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ItemHolder(
-        LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_episode, parent, false)
-    )
+    fun getEpisodeList(): ArrayList<Episode> {
+        val list = arrayListOf<Episode>()
+        episodes.forEach {
+            list.add(it as Episode)
+        }
+        return list
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        when (this@EpisodeAdapter.viewType) {
+            0 -> EpisodeHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_episode, parent, false),
+                isDownloadList,
+                isBookmarkList,
+                onItemClick,
+                longClickListener
+            )
+            else -> EpisodeHorizontalHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_episode_h, parent, false),
+                onItemClick,
+                longClickListener
+            )
+        }
 
     override fun getItemCount() = episodes.size
 
-    override fun onBindViewHolder(holder: ItemHolder, position: Int) = holder.bind(episodes[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = when (viewType) {
+        0 -> (holder as EpisodeHolder).bind(episodes[position] as Episode)
+        else -> (holder as EpisodeHorizontalHolder).bind(episodes[position] as Episode)
+    }
 
     fun updateList(episodes: ArrayList<Episode>) {
         this.episodes.addAll(episodes)
@@ -47,7 +61,7 @@ class EpisodeAdapter(
     fun clearAndAddEpisode(episodes: ArrayList<Episode>) {
         this.episodes.clear()
         this.episodes.addAll(episodes)
-        notifyItemRangeInserted(0, this.episodes.size)
+        notifyDataSetChanged()
     }
 
     fun clearAll() {
@@ -60,36 +74,6 @@ class EpisodeAdapter(
             val index = episodes.indexOf(e)
             episodes[index] = e
             notifyItemChanged(index)
-        }
-    }
-
-    inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val calendar = PersianCalendar()
-
-        fun bind(episode: Episode) {
-            itemView.let {
-
-                episode.run {
-                    it.logo.load(cover, transformation = RoundRectTransform())
-                    if (downloadStatus == DOWNLOADED && isDownloadList.not()) {
-                        it.downloadStatus.show()
-                        it.downloadStatus.progress = 0.74f
-                    } else it.downloadStatus.hide()
-                    if (isBookmarked && isBookmarkList.not()) {
-                        it.bookmarkStatus.show()
-                        it.bookmarkStatus.progress = 1.0f
-                    } else it.bookmarkStatus.hide()
-                    it.title.text = title
-                    calendar.timeInMillis = getPublishTime()
-                    it.date.text = calendar.persianLongDate
-                    it.podcaster.text = podcast.title
-                    it.setOnClickListener { onItemClick(this, adapterPosition) }
-                    it.setOnLongClickListener { longClickListener(podcast);true }
-
-                }
-
-            }
         }
     }
 }

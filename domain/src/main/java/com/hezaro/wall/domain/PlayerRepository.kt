@@ -45,7 +45,7 @@ interface PlayerRepository {
             database.updateDownloadStatus(
                 it.id,
                 it.isBookmarked,
-                it.likes,
+                it.likes.toLong(),
                 it.downloadStatus,
                 it.isLastPlay,
                 it.state

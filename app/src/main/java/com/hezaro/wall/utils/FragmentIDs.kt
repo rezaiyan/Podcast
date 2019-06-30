@@ -1,6 +1,7 @@
 package com.hezaro.wall.utils
 
-const val EXPLORE = 101
+const val EXPLORE = 100
+const val EPISODES = 101
 const val SEARCH = 102
 const val PROFILE = 103
 

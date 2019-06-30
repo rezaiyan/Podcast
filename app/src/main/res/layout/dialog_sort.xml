@@ -21,14 +21,15 @@
             android:layout_toStartOf="@+id/radioNewest"
             android:fontFamily="@font/traffic"
             android:text="@string/the_newest"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/title_size" />
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/radioNewest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:buttonTint="@color/player_progress"
             android:layout_centerVertical="true"
             android:checked="true" />
 
@@ -49,12 +50,13 @@
             android:layout_toStartOf="@+id/radioBest"
             android:fontFamily="@font/traffic"
             android:text="@string/the_bests"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/title_size" />
 
-        <RadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/radioBest"
             android:layout_width="wrap_content"
+            android:buttonTint="@color/player_progress"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true" />

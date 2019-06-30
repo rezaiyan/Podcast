@@ -6,12 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Version
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.sdk.base.exception.Failure
-import kotlinx.android.synthetic.main.activity_splash.loading
 import org.koin.android.ext.android.inject
 
 class SplashActivity : AppCompatActivity() {
@@ -21,10 +19,10 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        AppCompatDelegate.setDefaultNightMode(if (vm.isNight()) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
+//        AppCompatDelegate.setDefaultNightMode(if (false) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
         setContentView(R.layout.activity_splash)
 
-        loading.setAnimation(if (vm.isNight()) R.raw.loading else R.raw.loading_night)
+//        loading.setAnimation(if (vm.isNight()) R.raw.loading else R.raw.loading_night)
         with(vm) {
             observe(version, ::onVersion)
             failure(failure, ::onFailure)

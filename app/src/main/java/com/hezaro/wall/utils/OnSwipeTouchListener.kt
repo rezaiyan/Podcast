@@ -6,7 +6,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import java.util.*
+import java.util.Calendar
 
 /**
  * Detects left and right swipes across a view.
@@ -33,7 +33,7 @@ class OnSwipeTouchListener(
 
             override fun onStateChanged(p0: View, p1: Int) {
                 onStateChange(p1)
-                resetPosition(view)
+                resetPosition()
             }
         })
     }
@@ -57,35 +57,33 @@ class OnSwipeTouchListener(
                     (view.x >= view.width / 1.5) -> {
                         panel.peekHeight = 0
                         function.invoke()
-                        setPosition(view, (+view.width).toFloat())
-                        resetPosition(view)
+                        setPosition((+view.width).toFloat())
+                        resetPosition()
                     }
                     (-view.x >= view.width / 1.5) -> {
                         panel.peekHeight = 0
                         function.invoke()
-                        setPosition(view, (-view.width).toFloat())
-                        resetPosition(view)
+                        setPosition((-view.width).toFloat())
+                        resetPosition()
                     }
                     else -> {
                         val clickDuration = Calendar.getInstance().timeInMillis - startClickTime
                         if (clickDuration < MAX_CLICK_DURATION) {
                             panel.state = BottomSheetBehavior.STATE_EXPANDED
                         }
-                        resetPosition(view)
+                        resetPosition()
                     }
                 }
             }
 
             MotionEvent.ACTION_MOVE -> {
                 when {
-                    Math.abs(event.rawY - startPointY) * 1.5 > Math.abs(event.rawX - startPointX) -> resetPosition(
-                        view
-                    )
+                    Math.abs(event.rawY - startPointY) * 1.5 > Math.abs(event.rawX - startPointX) -> resetPosition()
                     panel.state == BottomSheetBehavior.STATE_COLLAPSED -> view.animate()
                         .x(event.rawX + dX)
                         .setDuration(0)
                         .start()
-                    else -> resetPosition(view)
+                    else -> resetPosition()
                 }
             }
             else -> return false
@@ -93,11 +91,11 @@ class OnSwipeTouchListener(
         return true
     }
 
-    private fun resetPosition(view: View?) {
+    private fun resetPosition() {
         view?.animate()?.x(0F)?.setDuration(200)?.start()
     }
 
-    private fun setPosition(view: View?, position: Float) {
+    private fun setPosition(position: Float) {
         view?.animate()
             ?.x(position)
             ?.setDuration(200)

@@ -162,7 +162,7 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
     }
 
     override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
-        if (trackGroups!!.isEmpty && playlist!!.getItemCount() > 0) {
+        if (playlist!!.getItemCount() > 0) {
             episode = playlist!!.getItem(exoPlayer!!.currentWindowIndex)
             broadcastEpisode(episode!!)
         }

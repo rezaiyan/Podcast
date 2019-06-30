@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="mini_player_height">66dp</dimen>
-    <dimen name="progress_margin">58dp</dimen>
-    <dimen name="progress_margin_8">-8dp</dimen>
+    <dimen name="mini_player_height">70dp</dimen>
+    <dimen name="progress_margin">64dp</dimen>
+    <dimen name="progress_margin_8">-4dp</dimen>
 </resources>

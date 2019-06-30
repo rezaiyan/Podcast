@@ -6,9 +6,10 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.hezaro.wall.utils.HAppBar
         android:id="@+id/episodeAppbar"
         android:layout_width="match_parent"
+        app:corner_position="bottomRight|bottomLeft"
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -167,7 +168,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.hezaro.wall.utils.HAppBar>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"

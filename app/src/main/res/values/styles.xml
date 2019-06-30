@@ -4,7 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/colorAccent</item>
         <item name="alertDialogTheme">@style/AlertDialogTheme</item>
         <item name="popupMenuStyle">@style/popUpMenuStyle</item>
         <item name="android:windowDisablePreview">true</item>
@@ -41,5 +41,16 @@
         <item name="android:fontFamily">@font/traffic</item>
         <item name="android:textSize">@dimen/title_size</item>
     </style>
+
+    <declare-styleable name="HAppBar">
+        <attr name="corner_position" format="flags">
+            <flag name="none" value="0" />
+            <flag name="topLeft" value="1" />
+            <flag name="topRight" value="2" />
+            <flag name="bottomLeft" value="4" />
+            <flag name="bottomRight" value="8" />
+            <flag name="all" value="15" />
+        </attr>
+    </declare-styleable>
 
 </resources>

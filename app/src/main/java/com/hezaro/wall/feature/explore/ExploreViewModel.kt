@@ -1,7 +1,7 @@
 package com.hezaro.wall.feature.explore
 
 import androidx.lifecycle.MutableLiveData
-import com.hezaro.wall.data.model.Explore
+import com.hezaro.wall.data.model.DExplore
 import com.hezaro.wall.domain.ExploreRepository
 import com.hezaro.wall.sdk.platform.BaseViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel(private val repository: ExploreRepository) : BaseViewModel() {
 
-    val explore: MutableLiveData<Explore> = MutableLiveData()
+    val explore: MutableLiveData<DExplore> = MutableLiveData()
 
     fun explore() {
         launch {
@@ -21,5 +21,5 @@ class ExploreViewModel(private val repository: ExploreRepository) : BaseViewMode
         }
     }
 
-    private fun onSuccess(it: Explore) = explore.postValue(it)
+    private fun onSuccess(it: DExplore) = explore.postValue(it)
 }

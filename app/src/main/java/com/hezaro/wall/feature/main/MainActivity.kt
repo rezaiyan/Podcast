@@ -181,6 +181,7 @@ class MainActivity : BaseActivity() {
     private fun prepareGoogleSignIn() {
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(string.server_client_id))
+            .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso!!)
     }
@@ -232,6 +233,7 @@ class MainActivity : BaseActivity() {
 
     private fun updateUI(account: GoogleSignInAccount?) {
         account?.let {
+            Timber.w("signInResult:Login ID token=" + it.idToken)
             vm.login(it.idToken!!)
         }
     }

@@ -106,24 +106,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/episodeDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:fontFamily="@font/traffic"
-            android:gravity="center"
-            android:padding="@dimen/margin_8"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            tools:text="@tools:sample/lorem/random" />
-
         <RelativeLayout
             android:id="@+id/likeActionLayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="gone">
+            android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/likeAction"
@@ -152,8 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:layout_weight="1"
-            android:src="@drawable/ic_description"
-            android:visibility="gone" />
+            android:src="@drawable/ic_description" />
 
 
         <ImageView
@@ -162,8 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:layout_weight="1"
-            android:src="@drawable/ic_download"
-            android:visibility="gone" />
+            android:src="@drawable/ic_download" />
 
 
         <ImageView
@@ -172,8 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:layout_weight="1"
-            android:src="@drawable/ic_bookmark"
-            android:visibility="gone" />
+            android:src="@drawable/ic_bookmark" />
 
     </LinearLayout>
 
@@ -272,8 +256,9 @@
 
         <ImageView
             android:id="@id/exo_pause"
-            android:layout_width="@dimen/player_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/player_button_size"
+            android:layout_weight="1"
             android:src="@drawable/ic_pause_2" />
 
         <ImageView

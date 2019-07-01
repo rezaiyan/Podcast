@@ -11,7 +11,7 @@ import com.hezaro.wall.feature.adapter.holder.EpisodeHolder
 import com.hezaro.wall.feature.adapter.holder.EpisodeHorizontalHolder
 
 class EpisodeAdapter(
-    val episodes: ArrayList<Any> = arrayListOf(),
+    val episodes: ArrayList<Episode> = arrayListOf(),
     private val isDownloadList: Boolean = false,
     private val isBookmarkList: Boolean = false,
     private val onItemClick: (Episode, Int) -> Unit,
@@ -23,7 +23,7 @@ class EpisodeAdapter(
     fun getEpisodeList(): ArrayList<Episode> {
         val list = arrayListOf<Episode>()
         episodes.forEach {
-            list.add(it as Episode)
+            list.add(it)
         }
         return list
     }
@@ -49,8 +49,8 @@ class EpisodeAdapter(
     override fun getItemCount() = episodes.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = when (viewType) {
-        0 -> (holder as EpisodeHolder).bind(episodes[position] as Episode)
-        else -> (holder as EpisodeHorizontalHolder).bind(episodes[position] as Episode)
+        0 -> (holder as EpisodeHolder).bind(episodes[position])
+        else -> (holder as EpisodeHorizontalHolder).bind(episodes[position])
     }
 
     fun updateList(episodes: ArrayList<Episode>) {

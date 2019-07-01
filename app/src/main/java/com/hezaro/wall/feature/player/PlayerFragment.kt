@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.hezaro.wall.R
 import com.hezaro.wall.R.drawable
 import com.hezaro.wall.data.model.DOWNLOADED
@@ -46,7 +47,6 @@ import com.hezaro.wall.sdk.platform.player.download.DownloadTracker
 import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.services.MediaPlayerServiceHelper
-import com.hezaro.wall.utils.OnSwipeTouchListener
 import com.hezaro.wall.utils.RoundRectTransform
 import com.minibugdev.drawablebadge.BadgePosition
 import com.minibugdev.drawablebadge.DrawableBadge
@@ -69,7 +69,6 @@ import kotlinx.android.synthetic.main.player_control.bookmarkAction
 import kotlinx.android.synthetic.main.player_control.descriptionAction
 import kotlinx.android.synthetic.main.player_control.downloadAction
 import kotlinx.android.synthetic.main.player_control.episodeAvatar
-import kotlinx.android.synthetic.main.player_control.episodeDescription
 import kotlinx.android.synthetic.main.player_control.episodeShare
 import kotlinx.android.synthetic.main.player_control.episodeTitle
 import kotlinx.android.synthetic.main.player_control.exo_ffwd
@@ -105,62 +104,50 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         fun getInstance() = PlayerFragment()
     }
 
-    private fun onSlide(slideOffset: Float) {
-        Timber.i("slideOffset: $slideOffset")
-        playerLayout.updateRadius(slideOffset)
-        updateMarginList(
-            slideOffset.toRange(
-                0..1,
-                0..(resources.getDimension(R.dimen.mini_player_height).toInt() * -1)
-            ).toInt()
-        )
-        miniPlayer.alpha = slideOffset.toRange(0..1, 1..0)
-        if (showInfo && slideOffset < 0.5F) {
-            (activity as MainActivity).openEpisodeInfo(currentEpisode!!)
-            showInfo = false
-        }
-    }
-
     private fun updateMarginList(i: Int = -1) {
         val params = miniPlayer.layoutParams as AppBarLayout.LayoutParams
         params.topMargin = i
         miniPlayer?.requestLayout()
     }
 
-    private fun onStateChanged(newState: Int) {
-        sharedVm.updateSheetState(newState)
-        sharedVm.playerIsOpen(behavior?.peekHeight!! > 0)
-
-//        if (isBuffering && newState == BottomSheetBehavior.STATE_DRAGGING)
-//            behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-
-        isExpanded = when (newState) {
-            BottomSheetBehavior.STATE_EXPANDED -> {
-                true
-            }
-            BottomSheetBehavior.STATE_COLLAPSED -> {
-                false
-            }
-            else -> {
-                false
-            }
-        }
-    }
-
     fun setBehavior() {
         behavior = BottomSheetBehavior.from(this@PlayerFragment.view)
         behavior!!.state = BottomSheetBehavior.STATE_HIDDEN
 
-        playerLayout.setOnTouchListener(
-            OnSwipeTouchListener(
-                behavior!!, ::onStateChanged, ::onSlide
-            ) {
-                (activity as MainActivity).unbindService()
-                playerView.player.stop()
-                MediaPlayerServiceHelper.stopService(requireContext())
-                closeMiniPlayer()
+        behavior!!.setBottomSheetCallback(object : BottomSheetCallback() {
+            override fun onSlide(p0: View, slideOffset: Float) {
+                Timber.i("slideOffset: $slideOffset")
+                playerLayout.updateRadius(slideOffset)
+                updateMarginList(
+                    slideOffset.toRange(
+                        0..1,
+                        0..(resources.getDimension(R.dimen.mini_player_height).toInt() * -1)
+                    ).toInt()
+                )
+                miniPlayer.alpha = slideOffset.toRange(0..1, 1..0)
+                if (showInfo && slideOffset < 0.5F) {
+                    (activity as MainActivity).openEpisodeInfo(currentEpisode!!)
+                    showInfo = false
+                }
             }
-        )
+
+            override fun onStateChanged(p0: View, newState: Int) {
+                sharedVm.updateSheetState(newState)
+                sharedVm.playerIsOpen(behavior?.peekHeight!! > 0)
+
+                isExpanded = when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        true
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        false
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+        })
     }
 
     fun setPlayer(player: Player) {
@@ -207,11 +194,14 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { progress ->
                 playerView.player?.let {
-                    Timber.d("onViewCreated, progress: $progress")
-                    miniPlayerProgressBar.maximum = playerView.player.duration.toFloat() / 1000
-                    miniPlayerProgressBar.progress = (progress).toFloat()
-                    subtitle.text = "${Util.getStringForTime(formatBuilder, formatter, progress * 1000)
-                    }/${Util.getStringForTime(formatBuilder, formatter, playerView.player.duration)}"
+                    Timber.d("onViewCreated, isActivated: ${playerView.isActivated}")
+                    Timber.d("onViewCreated, playWhenReady: ${playerView.player.playWhenReady}")
+                    if (playerView.player.playWhenReady) {
+                        miniPlayerProgressBar.maximum = playerView.player.duration.toFloat() / 1000
+                        miniPlayerProgressBar.progress = (progress).toFloat()
+                        subtitle.text = "${Util.getStringForTime(formatBuilder, formatter, progress * 1000)
+                        }/${Util.getStringForTime(formatBuilder, formatter, playerView.player.duration)}"
+                    }
 
                 }
             }
@@ -268,13 +258,11 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
                         R.color.colorAccent
                 )
             )
-            episodeDescription.gone()
             likeActionLayout.show()
             descriptionAction.show()
             downloadAction.show()
             bookmarkAction.show()
         } else {
-            episodeDescription.show()
             likeActionLayout.gone()
             descriptionAction.gone()
             downloadAction.gone()
@@ -314,12 +302,26 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
             val title = currentEpisode!!.title
             if (downloader.isDownloaded(uri))
                 removeDownloadDialog(title, uri)
-            else
+            else {
                 downloader.startDownload(activity!!, title, uri)
+                vm.save(currentEpisode!!)
+            }
         }
-        episodeDescription.setOnClickListener { }
-        descriptionAction.setOnClickListener { }
-        bookmarkAction.setOnClickListener { }
+        descriptionAction.setOnClickListener {
+
+            val dialog = Dialog(requireContext())
+            dialog.setContentView(R.layout.dialog_description)
+            dialog.findViewById<View>(R.id.closeDescription).setOnClickListener { dialog.dismiss() }
+            dialog.findViewById<TextView>(R.id.episodeDescription).text =
+                Html.fromHtml(currentEpisode!!.description, FROM_HTML_MODE_LEGACY)
+            dialog.show()
+        }
+        bookmarkAction.setOnClickListener {
+
+            vm.sendBookmarkAction(!currentEpisode!!.isBookmarked, currentEpisode!!.id)
+            currentEpisode!!.isBookmarked = !currentEpisode!!.isBookmarked
+            sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
+        }
     }
 
     private fun removeDownloadDialog(title: String, uri: Uri) {
@@ -404,7 +406,7 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
 
     private fun preparePlayer(it: Pair<Int, Episode>) {
         currentEpisode = it.second
-
+        initMetaActions()
         if (!(activity as MainActivity).serviceIsBounded) {
             (activity as MainActivity).bindService()
         }
@@ -471,7 +473,6 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         currentEpisode?.let {
             title.isSelected = true
             episodeTitle.text = it.title
-            episodeDescription.text = Html.fromHtml(it.description, FROM_HTML_MODE_LEGACY)
             podcastTitle.text = it.podcast.title
             calendar.timeInMillis = it.getPublishTime()
             releaseDate.text = calendar.persianLongDate

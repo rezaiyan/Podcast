@@ -1,8 +1,8 @@
 package com.hezaro.wall.data.remote
 
 import com.hezaro.wall.data.BuildConfig
+import com.hezaro.wall.data.model.DExplore
 import com.hezaro.wall.data.model.Episode
-import com.hezaro.wall.data.model.Explore
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.Response
 import com.hezaro.wall.data.model.Status.Companion.SortBy
@@ -22,7 +22,7 @@ private const val BASE = "api/v1"
 interface ApiService {
 
     @GET("$BASE/explore")
-    fun explore(): Call<Response<Explore>>
+    fun explore(): Call<DExplore>
 
     @GET("$BASE/episodes")
     fun episodes(@Query("sort_by") sort: @SortBy String, @Query("page") page: Int = 1, @Query("offset") offset: Int = 20): Call<Response<ArrayList<Episode>>>

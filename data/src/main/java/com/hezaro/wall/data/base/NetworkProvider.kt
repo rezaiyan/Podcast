@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
+import com.google.gson.GsonBuilder
 import com.hezaro.wall.data.BuildConfig
+import com.hezaro.wall.data.model.DExplore
+import com.hezaro.wall.data.model.ExploreDeserializer
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.extention.JWT
 import com.hezaro.wall.sdk.base.extention.get
@@ -20,10 +23,15 @@ import java.util.concurrent.TimeUnit.SECONDS
 
 fun provideRetrofit(context: Context): ApiService {
     val jwt = PreferenceManager.getDefaultSharedPreferences(context).get(JWT, "")
+
+    val gson = GsonBuilder()
+        .registerTypeAdapter(DExplore::class.java, ExploreDeserializer())
+        .create()
+
     return Retrofit.Builder()
         .baseUrl("http://wall.hezaro.com")
         .client(provideHttpClient(context, jwt))
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build().create(ApiService::class.java)
 }
 

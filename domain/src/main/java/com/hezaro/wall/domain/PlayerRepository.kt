@@ -20,6 +20,7 @@ interface PlayerRepository {
     fun getSpeed(): Float
     fun savePlayedEpisode(episode: Episode)
     fun likeAction(like: Boolean, id: Long)
+    fun bookmarkAction(bookmark: Boolean, id: Long)
     fun userIsLogin(): Boolean
     fun updateEpisode(it: Episode)
     fun save(episode: Episode)
@@ -59,6 +60,13 @@ interface PlayerRepository {
                 request(api.like(id)) {}
             else
                 request(api.disLike(id)) {}
+        }
+
+        override fun bookmarkAction(bookmark: Boolean, id: Long) {
+            if (bookmark)
+                request(api.bookmark(id)) {}
+            else
+                request(api.unBookmark(id)) {}
         }
 
         override fun getSpeed(): Float = storage.get(SPEED, 1.0F)

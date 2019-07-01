@@ -8,7 +8,7 @@ import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.feature.adapter.holder.PodcastHolder
 
 class PodcastAdapter(
-    private val podcasts: ArrayList<Any> = arrayListOf(),
+    private val podcasts: ArrayList<Podcast> = arrayListOf(),
     private val onItemClick: (Podcast, Int) -> Unit
 ) : Adapter<PodcastHolder>() {
 
@@ -25,5 +25,5 @@ class PodcastAdapter(
 
     override fun getItemCount() = podcasts.size
 
-    override fun onBindViewHolder(holder: PodcastHolder, position: Int) = holder.bind(podcasts[position] as Podcast)
+    override fun onBindViewHolder(holder: PodcastHolder, position: Int) = holder.bind(podcasts[position])
 }

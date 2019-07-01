@@ -25,6 +25,11 @@ class PlayerViewModel(private val repository: PlayerRepository) : BaseViewModel(
             repository.likeAction(like, id)
         }
 
+    fun sendBookmarkAction(like: Boolean, id: Long) =
+        launch {
+            repository.bookmarkAction(like, id)
+        }
+
 
     fun userIsLogin() = repository.userIsLogin()
 

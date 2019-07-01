@@ -1,7 +1,7 @@
 package com.hezaro.wall.domain
 
 import com.hezaro.wall.data.base.BaseRepository
-import com.hezaro.wall.data.model.Explore
+import com.hezaro.wall.data.model.DExplore
 import com.hezaro.wall.data.remote.ApiService
 import com.hezaro.wall.sdk.base.Either
 import com.hezaro.wall.sdk.base.exception.Failure
@@ -13,14 +13,14 @@ import com.hezaro.wall.sdk.base.exception.Failure
 
 interface ExploreRepository {
 
-    fun explore(): Either<Failure, Explore>
+    fun explore(): Either<Failure, DExplore>
 
     class ExploreRepositoryImpl(private val api: ApiService) :
         BaseRepository(),
         ExploreRepository {
 
         override fun explore() =
-            request(api.explore()) { it.response }
+            request(api.explore()) { it }
 
     }
 }

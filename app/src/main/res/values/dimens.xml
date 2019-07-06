@@ -12,6 +12,7 @@
     <dimen name="title_size">14sp</dimen>
     <dimen name="large_title_size">20sp</dimen>
     <dimen name="subtitle_size">12sp</dimen>
+    <dimen name="subtitle_size2">10sp</dimen>
     <dimen name="lottie_size">28dp</dimen>
     <dimen name="player_button_size">45dp</dimen>
     <dimen name="player_button_size_s">25dp</dimen>

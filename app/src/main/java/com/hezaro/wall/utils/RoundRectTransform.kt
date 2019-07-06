@@ -11,7 +11,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import com.squareup.picasso.Transformation
 
-class RoundRectTransform(private val round: Float = 7F) : Transformation {
+class RoundRectTransform(private val round: Float = 12F) : Transformation {
 
     override fun transform(source: Bitmap): Bitmap {
         val size = Math.min(source.width, source.height)

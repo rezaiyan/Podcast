@@ -11,7 +11,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/colorAccentDark">
 
         <ImageView
             android:id="@+id/categoryCover"
@@ -23,14 +24,20 @@
 
         <TextView
             android:id="@+id/titleCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/margin_4"
-            android:gravity="end"
-            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:layout_marginStart="@dimen/margin_8"
+            android:ellipsize="end"
+            android:fontFamily="@font/traffic"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textAlignment="gravity"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_size"
             android:textStyle="bold"
-            tools:text="@tools:sample/cities" />
+            tools:ignore="RtlHardcoded"
+            tools:text="@tools:sample/lorem/random" />
 
     </FrameLayout>
 

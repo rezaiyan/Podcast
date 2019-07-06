@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,21 +11,53 @@
         style="@style/Base.TextAppearance.AppCompat.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:padding="20dp"
-        android:text="Hello World"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_marginLeft="@dimen/margin_8"
+        android:layout_marginRight="@dimen/margin_8"
+        android:layout_marginStart="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
+        android:fontFamily="@font/traffic"
+        android:textColor="@color/colorAccentDark"
+        android:textStyle="bold"
+        tools:text="Hello World" />
+
+
+    <TextView
+        android:id="@+id/exploreShowMoreTitle"
+        style="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_marginLeft="@dimen/margin_8"
+        android:layout_marginRight="@dimen/margin_8"
+        android:layout_marginStart="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
+        android:fontFamily="@font/traffic"
+        android:text="@string/show_all"
+        android:textColor="@color/colorAccent2"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/exploreItemRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/exploreItemTitle"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_8"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="horizontal"
-        android:padding="20dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:paddingEnd="@dimen/margin_8"
+        android:paddingLeft="@dimen/margin_8"
+        android:paddingRight="@dimen/margin_8"
+        android:paddingStart="@dimen/margin_8"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:reverseLayout="true" />
 
 </RelativeLayout>

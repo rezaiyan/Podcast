@@ -48,9 +48,12 @@ class EpisodeAdapter(
 
     override fun getItemCount() = episodes.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = when (viewType) {
-        0 -> (holder as EpisodeHolder).bind(episodes[position])
-        else -> (holder as EpisodeHorizontalHolder).bind(episodes[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        when {
+            (holder is EpisodeHolder) -> holder.bind(episodes[position])
+            (holder is EpisodeHorizontalHolder) -> holder.bind(episodes[position])
+        }
     }
 
     fun updateList(episodes: ArrayList<Episode>) {

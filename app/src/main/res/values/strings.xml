@@ -31,4 +31,6 @@
     <string name="cancel">انصراف</string>
     <string name="init_timer">00:00/00:00</string>
     <string name="not_found_episode">اپیزودی پیدا نشد</string>
+    <string name="login">ورود</string>
+    <string name="show_all">نمایش همه</string>
 </resources>

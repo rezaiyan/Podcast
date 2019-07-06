@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/progress_margin_8"
         android:indeterminateOnly="true"
-        android:indeterminateTint="@color/player_progress"
+        android:indeterminateTint="@color/colorAccent2"
         android:visibility="gone"
         app:layout_anchor="@+id/fragmentContainer"
         app:layout_anchorGravity="bottom|center"

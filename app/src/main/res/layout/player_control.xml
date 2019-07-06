@@ -214,8 +214,8 @@
             android:layout_gravity="bottom"
             app:bar_height="4dp"
             app:buffered_color="@color/ic_controller"
-            app:played_color="@color/player_progress"
-            app:scrubber_color="@color/player_progress"
+            app:played_color="@color/colorAccent2"
+            app:scrubber_color="@color/colorAccent2"
             app:unplayed_color="@color/unplayedColor" />
 
     </FrameLayout>

@@ -12,18 +12,17 @@ class PodcastAdapter(
     private val onItemClick: (Podcast, Int) -> Unit
 ) : Adapter<PodcastHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PodcastHolder(
-        LayoutInflater.from(parent.context).inflate(
-            R.layout.item_podcast, parent, false
-        ), onItemClick
-    )
-
-    fun addPodcast(it: ArrayList<Podcast>) {
-        this.podcasts.addAll(it)
-        notifyItemRangeInserted(itemCount, this.podcasts.size)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PodcastHolder {
+        return PodcastHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_podcast, parent, false
+            ), onItemClick
+        )
     }
 
     override fun getItemCount() = podcasts.size
 
-    override fun onBindViewHolder(holder: PodcastHolder, position: Int) = holder.bind(podcasts[position])
+    override fun onBindViewHolder(holder: PodcastHolder, position: Int) {
+        holder.bind(podcasts[position])
+    }
 }

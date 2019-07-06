@@ -4,15 +4,16 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorAccent">#F7F5EB</color>
     <color name="colorAccentLight">#F7F4EB</color>
+    <color name="colorAccentDark">#032A37</color>
     <color name="white">#FFFFFF</color>
     <color name="colorDone">#1DC88D</color>
-    <color name="colorTextPrimary">#1B1B1B</color>
-    <color name="colorTextSecondary">#3D3D3D</color>
-    <color name="ic_controller">#3D3D3D</color>
+    <color name="colorTextPrimary">#414141</color>
+    <color name="colorTextSecondary">#777777</color>
+    <color name="ic_controller">@color/colorAccentDark</color>
     <color name="black">#000000</color>
     <color name="bg_player_action">#9F050505</color>
     <color name="bg_like_badge">#050505</color>
     <color name="bg_count">#B1406B</color>
-    <color name="player_progress">#9B0B42</color>
+    <color name="colorAccent2">#9B0B42</color>
     <color name="unplayedColor">#37FFFFFF</color>
 </resources>

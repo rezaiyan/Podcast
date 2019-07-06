@@ -17,9 +17,13 @@ class ExploreViewModel(private val repository: ExploreRepository) : BaseViewMode
 
     fun explore() {
         launch {
+            progress.postValue(true)
             repository.explore().either(::onFailure, ::onSuccess)
         }
     }
 
-    private fun onSuccess(it: DExplore) = explore.postValue(it)
+    private fun onSuccess(it: DExplore) {
+        progress.postValue(false)
+        explore.postValue(it)
+    }
 }

@@ -2,7 +2,6 @@ package com.hezaro.wall.feature.adapter.holder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.hezaro.wall.data.model.CategoryItem
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.EpisodeItem
@@ -12,7 +11,6 @@ import com.hezaro.wall.feature.adapter.CategoryAdapter
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.adapter.PodcastAdapter
 import kotlinx.android.synthetic.main.item_explore.view.exploreItemRecyclerView
-import kotlinx.android.synthetic.main.item_explore.view.exploreItemTitle
 
 /**
  * @author ali (alirezaiyann@gmail.com)
@@ -23,14 +21,12 @@ class ExploreHolder(
     private val onEpisodeClick: (Episode, Int) -> Unit,
     private val onPodcastClick: (Podcast, Int) -> Unit
 ) :
-    ViewHolder(view) {
+    BaseExploreHolder(view, viewPool) {
 
-    init {
-        view.exploreItemRecyclerView.setRecycledViewPool(viewPool)
-    }
 
     fun bindEpisode(episodeItem: EpisodeItem) {
-        view.exploreItemTitle.text = episodeItem.title
+        baseBind(episodeItem)
+
         view.exploreItemRecyclerView.adapter = EpisodeAdapter(
             ArrayList(episodeItem.episodes),
             false, false,
@@ -39,14 +35,14 @@ class ExploreHolder(
     }
 
     fun bindPodcast(podcastItem: PodcastItem) {
-        view.exploreItemTitle.text = podcastItem.title
+        baseBind(podcastItem)
         view.exploreItemRecyclerView.adapter = PodcastAdapter(
             ArrayList(podcastItem.podcasts), onPodcastClick
         )
     }
 
     fun bindCategory(category: CategoryItem) {
-        view.exploreItemTitle.text = category.title
+        baseBind(category)
         view.exploreItemRecyclerView.adapter = CategoryAdapter(
             ArrayList(category.categories)
         )

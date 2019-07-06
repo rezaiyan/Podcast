@@ -24,7 +24,7 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.episode.EpisodeFragment
-import com.hezaro.wall.feature.episodes.EpisodesFragment
+import com.hezaro.wall.feature.explore.ExploreFragment
 import com.hezaro.wall.feature.player.PlayerFragment
 import com.hezaro.wall.feature.podcast.PodcastFragment
 import com.hezaro.wall.feature.profile.ProfileFragment
@@ -49,7 +49,7 @@ import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
-    override fun fragment() = EpisodesFragment.getInstance()
+    override fun fragment() = ExploreFragment.getInstance()
 
     private var gso: GoogleSignInOptions? = null
     private lateinit var mGoogleSignInClient: GoogleSignInClient

@@ -22,13 +22,13 @@ class DExplore(
     fun getMergedList(): MutableList<ExploreItem> {
         if (exploreItem.isEmpty()) {
             episodeItems.forEach {
-                exploreItem.add(ExploreItem(it.title, it.type, it.order))
+                exploreItem.add(ExploreItem(it.title, it.show_more, it.type, it.order))
             }
             podcastItems.forEach {
-                exploreItem.add(ExploreItem(it.title, it.type, it.order))
+                exploreItem.add(ExploreItem(it.title, it.show_more, it.type, it.order))
             }
             categoryItems.forEach {
-                exploreItem.add(ExploreItem(it.title, it.type, it.order))
+                exploreItem.add(ExploreItem(it.title, it.show_more, it.type, it.order))
             }
         }
         return exploreItem
@@ -37,6 +37,7 @@ class DExplore(
 
 open class ExploreItem(
     var title: String = "",
+    var show_more: Boolean = false,
     var type: Int = -1,
     var order: Int = -1
 )
@@ -62,6 +63,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
             val order = j.get("order").asInt
             val type = j.get("type").asInt
             val title = j.get("title").asString
+            val show_more = j.get("show_more").asBoolean
             val itemArray = j.get("items").asJsonArray
 
             when (type) {
@@ -71,6 +73,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
                     item.episodes = Gson().fromJson(itemArray, valueType)
                     item.type = type
                     item.title = title
+                    item.show_more = show_more
                     item.order = order
                     explore.episodeItems.add(item)
                 }
@@ -81,6 +84,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
                     item.podcasts = Gson().fromJson(itemArray, valueType)
                     item.type = type
                     item.title = title
+                    item.show_more = show_more
                     item.order = order
                     explore.podcastItems.add(item)
                 }
@@ -90,6 +94,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
                     item.categories = Gson().fromJson(itemArray, valueType)
                     item.type = type
                     item.title = title
+                    item.show_more = show_more
                     item.order = order
                     explore.categoryItems.add(item)
                 }

@@ -60,7 +60,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun addFragment(fragment: BaseFragment) {
         when {
-            (fragment.id() in 101..103) -> {
+            (fragment.id() in 100..103) -> {
                 fragment.enterTransition = Fade()
                 fragment.exitTransition = Fade()
             }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
     <com.hezaro.wall.utils.HAppBar
@@ -12,8 +13,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll">
+            android:layout_height="match_parent">
 
 
             <ImageView
@@ -130,7 +130,6 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:visibility="gone"
-            app:layout_scrollFlags="exitUntilCollapsed"
             app:tabIndicatorColor="@color/colorTextPrimary"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorTextPrimary"
@@ -140,4 +139,5 @@
     </com.hezaro.wall.utils.HAppBar>
 
     <include layout="@layout/fragment_list" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

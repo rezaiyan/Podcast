@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_episodes.search
 import kotlinx.android.synthetic.main.fragment_explore.exploreContainer
 import kotlinx.android.synthetic.main.fragment_explore.exploreRecyclerView
 import kotlinx.android.synthetic.main.fragment_explore.loginTitle
+import kotlinx.android.synthetic.main.fragment_explore.retry
 import org.koin.android.ext.android.inject
 
 class ExploreFragment : BaseFragment() {
@@ -63,6 +64,8 @@ class ExploreFragment : BaseFragment() {
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         sharedVm.listMargin.observe(this@ExploreFragment, Observer { updateMarginScroller(it) })
 
+        sharedVm.userInfo.observe(this@ExploreFragment, Observer { updateUser() })
+
         with(vm) {
             observe(explore, ::onSuccess)
             failure(failure, ::onFailure)
@@ -77,6 +80,8 @@ class ExploreFragment : BaseFragment() {
         avatar.setOnClickListener {
             activity.profile()
         }
+
+        retry.setOnClickListener { vm.explore() }
     }
 
     private fun onSuccess(it: DExplore) {
@@ -98,7 +103,7 @@ class ExploreFragment : BaseFragment() {
         exploreRecyclerView?.onError()
         it.message?.let { showMessage(it) }
         exploreRecyclerView.setLoading(false)
-        if (exploreRecyclerView.adapter!!.itemCount == 0)
+        if (exploreRecyclerView.adapter == null || exploreRecyclerView.adapter!!.itemCount == 0)
             emptyViewLayout.show()
     }
 

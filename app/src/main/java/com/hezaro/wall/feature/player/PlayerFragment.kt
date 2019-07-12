@@ -316,7 +316,6 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
 
 
         downloadAction.setOnClickListener {
-            if (vm.userIsLogin()) {
                 val uri = Uri.parse(currentEpisode!!.source)
                 val title = currentEpisode!!.title
                 if (downloader.isDownloaded(uri))
@@ -325,11 +324,8 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
                     downloader.startDownload(activity!!, title, uri)
                     vm.save(currentEpisode!!)
                 }
-            } else {
-
-                Toast.makeText(requireContext(), "برای بوکمارک لاگین کنید", Toast.LENGTH_SHORT).show()
-            }
         }
+
         descriptionAction.setOnClickListener {
 
             val dialog = Dialog(requireContext(), R.style.FullWidthDimDialog)
@@ -491,9 +487,9 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         behavior?.state = BottomSheetBehavior.STATE_HIDDEN
         behavior?.peekHeight = 0
         (activity as MainActivity).unbindService()
+        MediaPlayerServiceHelper.stopService(requireContext())
     }
 
-    @SuppressLint("CheckResult", "SetTextI18n")
     private fun updatePlayerView() {
 
         behavior?.isHideable = false

@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.hezaro.wall.data.model.DOWNLOADED
 import com.hezaro.wall.data.model.Episode
+import com.hezaro.wall.data.model.IS_NOT_DOWNLOADED
 import io.reactivex.Flowable
 
 /**
@@ -86,24 +87,39 @@ interface EpisodeDao {
      */
     @Transaction
     fun updateLastEpisode(userId: String, episode: Episode) {
+        deletePlayedEpisodes(if (userId.isEmpty()) "Guest" else userId)
 
-        val it = getLastPlayedEpisode(userId)
+        val it = getLastPlayedEpisode(if (userId.isEmpty()) "Guest" else userId) //
         it?.let {
-            if (it.downloadStatus == DOWNLOADED) {
-                it.isLastPlay = false
-                saveEpisode(it)
-            } else {
-                delete(it)
-                episode.isLastPlay = true
-                episode.creationDate = System.currentTimeMillis()
-                saveEpisode(episode)
-            }
-        } ?: run {
+
+            it.isLastPlay = false
+            it.userId = if (userId.isEmpty()) "Guest" else userId
+            saveEpisode(it)
+
             episode.isLastPlay = true
+            episode.userId = if (userId.isEmpty()) "Guest" else userId
             episode.creationDate = System.currentTimeMillis()
             saveEpisode(episode)
         }
+            ?: run {
+                episode.isLastPlay = true
+                episode.userId = if (userId.isEmpty()) "Guest" else userId
+                episode.creationDate = System.currentTimeMillis()
+                saveEpisode(episode)
+            }
     }
+
+    /**
+     * @return Delete the [Episode]s that [Episode.isLastPlay] is True
+     */
+    @Query("DELETE FROM episodes WHERE isLastPlay = :isLastPlay AND downloadStatus = :notDownloaded AND userId = :userId")
+    fun deletePlayedEpisodes(userId: String, isLastPlay: Boolean = true, notDownloaded: Int = IS_NOT_DOWNLOADED)
+
+    /**
+     * @return A list of [Episode] that [Episode.downloadStatus] is [DOWNLOADED]
+     */
+    @Query("SELECT * FROM episodes WHERE downloadStatus = :downloadStatus AND userId = :userId")
+    fun getDownloadEpisodeList(userId: String, downloadStatus: Int = DOWNLOADED): List<Episode>
 
     /**
      * @return A list of [Episode] that [Episode.downloadStatus] is [DOWNLOADED]

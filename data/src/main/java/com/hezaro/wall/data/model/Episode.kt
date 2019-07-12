@@ -13,7 +13,7 @@ import com.hezaro.wall.data.model.Status.Companion.NEW
 @Entity(tableName = "episodes", indices = [Index("id", unique = true)])
 class Episode(
     @SerializedName("userId")
-    var userId: Long = 0,
+    var userId: String = "Guest",
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     var id: Long = 0,

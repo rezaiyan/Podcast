@@ -11,6 +11,7 @@ import com.hezaro.wall.feature.adapter.CategoryAdapter
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
 import com.hezaro.wall.feature.adapter.PodcastAdapter
 import kotlinx.android.synthetic.main.item_explore.view.exploreItemRecyclerView
+import timber.log.Timber
 
 /**
  * @author ali (alirezaiyann@gmail.com)
@@ -26,7 +27,7 @@ class ExploreHolder(
 
     fun bindEpisode(episodeItem: EpisodeItem) {
         baseBind(episodeItem)
-
+        Timber.i("bindEpisode ${this::class.java.simpleName}")
         view.exploreItemRecyclerView.adapter = EpisodeAdapter(
             ArrayList(episodeItem.episodes),
             false, false,
@@ -35,6 +36,7 @@ class ExploreHolder(
     }
 
     fun bindPodcast(podcastItem: PodcastItem) {
+        Timber.i("bindPodcast ${this::class.java.simpleName}")
         baseBind(podcastItem)
         view.exploreItemRecyclerView.adapter = PodcastAdapter(
             ArrayList(podcastItem.podcasts), onPodcastClick
@@ -43,6 +45,7 @@ class ExploreHolder(
 
     fun bindCategory(category: CategoryItem) {
         baseBind(category)
+        Timber.i("bindCategory ${this::class.java.simpleName}")
         view.exploreItemRecyclerView.adapter = CategoryAdapter(
             ArrayList(category.categories)
         )

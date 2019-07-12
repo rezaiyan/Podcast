@@ -21,7 +21,7 @@ class PodcastHolder(
     fun bind(podcast: Podcast) {
 
         itemView.let {
-            it.podcastCover.load(podcast.cover, transform)
+            it.podcastCover.load(podcast.cover, transformation = transform)
             it.podcastName.text = podcast.title
             it.setOnClickListener { onItemClick(podcast, adapterPosition) }
         }

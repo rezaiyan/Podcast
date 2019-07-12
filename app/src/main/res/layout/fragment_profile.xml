@@ -75,7 +75,8 @@
             android:background="@android:color/transparent"
             app:layout_scrollFlags="exitUntilCollapsed"
             app:tabIndicatorColor="@color/colorTextPrimary"
-            app:tabMode="scrollable"
+            app:tabIndicatorFullWidth="false"
+            app:tabMode="fixed"
             app:tabSelectedTextColor="@color/colorTextPrimary"
             app:tabTextAppearance="@style/TrafficTextAppearance"
             app:tabTextColor="@color/colorTextSecondary" />

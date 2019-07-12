@@ -40,7 +40,7 @@ class ProfileFragment : BaseFragment() {
         val userInfo = GoogleSignIn.getLastSignedInAccount(context!!)
 
         userInfo?.let {
-            avatar.load(it.photoUrl.toString(), CircleTransform())
+            avatar.load(it.photoUrl.toString(), transformation = CircleTransform())
             username.text = it.displayName
             email.text = it.email
         }

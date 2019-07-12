@@ -268,7 +268,7 @@ class EpisodesFragment : BaseFragment() {
         val userInfo = GoogleSignIn.getLastSignedInAccount(context!!)
 
         userInfo?.let {
-            avatar.load(it.photoUrl.toString(), CircleTransform())
+            avatar.load(it.photoUrl.toString(), transformation = CircleTransform())
         }
     }
 }

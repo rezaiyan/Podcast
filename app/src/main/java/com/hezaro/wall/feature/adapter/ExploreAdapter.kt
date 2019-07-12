@@ -30,14 +30,16 @@ class ExploreAdapter(
         )
     }
 
+    fun getItems() = items
+
     override fun getItemViewType(position: Int) = items.getMergedList()[position].type
 
     override fun onBindViewHolder(holder: ExploreHolder, position: Int) {
         Log.i("tag", "$position")
-        when {
-            position < items.episodeItems.size -> holder.bindEpisode(items.episodeItems[position])
-            position < items.episodeItems.size + items.podcastItems.size -> holder.bindPodcast(items.podcastItems[position - items.episodeItems.size])
-            position < itemCount -> holder.bindCategory(
+        when (getItemViewType(position)) {
+            1 -> holder.bindEpisode(items.episodeItems[position])
+            2 -> holder.bindPodcast(items.podcastItems[position - items.episodeItems.size])
+            3 -> holder.bindCategory(
                 items.categoryItems[position - (items.episodeItems.size + items.podcastItems.size)]
             )
 //            3 -> (holder as ExploreHolder).bindCategory(items[position] as CategoryItem)

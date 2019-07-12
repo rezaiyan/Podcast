@@ -15,8 +15,8 @@ fun ImageView.load(
     if (URLUtil.isValidUrl(imageUrl))
         Picasso.get()
             .load(imageUrl)
-            .placeholder(R.drawable.ic_placeholder)
-            .error(R.drawable.ic_placeholder)
+            .placeholder(R.drawable.ic_ph)
+            .error(R.drawable.ic_ph)
             .transform(transformation).into(this)
 }
 

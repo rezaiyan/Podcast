@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.hezaro.wall.data.model.ExploreItem
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.show
-import kotlinx.android.synthetic.main.item_explore.view.exploreItemRecyclerView
 import kotlinx.android.synthetic.main.item_explore.view.exploreItemTitle
 import kotlinx.android.synthetic.main.item_explore.view.exploreShowMoreTitle
 
@@ -22,7 +21,7 @@ abstract class BaseExploreHolder(
 
     fun baseBind(exploreItem: ExploreItem) {
         with(view) {
-            exploreItemRecyclerView.setRecycledViewPool(viewPool)
+            //            exploreItemRecyclerView.setRecycledViewPool(viewPool)
             if (exploreItem.show_more)
                 exploreShowMoreTitle.show()
             else exploreShowMoreTitle.hide()

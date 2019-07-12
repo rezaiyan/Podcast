@@ -1,7 +1,10 @@
 package com.hezaro.wall.feature.explore
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hezaro.wall.R
@@ -19,6 +22,7 @@ import com.hezaro.wall.utils.EXPLORE
 import kotlinx.android.synthetic.main.fragment_episodes.avatar
 import kotlinx.android.synthetic.main.fragment_episodes.emptyViewLayout
 import kotlinx.android.synthetic.main.fragment_episodes.search
+import kotlinx.android.synthetic.main.fragment_explore.exploreContainer
 import kotlinx.android.synthetic.main.fragment_explore.exploreRecyclerView
 import kotlinx.android.synthetic.main.fragment_explore.loginTitle
 import org.koin.android.ext.android.inject
@@ -48,7 +52,7 @@ class ExploreFragment : BaseFragment() {
         val userInfo = GoogleSignIn.getLastSignedInAccount(context!!)
 
         userInfo?.let {
-            avatar.load(it.photoUrl.toString(), CircleTransform())
+            avatar.load(it.photoUrl.toString(), transformation = CircleTransform())
             loginTitle.hide()
         }
     }
@@ -56,6 +60,7 @@ class ExploreFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedVm = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
+        sharedVm.listMargin.observe(this@ExploreFragment, Observer { updateMarginScroller(it) })
 
         with(vm) {
             observe(explore, ::onSuccess)
@@ -94,5 +99,22 @@ class ExploreFragment : BaseFragment() {
         exploreRecyclerView.setLoading(false)
         if (exploreRecyclerView.adapter!!.itemCount == 0)
             emptyViewLayout.show()
+    }
+
+    private fun updateMarginScroller(i: Int = -1) {
+        val params = exploreContainer.layoutParams as ConstraintLayout.LayoutParams
+        if (params.bottomMargin == 0 || i >= 0) {
+            val animator =
+                ValueAnimator.ofInt(
+                    params.bottomMargin,
+                    if (i == 0) 0 else resources.getDimension(R.dimen.mini_player_height).toInt()
+                )
+            animator.addUpdateListener { valueAnimator ->
+                params.bottomMargin = valueAnimator.animatedValue as Int
+                exploreContainer?.requestLayout()
+            }
+            animator.duration = 100
+            animator.start()
+        }
     }
 }

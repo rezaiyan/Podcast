@@ -143,9 +143,10 @@ class LocalMediaPlayer(private val context: Context) : MediaPlayer, Player.Event
         val currentIndex = playlist!!.getIndex(episode)
         Timber.tag("MediaPlayer").i("Selected track index = $currentIndex")
         Timber.tag("MediaPlayer").i("episodes.state (SEEK) = ${episode.state}")
-        exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
-
-        exoPlayer!!.playWhenReady = readyToPlay
+        if (currentIndex >= 0) {
+            exoPlayer!!.seekTo(currentIndex, if (episode.state >= 0) episode.state else 0)
+            exoPlayer!!.playWhenReady = readyToPlay
+        }
     }
 
     override fun playTrack(e: Episode) {

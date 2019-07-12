@@ -16,7 +16,7 @@ class CategoryHolder(private val view: View) :
     fun bind(category: Category) {
 
         with(view) {
-            titleCategory.text = category.title
+            titleCategory.text = category.title_fa
 //            categoryCover.load(category.conver)
         }
     }

@@ -83,6 +83,7 @@ dependencies {
     androidTestImplementation TestLibraries.espressoContrib
     implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
     implementation 'com.github.minibugdev:drawablebadge:1.0.3'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
 }
 

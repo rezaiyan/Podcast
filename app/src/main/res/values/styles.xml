@@ -43,6 +43,11 @@
         <item name="android:textSize">@dimen/title_size</item>
     </style>
 
+    <style name="FullWidthDimDialog" parent="Base.Theme.MaterialComponents.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
     <declare-styleable name="HAppBar">
         <attr name="corner_position" format="flags">
             <flag name="none" value="0" />

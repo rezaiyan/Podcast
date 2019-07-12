@@ -7,11 +7,13 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
@@ -37,7 +39,6 @@ import com.hezaro.wall.feature.search.PLAY_SINGLE_TRACK
 import com.hezaro.wall.feature.search.RESUME_VIEW
 import com.hezaro.wall.feature.search.SELECT_SINGLE_TRACK
 import com.hezaro.wall.feature.search.UPDATE_VIEW
-import com.hezaro.wall.sdk.platform.ext.gone
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.show
@@ -258,69 +259,100 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
                         R.color.colorAccent
                 )
             )
-            likeActionLayout.show()
-            descriptionAction.show()
-            downloadAction.show()
-            bookmarkAction.show()
+//            likeActionLayout.show()
+//            descriptionAction.show()
+//            downloadAction.show()
+//            bookmarkAction.show()
         } else {
-            likeActionLayout.gone()
-            descriptionAction.gone()
-            downloadAction.gone()
-            bookmarkAction.gone()
+//            likeActionLayout.gone()
+//            descriptionAction.gone()
+//            downloadAction.gone()
+//            bookmarkAction.gone()
         }
 
         likeActionLayout.setOnClickListener {
 
-            currentEpisode!!.likes++
-            currentEpisode!!.isLiked = !currentEpisode!!.isLiked
-            vm.sendLikeAction(!currentEpisode!!.isLiked, currentEpisode!!.id)
-            sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
+            if (vm.userIsLogin()) {
+                currentEpisode!!.likes++
+                currentEpisode!!.isLiked = !currentEpisode!!.isLiked
+                vm.sendLikeAction(!currentEpisode!!.isLiked, currentEpisode!!.id)
+                sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
 
-            DrawableBadge.Builder(requireContext().applicationContext)
-                .drawableResId(R.drawable.ic_action_name)
-                .badgeColor(R.color.bg_player_action)
-                .badgeSize(R.dimen.badge_size)
-                .badgePosition(BadgePosition.BOTTOM_LEFT)
-                .textColor(
-                    if (currentEpisode!!.isLiked) {
-                        R.color.colorDone
-                    } else {
-                        R.color.colorAccent
-                    }
-                )
-                .showBorder(false)
-                .badgeBorderColor(R.color.default_badge_border_color)
-                .badgeBorderSize(R.dimen.default_badge_border_size)
-                .maximumCounter(99)
-                .build()
-                .get(currentEpisode!!.likes)
-                .let { drawable -> likeCount.setImageDrawable(drawable) }
+                DrawableBadge.Builder(requireContext().applicationContext)
+                    .drawableResId(R.drawable.ic_action_name)
+                    .badgeColor(R.color.bg_player_action)
+                    .badgeSize(R.dimen.badge_size)
+                    .badgePosition(BadgePosition.BOTTOM_LEFT)
+                    .textColor(
+                        if (currentEpisode!!.isLiked) {
+                            R.color.colorDone
+                        } else {
+                            R.color.colorAccent
+                        }
+                    )
+                    .showBorder(false)
+                    .badgeBorderColor(R.color.default_badge_border_color)
+                    .badgeBorderSize(R.dimen.default_badge_border_size)
+                    .maximumCounter(99)
+                    .build()
+                    .get(currentEpisode!!.likes)
+                    .let { drawable -> likeCount.setImageDrawable(drawable) }
+            } else {
+                Toast.makeText(requireContext(), "برای لایک لاگین کنید", Toast.LENGTH_SHORT).show()
+            }
 
         }
+
+        //set download status TODO I know this is a duplication code
+        val downloaded = downloader.isDownloaded(Uri.parse(currentEpisode!!.source))
+
+        if (downloaded) {
+            currentEpisode!!.downloadStatus = DOWNLOADED
+            downloadAction.setColorFilter(Color.parseColor("#1DC88D"))
+        } else {
+            currentEpisode!!.downloadStatus = IS_NOT_DOWNLOADED
+            downloadAction.setColorFilter(Color.parseColor("#F7F4EB"))
+        }
+
+
         downloadAction.setOnClickListener {
-            val uri = Uri.parse(currentEpisode!!.source)
-            val title = currentEpisode!!.title
-            if (downloader.isDownloaded(uri))
-                removeDownloadDialog(title, uri)
-            else {
-                downloader.startDownload(activity!!, title, uri)
-                vm.save(currentEpisode!!)
+            if (vm.userIsLogin()) {
+                val uri = Uri.parse(currentEpisode!!.source)
+                val title = currentEpisode!!.title
+                if (downloader.isDownloaded(uri))
+                    removeDownloadDialog(title, uri)
+                else {
+                    downloader.startDownload(activity!!, title, uri)
+                    vm.save(currentEpisode!!)
+                }
+            } else {
+
+                Toast.makeText(requireContext(), "برای بوکمارک لاگین کنید", Toast.LENGTH_SHORT).show()
             }
         }
         descriptionAction.setOnClickListener {
 
-            val dialog = Dialog(requireContext())
+            val dialog = Dialog(requireContext(), R.style.FullWidthDimDialog)
+
             dialog.setContentView(R.layout.dialog_description)
             dialog.findViewById<View>(R.id.closeDescription).setOnClickListener { dialog.dismiss() }
-            dialog.findViewById<TextView>(R.id.episodeDescription).text =
-                Html.fromHtml(currentEpisode!!.description, FROM_HTML_MODE_LEGACY)
+
+            dialog.findViewById<TextView>(R.id.episodeDescription)
+                .apply {
+                    movementMethod = LinkMovementMethod.getInstance()
+                    text = Html.fromHtml(currentEpisode!!.description, FROM_HTML_MODE_LEGACY)
+                }
             dialog.show()
         }
         bookmarkAction.setOnClickListener {
 
-            vm.sendBookmarkAction(!currentEpisode!!.isBookmarked, currentEpisode!!.id)
-            currentEpisode!!.isBookmarked = !currentEpisode!!.isBookmarked
-            sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
+            if (vm.userIsLogin()) {
+                vm.sendBookmarkAction(!currentEpisode!!.isBookmarked, currentEpisode!!.id)
+                currentEpisode!!.isBookmarked = !currentEpisode!!.isBookmarked
+                sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
+            } else {
+                Toast.makeText(requireContext(), "برای بوکمارک لاگین کنید", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

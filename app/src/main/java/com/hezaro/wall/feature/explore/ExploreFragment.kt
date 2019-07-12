@@ -12,6 +12,7 @@ import com.hezaro.wall.data.model.DExplore
 import com.hezaro.wall.feature.adapter.ExploreAdapter
 import com.hezaro.wall.feature.main.MainActivity
 import com.hezaro.wall.feature.main.SharedViewModel
+import com.hezaro.wall.feature.search.PLAY_SINGLE_TRACK
 import com.hezaro.wall.sdk.base.exception.Failure
 import com.hezaro.wall.sdk.platform.BaseFragment
 import com.hezaro.wall.sdk.platform.ext.hide
@@ -83,9 +84,9 @@ class ExploreFragment : BaseFragment() {
             //            if (sharedVm.isPlaying.value!!) {
 //                sharedVm.isPlaying(true)
 //                isReset = false
-            activity.prepareAndPlayPlaylist(ArrayList(it.episodeItems[0].episodes), e)
+//            activity.prepareAndPlayPlaylist(ArrayList(it.episodeItems[0].episodes), e)
 //            } else {
-//                sharedVm.notifyEpisode(Pair(PLAY_EPISOD_FROM_PLAYLIST, e))
+            sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
 //            }
         }, onPodcastClick = { it, _ -> activity.openPodcastInfo(it) })
     }

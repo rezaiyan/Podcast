@@ -64,6 +64,7 @@ class DownloadFragment : BaseFragment() {
         with(vm) {
             observe(downloadEpisodes, ::onLoadEpisodes)
         }
+
         sharedVm.listMargin.observe(this, Observer { updateMarginList(it) })
 
         savedInstanceState?.let {

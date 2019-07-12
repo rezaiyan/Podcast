@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.adapter.EpisodeAdapter
@@ -67,7 +68,7 @@ class SearchFragment : BaseFragment() {
         }
 
         recyclerList.apply {
-            layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(context!!, RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(
                 onItemClick = { e, _ ->
                     sharedVm.resetPlaylist(true)

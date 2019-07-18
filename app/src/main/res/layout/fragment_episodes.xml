@@ -6,67 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.hezaro.wall.utils.HAppBar
-        android:id="@+id/toolbarExplore"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:fitsSystemWindows="true"
-        app:corner_position="bottomLeft|bottomRight"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarMain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentInsetEnd="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/margin_8"
-                android:layout_marginStart="@dimen/margin_8"
-                android:gravity="center_vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/search"
-                    android:layout_width="@dimen/navigator_icon"
-                    android:layout_height="@dimen/navigator_icon"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/ic_search" />
-
-                <ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="@dimen/navigator_icon"
-                    android:layout_height="@dimen/navigator_icon"
-                    android:layout_alignParentEnd="true"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_account" />
-
-                <ImageView
-                    android:id="@+id/sort"
-                    android:layout_width="@dimen/navigator_icon"
-                    android:layout_height="@dimen/navigator_icon"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/margin_8"
-                    android:layout_toStartOf="@+id/avatar"
-                    android:rotation="180"
-                    android:src="@drawable/ic_sort" />
-
-            </RelativeLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.hezaro.wall.utils.HAppBar>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
@@ -74,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarExplore">
+        app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
             android:layout_width="match_parent"

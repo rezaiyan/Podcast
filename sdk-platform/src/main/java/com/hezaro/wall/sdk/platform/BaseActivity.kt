@@ -2,13 +2,11 @@ package com.hezaro.wall.sdk.platform
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
-import androidx.transition.Slide
 import com.hezaro.wall.sdk.platform.ext.doAddToBackStack
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.show
@@ -59,20 +57,20 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun addFragment(fragment: BaseFragment) {
-        when {
-            (fragment.id() in 100..103) -> {
+//        when {
+//            (fragment.id() in 100..103) -> {
                 fragment.enterTransition = Fade()
                 fragment.exitTransition = Fade()
-            }
-            (fragment.id() in 104..105) -> {
-                fragment.enterTransition = Slide(Gravity.BOTTOM)
-                fragment.exitTransition = Slide(Gravity.TOP)
-            }
-            else -> {
-                fragment.enterTransition = Slide(Gravity.END)
-                fragment.exitTransition = Slide(Gravity.END)
-            }
-        }
+//            }
+//            (fragment.id() in 200..302) -> {
+//                fragment.enterTransition = Slide(Gravity.BOTTOM)
+//                fragment.exitTransition = Slide(Gravity.TOP)
+//            }
+//            else -> {
+//                fragment.enterTransition = Slide(Gravity.END)
+//                fragment.exitTransition = Slide(Gravity.END)
+//            }
+//        }
 
 
 

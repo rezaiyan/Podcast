@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
+import com.hezaro.wall.data.model.Status.Companion.NEWEST
 import java.lang.reflect.Type
 
 class Explore(val response: MutableList<ExploreItem> = mutableListOf())
@@ -40,7 +41,10 @@ open class ExploreItem(
     var show_more: Boolean = false,
     var type: Int = -1,
     var order: Int = -1
-)
+) {
+
+    fun getSortType(): String = NEWEST
+}
 
 class EpisodeItem(var episodes: MutableList<Episode> = mutableListOf()) : ExploreItem()
 class PodcastItem(var podcasts: MutableList<Podcast> = mutableListOf()) : ExploreItem()

@@ -1,7 +1,6 @@
 package com.hezaro.wall.feature.adapter.holder
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.hezaro.wall.data.model.CategoryItem
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.EpisodeItem
@@ -18,11 +17,12 @@ import timber.log.Timber
  * @since 6/25/19 1:11 PM.
  */
 class ExploreHolder(
-    private val view: View, viewPool: RecyclerView.RecycledViewPool,
+    private val view: View,
     private val onEpisodeClick: (Episode, Int) -> Unit,
-    private val onPodcastClick: (Podcast, Int) -> Unit
+    private val onPodcastClick: (Podcast, Int) -> Unit,
+    onSowMoreClick: (String) -> Unit
 ) :
-    BaseExploreHolder(view, viewPool) {
+    BaseExploreHolder(view, onSowMoreClick) {
 
 
     fun bindEpisode(episodeItem: EpisodeItem) {

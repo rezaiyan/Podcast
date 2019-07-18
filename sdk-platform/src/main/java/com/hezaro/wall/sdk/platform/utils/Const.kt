@@ -12,6 +12,7 @@ const val ERROR_LOGIN_CODE = 422
 
 const val SAVE_INSTANCE_EPISODES = "com.hezaro.wall.episodes"
 const val SAVE_INSTANCE_PAGE = "com.hezaro.wall.episodes.page"
+const val SAVE_INSTANCE_SORT = "com.hezaro.wall.episodes.sort"
 const val RC_SIGN_IN = 991
 const val MEDIA_SESSION_ACTIONS = PlaybackStateCompat.ACTION_FAST_FORWARD or
         PlaybackStateCompat.ACTION_REWIND or

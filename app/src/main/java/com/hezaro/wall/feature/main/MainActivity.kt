@@ -24,6 +24,7 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.data.model.UserInfo
 import com.hezaro.wall.feature.episode.EpisodeFragment
+import com.hezaro.wall.feature.episodes.EpisodesFragment
 import com.hezaro.wall.feature.explore.ExploreFragment
 import com.hezaro.wall.feature.player.PlayerFragment
 import com.hezaro.wall.feature.podcast.PodcastFragment
@@ -221,12 +222,17 @@ class MainActivity : BaseActivity() {
             // a listener.
             val completedTask = GoogleSignIn.getSignedInAccountFromIntent(data)
             hideProgress()
-            try {
-                val account = completedTask.getResult(ApiException::class.java)
-                updateUI(account)
-            } catch (e: ApiException) {
-                Timber.w("signInResult:failed code=" + e.statusCode)
+            if (!completedTask.isSuccessful) {
+                showMessage(getString(string.login_error))
                 updateUI(null)
+            } else {
+                try {
+                    val account = completedTask.getResult(ApiException::class.java)
+                    updateUI(account)
+                } catch (e: ApiException) {
+                    Timber.w("signInResult:failed code=" + e.statusCode)
+                    updateUI(null)
+                }
             }
         }
     }
@@ -256,7 +262,7 @@ class MainActivity : BaseActivity() {
 
             is Failure.FeatureFailure -> {
                 if (failure.code == ERROR_LOGIN_CODE) {
-                    showMessage(if (failure.message.isNullOrEmpty().not()) failure.message else getString(R.string.login_error))
+                    showMessage(if (failure.message.isNullOrEmpty().not()) failure.message else getString(string.login_error))
                 }
             }
             is Failure.ServerError -> {
@@ -314,6 +320,10 @@ class MainActivity : BaseActivity() {
             comFromDeepLink = false
         }
         addFragment(PodcastFragment.newInstance(p))
+    }
+
+    fun openEpisodes(it: String) {
+        addFragment(EpisodesFragment.getInstance(it))
     }
 
     fun preparePlaylist(

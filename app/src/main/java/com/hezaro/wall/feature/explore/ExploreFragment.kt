@@ -20,13 +20,13 @@ import com.hezaro.wall.sdk.platform.ext.load
 import com.hezaro.wall.sdk.platform.ext.show
 import com.hezaro.wall.utils.CircleTransform
 import com.hezaro.wall.utils.EXPLORE
-import kotlinx.android.synthetic.main.fragment_episodes.avatar
-import kotlinx.android.synthetic.main.fragment_episodes.emptyViewLayout
-import kotlinx.android.synthetic.main.fragment_episodes.search
+import kotlinx.android.synthetic.main.fragment_explore.avatar
+import kotlinx.android.synthetic.main.fragment_explore.emptyViewLayout
 import kotlinx.android.synthetic.main.fragment_explore.exploreContainer
 import kotlinx.android.synthetic.main.fragment_explore.exploreRecyclerView
 import kotlinx.android.synthetic.main.fragment_explore.loginTitle
 import kotlinx.android.synthetic.main.fragment_explore.retry
+import kotlinx.android.synthetic.main.fragment_explore.search
 import org.koin.android.ext.android.inject
 
 class ExploreFragment : BaseFragment() {
@@ -85,15 +85,20 @@ class ExploreFragment : BaseFragment() {
     }
 
     private fun onSuccess(it: DExplore) {
-        exploreRecyclerView.adapter = ExploreAdapter(it, onEpisodeClick = { e, _ ->
-            //            if (sharedVm.isPlaying.value!!) {
+        emptyViewLayout.hide()
+        exploreRecyclerView.adapter = ExploreAdapter(
+            it,
+            onEpisodeClick = { e, _ ->
+                //            if (sharedVm.isPlaying.value!!) {
 //                sharedVm.isPlaying(true)
 //                isReset = false
 //            activity.prepareAndPlayPlaylist(ArrayList(it.episodeItems[0].episodes), e)
 //            } else {
-            sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
+                sharedVm.notifyEpisode(Pair(PLAY_SINGLE_TRACK, e))
 //            }
-        }, onPodcastClick = { it, _ -> activity.openPodcastInfo(it) })
+            },
+            onPodcastClick = { p, _ -> activity.openPodcastInfo(p) },
+            onSowMoreClick = { activity.openEpisodes(it) })
     }
 
     private fun onFailure(it: Failure) {

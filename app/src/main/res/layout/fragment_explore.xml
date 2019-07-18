@@ -112,6 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_20"
+                android:textColor="@color/colorTextPrimary"
                 android:fontFamily="@font/traffic"
                 android:text="@string/retry"
                 android:textSize="@dimen/subtitle_size" />

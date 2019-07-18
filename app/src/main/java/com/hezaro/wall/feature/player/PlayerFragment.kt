@@ -16,7 +16,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -49,8 +48,6 @@ import com.hezaro.wall.sdk.platform.player.download.PlayerDownloadHelper
 import com.hezaro.wall.sdk.platform.utils.ACTION_PLAY_PAUSE
 import com.hezaro.wall.services.MediaPlayerServiceHelper
 import com.hezaro.wall.utils.RoundRectTransform
-import com.minibugdev.drawablebadge.BadgePosition
-import com.minibugdev.drawablebadge.DrawableBadge
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -76,7 +73,6 @@ import kotlinx.android.synthetic.main.player_control.exo_ffwd
 import kotlinx.android.synthetic.main.player_control.exo_rew
 import kotlinx.android.synthetic.main.player_control.likeAction
 import kotlinx.android.synthetic.main.player_control.likeActionLayout
-import kotlinx.android.synthetic.main.player_control.likeCount
 import kotlinx.android.synthetic.main.player_control.playerMinimize
 import kotlinx.android.synthetic.main.player_control.podcastTitle
 import kotlinx.android.synthetic.main.player_control.releaseDate
@@ -188,22 +184,19 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         val formatBuilder = StringBuilder()
         val formatter = Formatter(formatBuilder, Locale.getDefault())
 
-        progressObservable = Observable.interval(1, TimeUnit.SECONDS)
-            .map {
-                playerView.player?.currentPosition?.div(1000) ?: 0
-            }
+        progressObservable = Observable
+            .interval(1, TimeUnit.SECONDS)
+            .filter { playerView.player.playWhenReady && playerView.isActivated }
+            .map { playerView.player?.currentPosition?.div(1000) ?: 0 }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { progress ->
                 playerView.player?.let {
                     Timber.d("onViewCreated, isActivated: ${playerView.isActivated}")
                     Timber.d("onViewCreated, playWhenReady: ${playerView.player.playWhenReady}")
-                    if (playerView.player.playWhenReady) {
-                        miniPlayerProgressBar.maximum = playerView.player.duration.toFloat() / 1000
-                        miniPlayerProgressBar.progress = (progress).toFloat()
-                        subtitle.text = "${Util.getStringForTime(formatBuilder, formatter, progress * 1000)
-                        }/${Util.getStringForTime(formatBuilder, formatter, playerView.player.duration)}"
-                    }
-
+                    miniPlayerProgressBar.maximum = playerView.player.duration.toFloat() / 1000
+                    miniPlayerProgressBar.progress = (progress).toFloat()
+                    subtitle.text = "${Util.getStringForTime(formatBuilder, formatter, progress * 1000)
+                    }/${Util.getStringForTime(formatBuilder, formatter, playerView.player.duration)}"
                 }
             }
 
@@ -247,56 +240,47 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
             bookmarkAction.setImageDrawable(
                 AppCompatResources.getDrawable(
                     requireContext(),
-                    if (currentEpisode!!.isBookmarked) R.drawable.ic_bookmarked_colored else R.drawable.ic_bookmark
+                    if (currentEpisode!!.isBookmarked) drawable.ic_bookmarked_colored else drawable.ic_bookmark
                 )
             )
-            likeAction.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    if (currentEpisode!!.isLiked)
-                        R.color.colorDone
-                    else
-                        R.color.colorAccent
-                )
-            )
-//            likeActionLayout.show()
-//            descriptionAction.show()
-//            downloadAction.show()
-//            bookmarkAction.show()
-        } else {
-//            likeActionLayout.gone()
-//            descriptionAction.gone()
-//            downloadAction.gone()
-//            bookmarkAction.gone()
         }
+
+        if (vm.userIsLogin()) {
+
+            likeAction.setImageResource(
+                if (currentEpisode!!.isLiked)
+                    drawable.ic_like_active
+                else
+                    drawable.ic_like_deactive
+            )
+        }
+
+
 
         likeActionLayout.setOnClickListener {
 
             if (vm.userIsLogin()) {
-                currentEpisode!!.likes++
+
                 currentEpisode!!.isLiked = !currentEpisode!!.isLiked
+
+
+                if (currentEpisode!!.isLiked)
+                    currentEpisode!!.likes++
+                else
+                    currentEpisode!!.likes--
+
+
+                likeAction.setImageResource(
+                    if (currentEpisode!!.isLiked)
+                        drawable.ic_like_active
+                    else
+                        drawable.ic_like_deactive
+                )
+
+
                 vm.sendLikeAction(!currentEpisode!!.isLiked, currentEpisode!!.id)
                 sharedVm.notifyEpisode(Pair(UPDATE_VIEW, currentEpisode!!))
 
-                DrawableBadge.Builder(requireContext().applicationContext)
-                    .drawableResId(R.drawable.ic_action_name)
-                    .badgeColor(R.color.bg_player_action)
-                    .badgeSize(R.dimen.badge_size)
-                    .badgePosition(BadgePosition.BOTTOM_LEFT)
-                    .textColor(
-                        if (currentEpisode!!.isLiked) {
-                            R.color.colorDone
-                        } else {
-                            R.color.colorAccent
-                        }
-                    )
-                    .showBorder(false)
-                    .badgeBorderColor(R.color.default_badge_border_color)
-                    .badgeBorderSize(R.dimen.default_badge_border_size)
-                    .maximumCounter(99)
-                    .build()
-                    .get(currentEpisode!!.likes)
-                    .let { drawable -> likeCount.setImageDrawable(drawable) }
             } else {
                 Toast.makeText(requireContext(), "برای لایک لاگین کنید", Toast.LENGTH_SHORT).show()
             }
@@ -316,14 +300,14 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
 
 
         downloadAction.setOnClickListener {
-                val uri = Uri.parse(currentEpisode!!.source)
-                val title = currentEpisode!!.title
-                if (downloader.isDownloaded(uri))
-                    removeDownloadDialog(title, uri)
-                else {
-                    downloader.startDownload(activity!!, title, uri)
-                    vm.save(currentEpisode!!)
-                }
+            val uri = Uri.parse(currentEpisode!!.source)
+            val title = currentEpisode!!.title
+            if (downloader.isDownloaded(uri))
+                removeDownloadDialog(title, uri)
+            else {
+                downloader.startDownload(activity!!, title, uri)
+                vm.save(currentEpisode!!)
+            }
         }
 
         descriptionAction.setOnClickListener {

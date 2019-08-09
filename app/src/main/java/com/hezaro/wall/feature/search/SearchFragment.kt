@@ -134,8 +134,10 @@ class SearchFragment : BaseFragment() {
         hideProgress()
 
     private fun onSearch(it: ArrayList<Episode>) {
-        if (it.isNotEmpty())
+        if (it.isNotEmpty()) {
             (recyclerList.adapter as EpisodeAdapter).clearAndAddEpisode(it)
+            emptyTitleView.hide()
+        }
         else {
             (recyclerList.adapter as EpisodeAdapter).clearAll()
             emptyTitleView.show()

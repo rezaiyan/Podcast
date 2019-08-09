@@ -29,7 +29,7 @@ class ExploreHolder(
         baseBind(episodeItem)
         Timber.i("bindEpisode ${this::class.java.simpleName}")
         view.exploreItemRecyclerView.adapter = EpisodeAdapter(
-            ArrayList(episodeItem.episodes),
+            ArrayList(episodeItem.items),
             false, false,
             onEpisodeClick, onPodcastClick, 1
         )
@@ -39,7 +39,7 @@ class ExploreHolder(
         Timber.i("bindPodcast ${this::class.java.simpleName}")
         baseBind(podcastItem)
         view.exploreItemRecyclerView.adapter = PodcastAdapter(
-            ArrayList(podcastItem.podcasts), onPodcastClick
+            ArrayList(podcastItem.items), onPodcastClick
         )
     }
 
@@ -47,7 +47,7 @@ class ExploreHolder(
         baseBind(category)
         Timber.i("bindCategory ${this::class.java.simpleName}")
         view.exploreItemRecyclerView.adapter = CategoryAdapter(
-            ArrayList(category.categories)
+            ArrayList(category.items)
         )
     }
 }

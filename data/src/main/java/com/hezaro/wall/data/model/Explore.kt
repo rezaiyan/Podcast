@@ -46,9 +46,9 @@ open class ExploreItem(
     fun getSortType(): String = NEWEST
 }
 
-class EpisodeItem(var episodes: MutableList<Episode> = mutableListOf()) : ExploreItem()
-class PodcastItem(var podcasts: MutableList<Podcast> = mutableListOf()) : ExploreItem()
-class CategoryItem(var categories: MutableList<Category> = mutableListOf()) : ExploreItem()
+class EpisodeItem(var items: MutableList<Episode> = mutableListOf()) : ExploreItem()
+class PodcastItem(var items: MutableList<Podcast> = mutableListOf()) : ExploreItem()
+class CategoryItem(var items: MutableList<Category> = mutableListOf()) : ExploreItem()
 
 data class Category(var id: Int, var title: String, var title_fa: String, var count: Int, var description: String)
 
@@ -74,7 +74,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
                 1 -> {
                     valueType = object : TypeToken<MutableList<Episode>>() {}.type
                     val item = EpisodeItem()
-                    item.episodes = Gson().fromJson(itemArray, valueType)
+                    item.items = Gson().fromJson(itemArray, valueType)
                     item.type = type
                     item.title = title
                     item.show_more = show_more
@@ -85,7 +85,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
                 2 -> {
                     valueType = object : TypeToken<MutableList<Podcast>>() {}.type
                     val item = PodcastItem()
-                    item.podcasts = Gson().fromJson(itemArray, valueType)
+                    item.items = Gson().fromJson(itemArray, valueType)
                     item.type = type
                     item.title = title
                     item.show_more = show_more
@@ -95,7 +95,7 @@ class ExploreDeserializer : JsonDeserializer<DExplore> {
                 3 -> {
                     valueType = object : TypeToken<MutableList<Category>>() {}.type
                     val item = CategoryItem()
-                    item.categories = Gson().fromJson(itemArray, valueType)
+                    item.items = Gson().fromJson(itemArray, valueType)
                     item.type = type
                     item.title = title
                     item.show_more = show_more

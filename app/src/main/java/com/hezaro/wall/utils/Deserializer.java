@@ -1,4 +1,4 @@
-package com.hezaro.wall;
+package com.hezaro.wall.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializer;

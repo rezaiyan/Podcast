@@ -3,10 +3,12 @@
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorPrimary">#424242</color>
     <color name="colorAccent">#032A37</color>
+    <color name="colorAccentLight">#032A37</color>
+    <color name="colorAccentDark">#F7F4EB</color>
     <color name="white">#F5F5F5</color>
     <color name="colorTextPrimary">@color/white</color>
     <color name="colorTextSecondary">#9E9E9E</color>
     <color name="ic_controller">@color/colorTextSecondary</color>
-    <color name="black">#000000</color>
+    <color name="black">#FFFFFF</color>
 
 </resources>

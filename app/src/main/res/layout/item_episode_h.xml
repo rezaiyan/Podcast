@@ -10,7 +10,7 @@
     android:weightSum="10">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutEpisode"
         android:layout_width="140dp"
         android:layout_height="150dp"
         android:layout_marginTop="30dp"
@@ -70,7 +70,6 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
-
         android:id="@+id/logo"
         android:layout_width="115dp"
         android:layout_height="115dp"

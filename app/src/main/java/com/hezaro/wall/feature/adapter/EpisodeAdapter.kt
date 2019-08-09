@@ -1,7 +1,11 @@
 package com.hezaro.wall.feature.adapter
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.hezaro.wall.R
@@ -9,6 +13,8 @@ import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.data.model.Podcast
 import com.hezaro.wall.feature.adapter.holder.EpisodeHolder
 import com.hezaro.wall.feature.adapter.holder.EpisodeHorizontalHolder
+import com.hezaro.wall.utils.toDp
+import com.hezaro.wall.utils.toPx
 
 class EpisodeAdapter(
     val episodes: ArrayList<Episode> = arrayListOf(),
@@ -38,12 +44,27 @@ class EpisodeAdapter(
                 onItemClick,
                 longClickListener
             )
-            else -> EpisodeHorizontalHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_episode_h, parent, false),
-                onItemClick,
-                longClickListener
-            )
+            else -> {
+
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_episode_h, parent, false)
+                val screenWidth = view.context.resources.displayMetrics.widthPixels.toDp()
+                val logo = view.findViewById<ImageView>(R.id.logo)
+                val logoLayoutParams = FrameLayout.LayoutParams(
+                    ((screenWidth / 3) - 50).toPx(),
+                    (screenWidth / 3) - 50.toPx()
+                )
+                logoLayoutParams.gravity = Gravity.TOP + Gravity.CENTER_HORIZONTAL
+                logo.layoutParams = logoLayoutParams
+
+                val container = view.findViewById<LinearLayout>(R.id.linearLayoutEpisode)
+                container.layoutParams = FrameLayout.LayoutParams((screenWidth / 3).toPx(), 140.toPx())
+                EpisodeHorizontalHolder(
+                    view,
+                    onItemClick,
+                    longClickListener
+                )
+            }
         }
 
     override fun getItemCount() = episodes.size

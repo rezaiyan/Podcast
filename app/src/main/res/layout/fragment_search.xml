@@ -38,7 +38,7 @@
                         android:layout_marginStart="@dimen/margin_8"
                         android:layout_toStartOf="@id/back"
                         android:hint="@string/search"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorAccentDark"
                         android:textColorHint="@color/colorTextSecondary"
                         app:closeIcon="@null"
                         app:iconifiedByDefault="false"

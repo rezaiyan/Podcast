@@ -189,17 +189,13 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
         progressObservable = Observable
             .interval(1, TimeUnit.SECONDS)
             .subscribeOn(AndroidSchedulers.mainThread())
-            .filter { playerView.player.playWhenReady && playerView.isActivated }
-            .map { playerView.player?.currentPosition?.div(1000) ?: 0 }
             .observeOn(AndroidSchedulers.mainThread())
+            .filter { playerView.player.playWhenReady }
+            .map { playerView.player?.currentPosition?.div(1000) ?: 0 }
             .subscribe { progress ->
-                playerView.player?.let {
-                    val duration = playerView.player.duration
-                    miniPlayerProgressBar.maximum = playerView.player.duration.toFloat() / 1000
                     miniPlayerProgressBar.progress = (progress).toFloat()
                     subtitle.text = "${Util.getStringForTime(formatBuilder, formatter, progress * 1000)
-                    }/${Util.getStringForTime(formatBuilder, formatter, duration)}"
-                }
+                    }/${Util.getStringForTime(formatBuilder, formatter, playerView.player.duration)}"
             }
 
         episodeShare.setOnClickListener {
@@ -322,10 +318,10 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
             dialog.findViewById<TextView>(R.id.episodeDescription)
                 .apply {
                     movementMethod = LinkMovementMethod.getInstance()
-                    if (VERSION.SDK_INT >= VERSION_CODES.N) {
-                        text = Html.fromHtml(currentEpisode!!.description, FROM_HTML_MODE_LEGACY)
+                    text = if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                        Html.fromHtml(currentEpisode!!.description, FROM_HTML_MODE_LEGACY)
                     } else {
-                        text = Html.fromHtml(currentEpisode!!.description)
+                        Html.fromHtml(currentEpisode!!.description)
                     }
                 }
             dialog.show()
@@ -399,7 +395,7 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
 
     private fun updatePlayingStatus(action: Int) {
         isBuffering = false
-        miniPlayerProgressBar.maximum = playerView.player.duration.toFloat() / 1000
+        miniPlayerProgressBar.maximum = (playerView?.player?.duration?.toFloat() ?: 1000F) / 1000
 
         playPause.setImageResource(drawable.ic_play)
         closePlayer.show()
@@ -416,8 +412,7 @@ class PlayerFragment : Fragment(), DownloadTracker.Listener {
             }
             MediaPlayerState.STATE_PAUSED -> {
                 currentEpisode?.let {
-                    if (playerView.player != null)
-                        it.state = playerView.player.currentPosition
+                    it.state = playerView?.player?.currentPosition ?: 0L
                     vm.saveLatestEpisode(it)
                 }
             }

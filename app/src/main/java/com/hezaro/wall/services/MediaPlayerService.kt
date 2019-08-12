@@ -25,7 +25,6 @@ import com.hezaro.wall.sdk.platform.utils.ACTION_PREPARE_PLAYLIST
 import com.hezaro.wall.sdk.platform.utils.ACTION_RESUME_PLAYBACK
 import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_BACKWARD
 import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_FORWARD
-import com.hezaro.wall.sdk.platform.utils.ACTION_SEEK_TO
 import com.hezaro.wall.sdk.platform.utils.ACTION_SET_SPEED
 import com.hezaro.wall.sdk.platform.utils.ACTION_SLEEP_TIMER
 import com.hezaro.wall.sdk.platform.utils.ACTION_STOP_SERVICE
@@ -33,7 +32,6 @@ import com.hezaro.wall.sdk.platform.utils.DEFAULT_PLAYBACK_SPEED
 import com.hezaro.wall.sdk.platform.utils.PARAM_EPISODE
 import com.hezaro.wall.sdk.platform.utils.PARAM_PLAYBACK_SPEED
 import com.hezaro.wall.sdk.platform.utils.PARAM_PLAYLIST
-import com.hezaro.wall.sdk.platform.utils.PARAM_SEEK_MS
 import com.hezaro.wall.sdk.platform.utils.fastForwardIncrementMs
 import com.hezaro.wall.sdk.platform.utils.rewindIncrementMs
 import org.koin.android.ext.android.inject
@@ -120,9 +118,8 @@ class MediaPlayerService : Service() {
                     mediaPlayer.resumePlayback()
                 }
                 ACTION_PAUSE -> mediaPlayer.pausePlayback()
-                ACTION_SEEK_FORWARD -> seekTo(fastForwardIncrementMs)
-                ACTION_SEEK_BACKWARD -> seekTo(-rewindIncrementMs)
-                ACTION_SEEK_TO -> seekTo(intent.getIntExtra(PARAM_SEEK_MS, 30).toLong())
+                ACTION_SEEK_FORWARD -> seekTo(mediaPlayer.currentPosition + fastForwardIncrementMs)
+                ACTION_SEEK_BACKWARD -> seekTo(mediaPlayer.currentPosition - rewindIncrementMs)
                 ACTION_STOP_SERVICE -> {
                     notificationHelper.onHide()
                 }
@@ -140,7 +137,7 @@ class MediaPlayerService : Service() {
 
             }
         }
-        return Service.START_NOT_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onUnbind(intent: Intent): Boolean {

@@ -113,6 +113,7 @@ class EpisodesFragment : BaseFragment() {
             observe(episodes, ::onSuccess)
             observe(progress, ::onProgress)
             failure(failure, ::onFailure)
+            getEpisodes(page = episodeList.page)
         }
 
         retry.setOnClickListener {

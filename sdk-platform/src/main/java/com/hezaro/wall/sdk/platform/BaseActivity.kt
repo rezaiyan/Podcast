@@ -6,7 +6,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.transition.Fade
 import com.hezaro.wall.sdk.platform.ext.doAddToBackStack
 import com.hezaro.wall.sdk.platform.ext.hide
 import com.hezaro.wall.sdk.platform.ext.show
@@ -59,8 +58,8 @@ abstract class BaseActivity : AppCompatActivity() {
     fun addFragment(fragment: BaseFragment) {
 //        when {
 //            (fragment.id() in 100..103) -> {
-                fragment.enterTransition = Fade()
-                fragment.exitTransition = Fade()
+//                fragment.enterTransition = Fade()
+//                fragment.exitTransition = Fade()
 //            }
 //            (fragment.id() in 200..302) -> {
 //                fragment.enterTransition = Slide(Gravity.BOTTOM)

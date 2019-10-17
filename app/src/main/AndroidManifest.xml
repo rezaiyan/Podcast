@@ -28,6 +28,7 @@
         <activity
             android:name="com.hezaro.wall.feature.main.MainActivity"
             android:launchMode="singleTask"
+            android:configChanges="orientation"
             android:screenOrientation="portrait">
 
             <intent-filter android:autoVerify="true">

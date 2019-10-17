@@ -14,10 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.ACTION_STOP
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.*
 import com.hezaro.wall.R
 import com.hezaro.wall.data.model.Episode
 import com.hezaro.wall.feature.main.MainActivity
@@ -54,6 +51,7 @@ class PlayerNotificationHelper(
                 setMediaSessionToken(mediaSession.sessionToken)
                 setFastForwardIncrementMs(0)
                 setRewindIncrementMs(0)
+                setUseChronometer(true)
                 setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 setStopAction(ACTION_STOP)
             }

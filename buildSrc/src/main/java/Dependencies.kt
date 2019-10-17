@@ -33,7 +33,7 @@ object Modules {
 }
 
 object Versions {
-    val gradle = "3.2.1"
+    val gradle = "3.5.0"
 
     val appcompat = "1.1.0-alpha05"
     val archComponents_version = "2.0.0-rc01"
